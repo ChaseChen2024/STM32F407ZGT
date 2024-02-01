@@ -1,0 +1,61 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"freertos.h": "c",
+			"key_demo.h": "c",
+			"bsp_debug_usart.h": "c",
+			"stm32f4xx.h": "c",
+			"stdio.h": "c",
+			"stm32f4xx_conf.h": "c",
+			"bsp_led.h": "c",
+			"ff.h": "c",
+			"stm32f4x7_phy.h": "c",
+			"string.h": "c",
+			"fatfs_demo.h": "c",
+			"ethernetif.h": "c",
+			"stm32f4x7_eth.h": "c",
+			"opt.h": "c",
+			"sys_arch.h": "c",
+			"err.h": "c",
+			"ethernet.h": "c",
+			"arch.h": "c",
+			"sys.h": "c",
+			"timeouts.h": "c",
+			"etharp.h": "c",
+			"dhcp.h": "c",
+			"freertosconfig.h": "c",
+			"queue.h": "c",
+			"semphr.h": "c",
+			"stm32f4x7_eth_conf.h": "c",
+			"sockets.h": "c",
+			"bsp_key.h": "c",
+			"rtc_demo.h": "c",
+			"task.h": "c",
+			"tftp_demo.h": "c",
+			"sntp_demo.h": "c",
+			"lwip_tcp_client_socket_demo.h": "c",
+			"bsp_spi_flash.h": "c",
+			"tftp_server.h": "c",
+			"tftp_opts.h": "c",
+			"lwipopts.h": "c",
+			"api.h": "c",
+			"ip.h": "c",
+			"time.h": "c",
+			"limits": "c",
+			"cstdint": "c",
+			"bsp_sram.h": "c",
+			"client.h": "c",
+			"debug.h": "c",
+			"stdlib.h": "c",
+			"module.h": "c",
+			"atproc.h": "c",
+			"bsp_rtc.h": "c",
+			"log.h": "c"
+		}
+	}
+}
