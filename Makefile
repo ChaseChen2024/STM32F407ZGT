@@ -320,7 +320,13 @@ clean:
 
 #…’¬º√¸¡Ó
 download:
-	-openocd -f cmsis-dap-v1.cfg -f stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08000000" -c reset -c shutdown
+	-openocd -f TOOL/cmsis-dap-v1.cfg -f TOOL/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08000000" -c reset -c shutdown
+download_dap:
+	-openocd -f TOOL/cmsis-dap-v1.cfg -f TOOL/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08000000" -c reset -c shutdown
+download_stlinkv2:
+	-openocd -f TOOL/stlink-v2.cfg -f TOOL/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08000000" -c reset -c shutdown
+download_jlink:
+	-openocd -f TOOL/jlink.cfg -f TOOL/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08000000" -c reset -c shutdown
 #######################################
 # dependencies
 #######################################
