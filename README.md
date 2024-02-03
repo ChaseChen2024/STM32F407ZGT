@@ -62,20 +62,17 @@ cmd 进入工程目录或在工程目录打开cmd。
 如果为jLink、STLink、DAP等工具，在连接好设备后，如果使用dap调试器可以直接使用make download，兼容的命令如下，也可以自己定义
 
 #烧录命令
-download:
 
+download:
 	-openocd -f TOOL/cmsis-dap-v1.cfg -f TOOL/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08000000" -c reset -c shutdown
  
 download_dap:
-
 	-openocd -f TOOL/cmsis-dap-v1.cfg -f TOOL/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08000000" -c reset -c shutdown
  
 download_stlinkv2:
-
 	-openocd -f TOOL/stlink-v2.cfg -f TOOL/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08000000" -c reset -c shutdown
  
 download_jlink:
-
 	-openocd -f TOOL/jlink.cfg -f TOOL/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08000000" -c reset -c shutdown
  
 
