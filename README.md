@@ -80,3 +80,4 @@ download_jlink:
 	-openocd -f TOOL/jlink.cfg -f TOOL/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08000000" -c reset -c shutdown
  
 
+20240203修改-ChaseChen
