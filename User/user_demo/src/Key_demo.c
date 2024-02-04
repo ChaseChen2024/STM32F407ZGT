@@ -34,26 +34,9 @@ static void KEY_Demo_Task(void* parameter)
     if( Key_Scan(KEY0_GPIO_PORT,KEY0_PIN) == KEY_ON )
     {/* K0 被按下 */
       printf("按键0！\n");
-	    // Usart_SendString(MODULE_USART,"AT\r\n123456\r\nOK\r\n");
-		// LOG(1,1,"nnnnnsnsnsnsnn");
-		
-		// ret = send_at((uint8_t*)"AT+SLEEP?\r\n",Rxdata,1,5000);
-		// LOG_DEBUG_USER("%s",Rxdata);
-		// LOG(1,1,"ret=%d\r\n",ret);
-
-		// LOG(1,1,"Rxdata:%d\r\n",strlen(Rxdata));
-		// LOG(1,2,"%s",Rxdata);
-		// for(int i = 0;Rxdata[i] != '\0';i++)
-		// {
-		// 	printf("%c",Rxdata[i]);
-		// }
-		// printf("\r\n");
     }
 		if( Key_Scan(KEY1_GPIO_PORT,KEY1_PIN) == KEY_ON )
     {/* K1 被按下 */
-
-		// ret = send_at((uint8_t*)"AT+GMR\r\n",NULL,0,5000);
-		// printf("ret=%d\r\n",ret);
 		printf("按键1！\n");
 
     } 

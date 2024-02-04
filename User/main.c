@@ -44,14 +44,10 @@
 #include "Tftp_demo.h"
 #include "client.h"
 #include "atproc.h"
-//extern void TCPIP_Init(void);
-/**************************** 任务句柄 ********************************/
-/* 
- * 任务句柄是一个指针，用于指向一个任务，当任务创建好之后，它就具有了一个任务句柄
- * 以后我们要想操作这个任务都需要通过这个任务句柄，如果是自身的任务操作自己，那么
- * 这个句柄可以为NULL。
- */
+
 static TaskHandle_t AppTaskCreate_Handle = NULL;/* 创建任务句柄 */
+
+
 //设置变量定义到“EXRAM”节区的宏
 #define __EXRAM  __attribute__ ((section (".ext_sram")))
 
@@ -62,36 +58,9 @@ uint8_t ucHeap[ configTOTAL_HEAP_SIZE ] __EXRAM;
 uint8_t testGrup[3] __EXRAM ={1,2,3};
 //定义数组到SRAM
 uint8_t testGrup2[3] ={1,2,3};
-// static uint32_t aMemory[100] __attribute__ ((section (".ext_sram")));
-// static uint32_t aMemory2[100] __attribute__ ((section (".ext_sram")));
-// static uint32_t aMemory3[100] __attribute__ ((section (".ext_sram")));
-/********************************** 内核对象句柄 *********************************/
-/*
- * 信号量，消息队列，事件标志组，软件定时器这些都属于内核的对象，要想使用这些内核
- * 对象，必须先创建，创建成功之后会返回一个相应的句柄。实际上就是一个指针，后续我
- * 们就可以通过这个句柄操作这些内核对象。
- *
- * 内核对象说白了就是一种全局的数据结构，通过这些数据结构我们可以实现任务间的通信，
- * 任务间的事件同步等各种功能。至于这些功能的实现我们是通过调用这些内核对象的函数
- * 来完成的
- * 
- */
 
 
 
-/******************************* 全局变量声明 ************************************/
-/*
- * 当我们在写应用程序的时候，可能需要用到一些全局变量。
- */
- 
-
-
-
-/*
-*************************************************************************
-*                             函数声明
-*************************************************************************
-*/
 static void AppTaskCreate(void);/* 用于创建任务 */
 
 static void BSP_Init(void);/* 用于初始化板载相关资源 */
@@ -160,7 +129,7 @@ static void AppTaskCreate(void)
 
   printf("开始创建任务!\r\n");
  
-#if 0
+#if 1
 	xReturn = FatFs_Demo_Task_Init();
 	if(pdPASS == xReturn)
 			printf("创建FatFs_Demo_Task任务成功!\r\n");
@@ -180,7 +149,7 @@ static void AppTaskCreate(void)
   if(pdPASS == xReturn)
     printf("创建SDIO_Demo_Task任务成功!\r\n");
 #endif
-#if 0
+#if 1
   xReturn = RTC_Demo_Task_Init();
   if(pdPASS == xReturn)
     printf("创建RTC_Task任务成功!\r\n");

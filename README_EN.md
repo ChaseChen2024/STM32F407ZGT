@@ -1,19 +1,18 @@
 # STM32F407ZGT
-基于STM32F407ZGT的一个共享工程，后续将不断添加他支持的功能
+Based on a shared project of STM32F407ZGT, its supported functions will be added continuously in the future.
 
 
-项目工程介绍：
+Project Introduction:
 
-项目芯片型号：STM32F407ZGT6
-资源介绍：32位 cortex-M4  时钟最高168M, 板载192k ram  1024k flash, pin 144 , 3个12位AD,2个12位DA,16个DMA通道，17个定时器，3个i2c,6个串口，3个spi,2个can2.0,2个usb otg,1个SDIO
-工程使用makefile进行管理，gcc进行编译。
+Project chip model: STM32F407ZGT6
+Resources: 32-bit cortex-M4 clock up to 168M, onboard 192k ram 1024k flash, pin 144, 3 12-bit AD,2 12-bit DA,16 DMA channels, 17 timers, 3 i2c,6 serial ports, Three spi, two can2.0, two usb otg, and one SDIO
+The project is managed using a makefile and compiled by gcc.
 
 
-编译环境搭建：
+Build environment:
 
-主机环境：windows 10/11
+Host environment: windows 10/11
 
-JASN TEST
 
 
 
