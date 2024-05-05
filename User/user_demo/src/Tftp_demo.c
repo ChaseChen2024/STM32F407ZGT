@@ -1,4 +1,5 @@
 #if 0
+#if 0
 
 #include <string.h>
 
@@ -331,3 +332,4 @@ void tftpInit(void)
  
     return;
 }
+#endif

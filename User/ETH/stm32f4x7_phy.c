@@ -26,6 +26,9 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
+
+#include "user_define.h"
+#ifdef USE_LWIP_CODE
 #include "lwip/opt.h"
 #include "stm32f4x7_eth.h"
 #include "stm32f4x7_phy.h"
@@ -542,3 +545,4 @@ void ETH_link_callback(struct netif *netif)
 }
 #endif
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+#endif

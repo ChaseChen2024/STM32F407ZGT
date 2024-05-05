@@ -29,6 +29,11 @@
 #ifndef __STM32F4X7_ETH_BSP_H
 #define __STM32F4X7_ETH_BSP_H
 
+#include "user_define.h"
+#ifdef USE_LWIP_CODE
+
+
+
 #ifdef __cplusplus
  extern "C" {
 #endif
@@ -138,6 +143,8 @@ void GET_STM32MACID(uint8_t* pMacBuf);
 #ifdef __cplusplus
 }
 #endif
+
+#endif // USE_LWIP_CODE
 
 #endif /* __STM32F4X7_ETH_BSP_H */
 

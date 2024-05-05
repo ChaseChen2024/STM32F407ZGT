@@ -81,3 +81,16 @@ download_jlink:
  
 
 20240203修改-ChaseChen
+
+
+
+
+# 20240505修改——大调整。以实现码表为方向
+
+1、包含三方库有 FatFs\LVGL\LWIP。 LWIP默认裁剪掉。
+2、使用FreeRTOS进行任务调度，使用heap4进行内存管理。使用内部SRAM。
+3、开启了外部SRAM，外部SRAM 速度受限，仅用于要求不高的任务中的大变量。
+4、SPI1用于外部FLASH,SDIO用于SD卡，使用第三方库FATFS进行文件管理。
+5、SPI2+DMA用于ST7789 屏幕，并使用LVGL进行页面绘制显示。并在my_gui文件中添加了码表的基础页面。
+6、开启RTC时钟。
+7、使用UART6+DMA与GPS进行数据交互。

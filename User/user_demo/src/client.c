@@ -29,6 +29,7 @@
  * Author: Adam Dunkels <adam@sics.se>
  *
  */
+#if 0
 #include "client.h"
 
 #include "lwip/opt.h"
@@ -132,3 +133,4 @@ client_init(void)
 {
   sys_thread_new("client", client, NULL, 2048, 4);
 }
+#endif

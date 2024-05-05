@@ -180,13 +180,13 @@
               FreeRTOS与内存申请有关配置选项                                               
 *****************************************************************/
 //支持动态内存申请
-#define configSUPPORT_DYNAMIC_ALLOCATION        1    
+#define configSUPPORT_DYNAMIC_ALLOCATION        1
 //支持静态内存
-#define configSUPPORT_STATIC_ALLOCATION					0	
+#define configSUPPORT_STATIC_ALLOCATION					0
 // //将内存定义在SDRAM上
-#define configAPPLICATION_ALLOCATED_HEAP        1				
+#define configAPPLICATION_ALLOCATED_HEAP        0
 //系统所有总的堆大小
-#define configTOTAL_HEAP_SIZE					((size_t)(1000*1024))    
+#define configTOTAL_HEAP_SIZE					((size_t)(40*1024))    
 // #define configTOTAL_HEAP_SIZE					((size_t)(20*1024))  
 
 /***************************************************************
@@ -214,7 +214,7 @@
  * 不能调用以”FromISR" 或 "FROM_ISR”结尾的API函数
  */
  /*xTaskIncrementTick函数是在xPortSysTickHandler中断函数中被调用的。因此，vApplicationTickHook()函数执行的时间必须很短才行*/
-#define configUSE_TICK_HOOK						0           
+#define configUSE_TICK_HOOK						0          
 
 //使用内存申请失败钩子函数
 #define configUSE_MALLOC_FAILED_HOOK			0 

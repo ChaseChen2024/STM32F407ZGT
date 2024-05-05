@@ -31,6 +31,9 @@ Startup/startup_stm32f40xx.s
 ASMM_SOURCES = 
 
 
+######
+#
+BUILE_LWIP = n
 
 #######################################
 # binaries
@@ -75,8 +78,12 @@ C_DEFS =  \
 -DUSE_STDPERIPH_DRIVER\
 -DSTM32F40_41xxx\
 -DUSE_USB_OTG_FS\
--DUSE_EMBEDDED_PHY
 
+
+ifeq ($(BUILE_LWIP),y)
+C_DEFS = -DUSE_EMBEDDED_PHY -DUSE_LWIP
+
+endif
 
 # AS includes
 AS_INCLUDES =  \
@@ -163,8 +170,8 @@ clean:
 #   -rm -fR $(BUILD_DIR)
 
 #…’¬º√¸¡Ó
-download:
-	-openocd -f TOOL/debug/cmsis-dap-v1.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08000000" -c reset -c shutdown
+down:
+	-openocd -f TOOL/debug/stlink-v2.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08000000" -c reset -c shutdown
 download_dap:
 	-openocd -f TOOL/debug/cmsis-dap-v1.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08000000" -c reset -c shutdown
 download_stlinkv2:

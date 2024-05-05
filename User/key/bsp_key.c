@@ -1,63 +1,61 @@
 
 #include "bsp_key.h" 
 
-/// ²»¾«È·µÄÑÓÊ±
 void Key_Delay(__IO u32 nCount)
 {
 	for(; nCount != 0; nCount--);
 } 
 
-/**
-  * @brief  ÅäÖÃ°´¼üÓÃµ½µÄI/O¿Ú
-  * @param  ÎŞ
-  * @retval ÎŞ
-  */
+
 void Key_GPIO_Config(void)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
-	
-	/*¿ªÆô°´¼üGPIO¿ÚµÄÊ±ÖÓ*/
 	RCC_AHB1PeriphClockCmd(KEY1_GPIO_CLK|KEY0_GPIO_CLK,ENABLE);
-	
-  /*Ñ¡Ôñ°´¼üµÄÒı½Å*/
 	GPIO_InitStructure.GPIO_Pin = KEY1_PIN; 
-  
-  /*ÉèÖÃÒı½ÅÎªÊäÈëÄ£Ê½*/
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN; 
-  
-  /*ÉèÖÃÒı½ÅÉÏÀ­*/
   GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
-	
-  /*Ê¹ÓÃÉÏÃæµÄ½á¹¹Ìå³õÊ¼»¯°´¼ü*/
 	GPIO_Init(KEY1_GPIO_PORT, &GPIO_InitStructure);   
-  
-  /*Ñ¡Ôñ°´¼üµÄÒı½Å*/
 	GPIO_InitStructure.GPIO_Pin = KEY0_PIN; 
-  
-  /*Ê¹ÓÃÉÏÃæµÄ½á¹¹Ìå³õÊ¼»¯°´¼ü*/
 	GPIO_Init(KEY0_GPIO_PORT, &GPIO_InitStructure);  
 }
 
-/**
-  * @brief   ¼ì²âÊÇ·ñÓĞ°´¼ü°´ÏÂ     
-  *	@param 	GPIOx:¾ßÌåµÄ¶Ë¿Ú, x¿ÉÒÔÊÇ£¨A...K£© 
-	*	@param 	GPIO_PIN:¾ßÌåµÄ¶Ë¿ÚÎ»£¬ ¿ÉÒÔÊÇGPIO_PIN_x£¨x¿ÉÒÔÊÇ0...15£©
-  * @retval  °´¼üµÄ×´Ì¬
-  *		@arg KEY_ON:°´¼ü°´ÏÂ
-  *		@arg KEY_OFF:°´¼üÃ»°´ÏÂ
-  */
+
+
+
+
 uint8_t Key_Scan(GPIO_TypeDef* GPIOx,uint16_t GPIO_Pin)
 {			
-	/*¼ì²âÊÇ·ñÓĞ°´¼ü°´ÏÂ */
+
 	if(GPIO_ReadInputDataBit(GPIOx,GPIO_Pin) == KEY_ON )  
 	{	 
-		/*µÈ´ı°´¼üÊÍ·Å */
 		while(GPIO_ReadInputDataBit(GPIOx,GPIO_Pin) == KEY_ON);   
 		return 	KEY_ON;	 
 	}
 	else
 		return KEY_OFF;
 }
+
+//äº”ç»´æŒ‰é”®åˆå§‹åŒ–
+//PA3 
+//PA4ã€
+//PA5ã€
+//PA6ã€
+//PA8
+void Five_Key_GPIO_Init(void)
+{
+	GPIO_InitTypeDef GPIO_InitStructure;
+	
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA,ENABLE);
+	
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3|GPIO_Pin_4|GPIO_Pin_5|GPIO_Pin_6|GPIO_Pin_8; 
+  
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN; 
+  
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+	
+	GPIO_Init(GPIOA, &GPIO_InitStructure);   
+}
+
 
 
 /*********************************************END OF FILE**********************/

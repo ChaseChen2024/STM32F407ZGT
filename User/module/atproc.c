@@ -3,9 +3,9 @@
 
 #include "atproc.h"
 #include "bsp_debug_usart.h"
-//C¿â
+//Cï¿½ï¿½
 #include <string.h>
-/* FreeRTOSÍ·ÎÄ¼ş */
+/* FreeRTOSÍ·ï¿½Ä¼ï¿½ */
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
@@ -32,37 +32,27 @@ uint32_t  quec_get_time1(void)
     return currentMs;
 }
 
-/**********************************************************************
-  * @ º¯ÊıÃû  £º Test_Task
-  * @ ¹¦ÄÜËµÃ÷£º Test_TaskÈÎÎñÖ÷Ìå
-  * @ ²ÎÊı    £º   
-  * @ ·µ»ØÖµ  £º ÎŞ
-  ********************************************************************/
 static void AT_PROC_Task(void* parameter)
 {	
       uint8_t recv_data[USART_RBUFF_SIZE] ;
       uint32_t recv_data_len = 0;
-     BaseType_t xReturn = pdPASS;/* ¶¨ÒåÒ»¸ö´´½¨ĞÅÏ¢·µ»ØÖµ£¬Ä¬ÈÏÎªpdPASS */
+     BaseType_t xReturn = pdPASS;
     // printf("at_msg%x\r\n",at_msg);
   while (1)
   {
-
-    //»ñÈ¡¶şÖµĞÅºÅÁ¿ xSemaphore,Ã»»ñÈ¡µ½ÔòÒ»Ö±µÈ´ı
-		xReturn = xSemaphoreTake(BinarySem_Handle,/* ¶şÖµĞÅºÅÁ¿¾ä±ú */
-                              portMAX_DELAY); /* µÈ´ıÊ±¼ä */
+		xReturn = xSemaphoreTake(BinarySem_Handle,portMAX_DELAY);
       memset(recv_data,0,USART_RBUFF_SIZE);
       get_rx_data(recv_data);
-      printf("ÊÕµ½Êı¾İ:%s\n",recv_data);
+      printf("ï¿½Õµï¿½ï¿½ï¿½ï¿½ï¿½:%s\n",recv_data);
     recv_data_len=strlen(recv_data);
     // printf("len:%d \r\n",recv_data_len);
-    //ÕâÀïÒª´¦ÀíËùÓĞ·µ»Ø²ÎÊı£¬½«·µ»ØÊı¾İ·ÖÎª£¬Êı¾İºÍ½á¹ûÂë
 
     // printf("\r\n  isRecvData:%d \r\n",user_at.isRecvData);
-    if(user_at.isRecvData == 0)//Ö»·µ»ØÖ´ĞĞ½á¹û
+    if(user_at.isRecvData == 0)
     {
-       user_at.at_complete = 1;//´¦ÀíÍê³É
+       user_at.at_complete = 1;
     }
-    else //ĞèÒªÓĞÊı¾İ·µ»Ø
+    else
     {
         user_at.result_state = 1;
         if(user_at.at_result == 1)
@@ -75,7 +65,7 @@ static void AT_PROC_Task(void* parameter)
         }
         memcpy(user_at.recv_data,recv_data,user_at.recv_data_len);
         // printf("user_at.recv_data:%s \r\n",user_at.recv_data);
-        user_at.at_complete = 1;//´¦ÀíÍê³É
+        user_at.at_complete = 1;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     }
   }
 }
@@ -85,16 +75,16 @@ long AT_PROC_Task_Init(void)
 {
 		BaseType_t xReturn = pdPASS;
 
-     /* ´´½¨ BinarySem */
+     /* ï¿½ï¿½ï¿½ï¿½ BinarySem */
   BinarySem_Handle = xSemaphoreCreateBinary();	
 	    // Module_Queue = xQueueCreate(10,64);
-			/* ´´½¨KEY_TaskÈÎÎñ */
-		xReturn = xTaskCreate((TaskFunction_t )AT_PROC_Task,  /* ÈÎÎñÈë¿Úº¯Êı */
-                            (const char*    )"AT_PROC_Task",/* ÈÎÎñÃû×Ö */
-                            (uint16_t       )2048,  /* ÈÎÎñÕ»´óĞ¡ */
-                            (void*          )NULL,/* ÈÎÎñÈë¿Úº¯Êı²ÎÊı */
-                            (UBaseType_t    )3, /* ÈÎÎñµÄÓÅÏÈ¼¶ */
-                            (TaskHandle_t*  )&AT_PROC_Task_Handle);/* ÈÎÎñ¿ØÖÆ¿éÖ¸Õë */ 
+			/* ï¿½ï¿½ï¿½ï¿½KEY_Taskï¿½ï¿½ï¿½ï¿½ */
+		xReturn = xTaskCreate((TaskFunction_t )AT_PROC_Task,  /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Úºï¿½ï¿½ï¿½ */
+                            (const char*    )"AT_PROC_Task",/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+                            (uint16_t       )2048,  /* ï¿½ï¿½ï¿½ï¿½Õ»ï¿½ï¿½Ğ¡ */
+                            (void*          )NULL,/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Úºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+                            (UBaseType_t    )3, /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¼ï¿½ */
+                            (TaskHandle_t*  )&AT_PROC_Task_Handle);/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¿ï¿½Ö¸ï¿½ï¿½ */ 
 		return xReturn;
 }
 uint8_t send_at(uint8_t* at_str,uint8_t* ack_data,uint8_t isRecvData,uint32_t timeout)
@@ -108,26 +98,26 @@ uint8_t send_at(uint8_t* at_str,uint8_t* ack_data,uint8_t isRecvData,uint32_t ti
   user_at.isRecvData = isRecvData;
  while((quec_get_time1()- begin_time) < timeout)
   {
-    if(user_at.at_complete == 1)//Ö´ĞĞÍê³É
+    if(user_at.at_complete == 1)//Ö´ï¿½ï¿½ï¿½ï¿½ï¿½
     {
       if( user_at.isRecvData == 0)//
       {
           if(user_at.at_result == 1)
           {
             
-            ret =  1;//·µ»ØÖ´ĞĞ³É¹¦
+            ret =  1;//ï¿½ï¿½ï¿½ï¿½Ö´ï¿½Ğ³É¹ï¿½
             break;
           }
           else
           {
             
-            ret =  2;//·µ»ØÖ´ĞĞÊ§°Ü
+            ret =  2;//ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ï¿½Ê§ï¿½ï¿½
             break;
           }
       }
       else
       {
-        if(user_at.result_state == 1)//ÓĞÊı¾İ·µ»Ø
+        if(user_at.result_state == 1)//ï¿½ï¿½ï¿½ï¿½ï¿½İ·ï¿½ï¿½ï¿½
         {
           memset(ack_data,0,256);
           memcpy(ack_data,user_at.recv_data,user_at.recv_data_len);
@@ -138,14 +128,14 @@ uint8_t send_at(uint8_t* at_str,uint8_t* ack_data,uint8_t isRecvData,uint32_t ti
         else
         {
           
-          ret =  3;//Ö¸ÁîÎªÓĞÊı¾İ·µ»ØµÄ£¬µ«Ã»ÓĞÊÕµ½Êı¾İ£¬Ö´ĞĞ´íÎó
+          ret =  3;//Ö¸ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½İ·ï¿½ï¿½ØµÄ£ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½Õµï¿½ï¿½ï¿½ï¿½İ£ï¿½Ö´ï¿½Ğ´ï¿½ï¿½ï¿½
           break;
         }
       }
     }
   }
   if(ret == 0)
-    ret =  3;//³¬Ê±
+    ret =  3;//ï¿½ï¿½Ê±
 
   memset(&user_at,0,sizeof(user_at));
   return ret;

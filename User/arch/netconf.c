@@ -20,6 +20,8 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
+#include "user_define.h"
+#ifdef USE_LWIP_CODE
 #include "lwip/mem.h"
 #include "lwip/memp.h"
 #include "lwip/tcp.h"
@@ -243,3 +245,4 @@ void LwIP_DHCP_Process_Handle()
 #endif      
 
 /******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
+#endif   

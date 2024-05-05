@@ -116,7 +116,7 @@ typedef portSTACK_TYPE StackType_t;
 typedef long BaseType_t;
 typedef unsigned long UBaseType_t;
 
-#define TASK_DELAY_MS(x)   ( (x)        /portTICK_PERIOD_MS )
+#define TASK_vTaskDelay(x)   ( (x)        /portTICK_PERIOD_MS )
 #define TASK_DELAY_S(x)    ( (x)*1000   /portTICK_PERIOD_MS )
 #define TASK_DELAY_MIN(x)  ( (x)*60*1000/portTICK_PERIOD_MS )
 

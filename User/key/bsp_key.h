@@ -23,6 +23,6 @@
 
 void Key_GPIO_Config(void);
 uint8_t Key_Scan(GPIO_TypeDef* GPIOx,u16 GPIO_Pin);
-
+void Five_Key_GPIO_Init(void);
 #endif /* __LED_H */
 

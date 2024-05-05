@@ -34,9 +34,13 @@
 #include "task.h" 
 #include "queue.h"
 #include "semphr.h"
+
+#include "user_define.h"
+#ifdef USE_LWIP_CODE
 /* lwip includes */
 #include "lwip/sys.h"
 #include "stm32f4x7_eth.h"
+#endif
 #include "bsp_debug_usart.h"
 #include<string.h>
 // #include "./flash/bsp_spi_flash.h"
@@ -150,6 +154,7 @@ void SysTick_Handler(void)
       }
     #endif  /* INCLUDE_xTaskGetSchedulerState */
 }
+#ifdef USE_LWIP_CODE
 /**
   * @brief  This function handles ethernet DMA interrupt request.
   * @param  None
@@ -197,6 +202,25 @@ void MODULE_USART_IRQHandler(void)
   /* 退出临界段 */
   taskEXIT_CRITICAL_FROM_ISR( ulReturn );
 }	
+#endif
+#include "bsp_usart6.h"
+void USART6_IRQHandler(void)  
+{
+	uint32_t ulReturn;
+  u8 rec_data;
+  ulReturn = taskENTER_CRITICAL_FROM_ISR();
+
+	if(USART_GetITStatus(USART6,USART_IT_IDLE)!=RESET)
+	{		
+		Uart6_DMA_Rx_Data();
+		rec_data = USART_ReceiveData(USART6);
+    printf("%c",rec_data);
+	}	 
+  
+  /* 退出临界段 */
+  taskEXIT_CRITICAL_FROM_ISR( ulReturn );
+} 
+
 // extern USB_OTG_CORE_HANDLE  USB_OTG_dev;
 
 // /* Private function prototypes -----------------------------------------------*/

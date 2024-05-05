@@ -55,7 +55,27 @@
 			"module.h": "c",
 			"atproc.h": "c",
 			"bsp_rtc.h": "c",
-			"log.h": "c"
+			"log.h": "c",
+			"lcd.h": "c",
+			"oledfont.h": "c",
+			"lcd_demo.h": "c",
+			"lvgl.h": "c",
+			"lv_port_disp.h": "c",
+			"lv_port_indev.h": "c",
+			"lv_port_fs.h": "c",
+			"lv_demo_widgets.h": "c",
+			"lv_obj.h": "c",
+			"lv_group.h": "c",
+			"lv_demos.h": "c",
+			"lv_log.h": "c",
+			"mem.h": "c",
+			"string_view": "c",
+			"stdint.h": "c",
+			"netconf.h": "c",
+			"user.h": "c",
+			"user_define.h": "c",
+			"lv_conf.h": "c",
+			"bsp_usart6.h": "c"
 		}
 	}
 }

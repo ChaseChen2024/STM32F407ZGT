@@ -1,7 +1,6 @@
 #if 1
 #include "Usb_demo.h"
 
-
 #include <string.h>
 
 /* FreeRTOSÍ·ÎÄ¼þ */

@@ -1,4 +1,4 @@
-
+#if 0
 #include "Rtc_demo.h"
 #include "Sntp_demo.h"
 #include "bsp_rtc.h"
@@ -478,4 +478,5 @@ long SNTP_Demo_Task_Init(void)
 													(TaskHandle_t*  )&SNTP_Demo_Task_Handle);/* 任务控制块指针 */ 
 		return xReturn;
 }
+#endif
 #endif

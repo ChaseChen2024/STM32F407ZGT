@@ -20,11 +20,8 @@ static TaskHandle_t RTC_Demo_Task_Handle = NULL;/* RTC任务句柄 */
 static void RTC_Demo_Task(void* parameter)
 {	
 //	int a=0,b=0,c=0;
-  while (1)
-  {
     /* 显示时间和日期 */
 		RTC_TimeAndDate_Show();
-  }
 }
 
 
@@ -43,7 +40,7 @@ long RTC_Demo_Task_Init(void)
 }
 void Rtc_Bsp_Init(void)
 {
-	/* 按键初始化	*/
   Rtc_Init();
+  printf("[%s],[%d],[%s]\r\n",__FUNCTION__,__LINE__,"RTC init");
 }
 #endif

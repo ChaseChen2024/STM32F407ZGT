@@ -79,7 +79,7 @@ void RTC_CLK_Config(void)
 	RTC_InitTypeDef RTC_InitStructure;
 	
 	/*使能 PWR 时钟*/
-  RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
+//  RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
   /* PWR_CR:DBF置1，使能RTC、RTC备份寄存器和备份SRAM的访问 */
   PWR_BackupAccessCmd(ENABLE);
 
@@ -226,7 +226,7 @@ void Rtc_Init(void)
 		printf("\r\n 不需要重新配置RTC....\r\n");
 		
 		/* 使能 PWR 时钟 */
-		RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
+		// RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
 		/* PWR_CR:DBF置1，使能RTC、RTC备份寄存器和备份SRAM的访问 */
 		PWR_BackupAccessCmd(ENABLE);
 		/* 等待 RTC APB 寄存器同步 */

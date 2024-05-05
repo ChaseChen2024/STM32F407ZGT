@@ -7,7 +7,7 @@
 #define USE_LCD_DISPLAY
 
 // 时钟源宏定义
-//#define RTC_CLOCK_SOURCE_LSE      
+// #define RTC_CLOCK_SOURCE_LSE
 #define RTC_CLOCK_SOURCE_LSI
 
 // 异步分频因子

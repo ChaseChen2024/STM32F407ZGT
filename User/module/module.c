@@ -45,7 +45,7 @@ static void MODULE_USART_Config(void)
   GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
 
-  GPIO_InitStructure.GPIO_Pin = MODULE_USART_TX_PIN  ;
+  GPIO_InitStructure.GPIO_Pin = MODULE_USART_TX_PIN;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_Init(MODULE_USART_TX_GPIO_PORT, &GPIO_InitStructure);
 
