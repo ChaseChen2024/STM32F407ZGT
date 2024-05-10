@@ -100,3 +100,7 @@ download_jlink:
 6、开启RTC时钟。
 
 7、使用UART6+DMA与GPS进行数据交互。
+
+
+# 20240510修改
+1、添加开源NMEA0183解析器，开源地址 https://gitee.com/armxu/NMEA0183-C.git  仅做搭建时使用，后续有必要，需要重写

@@ -21,7 +21,8 @@
 #include "bsp_key.h"
 /*device*/
 
-
+#include <string.h>
+#include <stdio.h>
 
 //  EXSRAM
 #define __EXRAM  __attribute__ ((section (".ext_sram")))

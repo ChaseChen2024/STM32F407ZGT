@@ -6,11 +6,11 @@
 #include <stdio.h>
 #include "stm32f4xx_conf.h"
 
-#define UART6_BUFF_SIZE 512
+#define UART6_BUFF_SIZE 1024
 #define USART                             USART6
 
 #define USART_CLK                         RCC_APB2Periph_USART6
-#define USART_BAUDRATE                    115200
+#define USART_BAUDRATE                    9600
 
 #define USART_RX_GPIO_PORT                GPIOC
 #define USART_RX_GPIO_CLK                 RCC_AHB1Periph_GPIOC

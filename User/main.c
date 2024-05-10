@@ -30,7 +30,7 @@
 #include "atproc.h"
 
 #include "my_gui.h"
-
+#include "gnss.h"
 
 static TaskHandle_t AppTaskCreate_Handle = NULL;
 
@@ -78,26 +78,6 @@ int main(void)
   
   while(1);
 }
-char Usart6_Rx_Buf[UART6_BUFF_SIZE];
-static TaskHandle_t Uart6_Demo_Task_Handle = NULL;
-SemaphoreHandle_t Uart6_BinarySem_Handle =NULL;
-static void Uart6_Demo_Task(void* parameter)
-{
-		uint8_t recv_data[UART6_BUFF_SIZE];
-    uint32_t recv_data_len = 0;
-    Usart_SendString(USART6,"111111111");
-    printf("[%s],[%d],[%s]\r\n",__FUNCTION__,__LINE__,"Uart6_Demo_Task ssssssssssssssssss");
-    while (1)
-    {
-      xSemaphoreTake(Uart6_BinarySem_Handle, portMAX_DELAY);
-      memset(recv_data,0,UART6_BUFF_SIZE);
-      memcpy(recv_data,Usart6_Rx_Buf,sizeof(Usart6_Rx_Buf));
-	    memset(Usart6_Rx_Buf,0,UART6_BUFF_SIZE);
-      printf("[%s],[%d],[%s]\r\n",__FUNCTION__,__LINE__,recv_data);
-      //vTaskDelay(1000);
-    }
-    
-}
 
 extern void lv_demo_widgets(void);
 extern void lv_demo_stress(void);
@@ -130,10 +110,7 @@ static void AppTaskCreate(void)
   printf("[%s],[%d],[%s]\r\n",__FUNCTION__,__LINE__,"run lvgl handler");
   taskENTER_CRITICAL();
 
-  Uart6_BinarySem_Handle = xSemaphoreCreateBinary();	
-  xReturn = xTaskCreate(Uart6_Demo_Task,"Uart6_Demo_Task",2048,NULL,2,&Uart6_Demo_Task_Handle);
-  if(pdPASS == xReturn)
-    printf("[%s],[%d],[%s]\r\n",__FUNCTION__,__LINE__,"Uart6_Demo");
+  Gnss_Resolve_Task_Init();
 #if 0
 	xReturn = FatFs_Demo_Task_Init();
 	if(pdPASS == xReturn)
@@ -190,9 +167,7 @@ static void BSP_Init(void)
   
 	Debug_USART_Config();
   USART6_Config();
-  // uart6_init(115200);
   // MODULE_INIT();
-  // uart6SendChars("UART6 TEST",11);
   FSMC_SRAM_Init();
   Key_Bsp_Init();
   lcd_hardware_init();//st7789 lcd handle init

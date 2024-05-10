@@ -214,7 +214,6 @@ void USART6_IRQHandler(void)
 	{		
 		Uart6_DMA_Rx_Data();
 		rec_data = USART_ReceiveData(USART6);
-    printf("%c",rec_data);
 	}	 
   
   /* ÍË³öÁÙ½ç¶Î */

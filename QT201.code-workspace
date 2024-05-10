@@ -75,7 +75,9 @@
 			"user.h": "c",
 			"user_define.h": "c",
 			"lv_conf.h": "c",
-			"bsp_usart6.h": "c"
+			"bsp_usart6.h": "c",
+			"gnss.h": "c",
+			"nmea0183.h": "c"
 		}
 	}
 }

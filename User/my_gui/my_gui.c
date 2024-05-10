@@ -1,7 +1,7 @@
 #include "my_gui.h"
 #include "lvgl.h"
 #include "bsp_rtc.h"
-
+#include "gnss.h"
 extern lv_indev_t * indev_keypad;
 
 typedef struct
@@ -36,32 +36,48 @@ struct
     int bat;
 }LvglTopViewParm = {0};
 
+struct
+{
+    lv_obj_t* home_label;
+    lv_obj_t * speed_label;
+    lv_timer_t * timer;
+
+}LvglHomeViewParm = {0};
+
 static lv_style_t main_style;
+
+void home_sig_timer_cb(lv_timer_t *timer)
+{
+    lv_label_set_text_fmt(LvglHomeViewParm.speed_label,"%d.%d",get_gnss_speed()/10,get_gnss_speed()%10);
+}
 //首页信息
 void home_table_view(lv_obj_t *home_tab)
 {
 
-    //当前速度
-    lv_obj_t * speed_label = lv_label_create(home_tab);
-    lv_label_set_text_fmt(speed_label,"%d.%d",My_Gps_Data.speed/10,My_Gps_Data.speed%10);
-    lv_obj_set_style_text_font(speed_label,&lv_font_montserrat_40,0);
+    if(LvglHomeViewParm.speed_label == NULL)
+    {
+        LvglHomeViewParm.speed_label = lv_label_create(home_tab);
+        lv_label_set_text_fmt(LvglHomeViewParm.speed_label,"%d.%d",get_gnss_speed()/10,get_gnss_speed()%10);
+    }
+   
+    lv_obj_set_style_text_font( LvglHomeViewParm.speed_label,&lv_font_montserrat_40,0);
     //lv_obj_set_style_border_width(speed_label,1,0);
-    lv_obj_set_size(speed_label,214,60);
-    lv_obj_align_to(speed_label,home_tab,LV_ALIGN_TOP_MID,0,0);
-    lv_obj_set_style_text_color(speed_label, lv_color_make(255,255,255), 0);
+    lv_obj_set_size( LvglHomeViewParm.speed_label,214,60);
+    lv_obj_align_to( LvglHomeViewParm.speed_label,home_tab,LV_ALIGN_TOP_MID,0,0);
+    lv_obj_set_style_text_color( LvglHomeViewParm.speed_label, lv_color_make(255,255,255), 0);
 
     auto fontHeight = lv_font_get_line_height(&lv_font_montserrat_40);
     auto verPad = (40 - fontHeight)/2;
-    lv_obj_set_style_pad_top(speed_label, verPad, 0);
-    auto textWidth = lv_txt_get_width(lv_label_get_text(speed_label), strlen(lv_label_get_text(speed_label)), &lv_font_montserrat_40, 0,0);
+    lv_obj_set_style_pad_top( LvglHomeViewParm.speed_label, verPad, 0);
+    auto textWidth = lv_txt_get_width(lv_label_get_text( LvglHomeViewParm.speed_label), strlen(lv_label_get_text( LvglHomeViewParm.speed_label)), &lv_font_montserrat_40, 0,0);
     auto horPad = (214 - textWidth)/2;
-    lv_obj_set_style_pad_left(speed_label, horPad, 0);
+    lv_obj_set_style_pad_left( LvglHomeViewParm.speed_label, horPad, 0);
 
 
-    lv_obj_t * speed_label_KM = lv_label_create(speed_label);
+    lv_obj_t * speed_label_KM = lv_label_create( LvglHomeViewParm.speed_label);
     lv_label_set_text(speed_label_KM, "km/h");
     lv_obj_set_style_text_font(speed_label_KM,&lv_font_montserrat_14,0);
-    lv_obj_align_to(speed_label_KM,speed_label,LV_ALIGN_BOTTOM_MID,-30,0);
+    lv_obj_align_to(speed_label_KM, LvglHomeViewParm.speed_label,LV_ALIGN_BOTTOM_MID,-30,0);
 
 
     //平均速度
@@ -161,6 +177,12 @@ void home_table_view(lv_obj_t *home_tab)
     lv_obj_set_style_text_font(calorie_label_cal,&lv_font_montserrat_14,0);
     lv_obj_align_to(calorie_label_cal,calorie_label,LV_ALIGN_BOTTOM_MID,-10,0);
 
+    //创建定时器
+    if(LvglHomeViewParm.timer == NULL)
+    {
+        LvglHomeViewParm.timer = lv_timer_create(home_sig_timer_cb,1000,NULL);
+
+    }
 }
 
 static void return_but_event_handler(lv_event_t * e)
@@ -237,6 +259,8 @@ void top_sig_timer_cb(lv_timer_t *timer)
     RTC_TimeTypeDef RTC_TimeStructure_lvgl;
     RTC_GetTime(RTC_Format_BIN, &RTC_TimeStructure_lvgl);
     lv_label_set_text_fmt(LvglTopViewParm.rtc_label,"%02d:%02d:%02d",RTC_TimeStructure_lvgl.RTC_Hours,RTC_TimeStructure_lvgl.RTC_Minutes,RTC_TimeStructure_lvgl.RTC_Seconds);
+
+    lv_label_set_text_fmt(LvglTopViewParm.satellite_label,"%s %d",LV_SYMBOL_GPS,get_gnss_satellite_num());
     //printf("top_sig_timer_cb，top_sig_timer_cb: %d\r\n",LvglTopViewParm.bat);
 
 
@@ -250,14 +274,13 @@ void top_label_sig(lv_obj_t *top_label)
     if(LvglTopViewParm.satellite_label == NULL)
     {
         LvglTopViewParm.satellite_label = lv_label_create(top_label);
-        lv_label_set_text_fmt(LvglTopViewParm.satellite_label,"%s %d",LV_SYMBOL_GPS,My_Gps_Data.satellite_num);
+        lv_label_set_text_fmt(LvglTopViewParm.satellite_label,"%s %d",LV_SYMBOL_GPS,get_gnss_satellite_num());
     }
     lv_obj_set_style_text_font(LvglTopViewParm.satellite_label,&lv_font_montserrat_14,0);
     lv_obj_set_size(LvglTopViewParm.satellite_label,30,20);
     lv_obj_align_to(LvglTopViewParm.satellite_label,top_label,LV_ALIGN_TOP_LEFT,0,0);
     lv_obj_set_style_text_color(LvglTopViewParm.satellite_label, lv_color_make(255,255,255), 0);
 
-    // int h=10,m=02,s=22;
     RTC_TimeTypeDef RTC_TimeStructure_lvgl;
     RTC_GetTime(RTC_Format_BIN, &RTC_TimeStructure_lvgl);
     if(LvglTopViewParm.rtc_label == NULL)

@@ -21,7 +21,8 @@ User/app/usbd_storage_msd.c \
 User/app/usbd_usr.c \
 User/lcd/lcd.c \
 User/my_gui/my_gui.c \
-
+User/GNSS/gnss.c \
+User/GNSS/NMEA0183.c \
 
 
 #demo 
@@ -48,7 +49,7 @@ C_INCLUDES +=  \
 -IUser/lcd \
 -IUser/user_demo/inc \
 -IUser/my_gui \
-
+-IUser/GNSS \
 
 ifeq ($(BUILE_LWIP),y)
 C_SOURCES +=  \

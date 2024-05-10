@@ -9,7 +9,6 @@ static void Usart6_NVIC_Configuration(void)
 {
   NVIC_InitTypeDef NVIC_InitStructure;
   
-  /* 嵌套向量中断控制器组选择 */
   // NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
 
   NVIC_InitStructure.NVIC_IRQChannel = USART_IRQ;
