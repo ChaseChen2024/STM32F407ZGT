@@ -106,4 +106,4 @@ download_jlink:
 1、添加开源NMEA0183解析器，开源地址 https://gitee.com/armxu/NMEA0183-C.git  仅做搭建时使用，后续有必要，需要重写
 
 # 20240512修改
-添加开源的LVGL页面管理器，完成基本的页面交互流程
+添加开源的LVGL页面管理器，完成基本的页面交互流程，开源地址https://gitee.com/onedevice/lvgl-pm.git
