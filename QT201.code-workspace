@@ -77,7 +77,14 @@
 			"lv_conf.h": "c",
 			"bsp_usart6.h": "c",
 			"gnss.h": "c",
-			"nmea0183.h": "c"
+			"nmea0183.h": "c",
+			"my_gui.h": "c",
+			"pm.h": "c",
+			"anima.h": "c",
+			"pm_utils.h": "c",
+			"lv_gc.h": "c",
+			"lv_indev.h": "c",
+			"lv_conf_internal.h": "c"
 		}
 	}
 }

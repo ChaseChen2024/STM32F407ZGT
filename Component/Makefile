@@ -308,7 +308,6 @@ C_INCLUDES +=  \
 -IComponent/lvgl/demos/widgets/assets \
 
 
-
 CFLAGS += $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
 
 

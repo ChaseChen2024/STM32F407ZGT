@@ -101,12 +101,10 @@ static void AppTaskCreate(void)
   // lv_port_fs_init();  
   // lv_demo_widgets();
   // lv_demo_stress();
-  
-  my_gui_xtrack();
-  //my_gui();
+  xtrack_start();
   printf("[%s],[%d],[%s]\r\n",__FUNCTION__,__LINE__,"run my gui xtrack");
   MutexSemaphore=xSemaphoreCreateMutex(); 
-  xTaskCreate(lvgl_handler, "lvgl_handler", 1000, NULL, 3, NULL);
+  xTaskCreate(lvgl_handler, "lvgl_handler", 1000, NULL, 10, NULL);
   printf("[%s],[%d],[%s]\r\n",__FUNCTION__,__LINE__,"run lvgl handler");
   taskENTER_CRITICAL();
 

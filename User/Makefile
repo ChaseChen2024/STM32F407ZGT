@@ -23,6 +23,9 @@ User/lcd/lcd.c \
 User/my_gui/my_gui.c \
 User/GNSS/gnss.c \
 User/GNSS/NMEA0183.c \
+User/pg/pm_utils.c \
+User/pg/pm.c \
+User/pg/anima.c \
 
 
 #demo 
@@ -50,6 +53,7 @@ C_INCLUDES +=  \
 -IUser/user_demo/inc \
 -IUser/my_gui \
 -IUser/GNSS \
+-IUser/pg \
 
 ifeq ($(BUILE_LWIP),y)
 C_SOURCES +=  \
