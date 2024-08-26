@@ -403,7 +403,6 @@ static void SNTP_Demo_Task(void* parameter)
 	LwIP_NW_Init();
 	
 	printf("sntp init111\r\n");
-//	vTaskDelay(100);
 	uint32_t data[12]; //发送数据包
 	uint8_t buf[NTP_PACKET_SIZE];
     size_t nbytes = NTP_PACKET_SIZE;

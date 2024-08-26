@@ -28,7 +28,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "usbd_msc_mem.h"
 #include "usb_conf.h"
-#include "./flash/bsp_spi_flash.h"
+#include "bsp_spi_flash.h"
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
   * @{

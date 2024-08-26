@@ -1,5 +1,5 @@
 
-#include "./flash/bsp_spi_flash.h"
+#include "bsp_spi_flash.h"
 
 #ifdef  USB_SPI_TIMEOUT
 static __IO uint32_t  SPITimeout = SPIT_LONG_TIMEOUT;   

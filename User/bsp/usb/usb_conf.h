@@ -31,7 +31,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx.h"
-#include "./flash/bsp_spi_flash.h"
+#include "bsp_spi_flash.h"
 
 
 /** @addtogroup USB_OTG_DRIVER

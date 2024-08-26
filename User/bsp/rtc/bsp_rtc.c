@@ -1,6 +1,6 @@
 
 #include "stm32f4xx.h"
-#include "./RTC/bsp_rtc.h"
+#include "bsp_rtc.h"
 #include "bsp_debug_usart.h"
 
  

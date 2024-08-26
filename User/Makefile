@@ -4,21 +4,21 @@
 C_SOURCES +=  \
 User/main.c \
 User/stm32f4xx_it.c \
-User/uart/bsp_debug_usart.c \
-User/uart/bsp_usart6.c \
-User/key/bsp_key.c \
-User/led/bsp_led.c \
-User/rtc/bsp_rtc.c \
-User/flash/bsp_spi_flash.c \
-User/sdio/bsp_sdio_sd.c \
-User/sram/bsp_sram.c \
-User/app/usb_bsp.c \
-User/app/usbd_desc.c \
-User/app/usbd_storage_msd.c \
-User/app/usbd_usr.c \
-User/lcd/lcd.c \
-User/GNSS/gnss.c \
-User/GNSS/NMEA0183.c \
+User/bsp/uart/bsp_debug_usart.c \
+User/bsp/uart/bsp_usart6.c \
+User/bsp/key/bsp_key.c \
+User/bsp/led/bsp_led.c \
+User/bsp/rtc/bsp_rtc.c \
+User/bsp/flash/bsp_spi_flash.c \
+User/bsp/sdio/bsp_sdio_sd.c \
+User/bsp/sram/bsp_sram.c \
+User/bsp/usb/usb_bsp.c \
+User/bsp/usb/usbd_desc.c \
+User/bsp/usb/usbd_storage_msd.c \
+User/usb/usbd_usr.c \
+User/bsp/lcd/lcd.c \
+User/bsp/GNSS/gnss.c \
+User/bsp/GNSS/NMEA0183.c \
 
 
 ifeq ($(BUILE_LVGL),y)
@@ -41,26 +41,26 @@ User/user_demo/src/Lcd_demo.c \
 
 C_INCLUDES +=  \
 -IUser \
--IUser/uart \
--IUser/key \
--IUser/led \
--IUser/rtc \
--IUser/flash \
--IUser/sdio \
--IUser/app \
--IUser/sram \
--IUser/lcd \
+-IUser/bsp/uart \
+-IUser/bsp/key \
+-IUser/bsp/led \
+-IUser/bsp/rtc \
+-IUser/bsp/flash \
+-IUser/bsp/sdio \
+-IUser/bsp/usb \
+-IUser/bsp/sram \
+-IUser/bsp/lcd \
 -IUser/user_demo/inc \
 -IUser/my_gui \
--IUser/GNSS \
+-IUser/bsp/GNSS \
 -IUser/pg \
 
 ifeq ($(BUILE_LWIP),y)
 C_SOURCES +=  \
-User/ETH/stm32f4x7_phy.c \
-User/arch/sys_arch.c \
-User/arch/ethernetif.c \
-User/arch/netconf.c \
+User/bsp/ETH/stm32f4x7_phy.c \
+User/bsp/arch/sys_arch.c \
+User/bsp/arch/ethernetif.c \
+User/bsp/arch/netconf.c \
 
 #demo 
 C_SOURCES +=  \
@@ -71,8 +71,8 @@ User/user_demo/src/client.c \
 
 
 C_INCLUDES +=  \
--IUser/ETH \
--IUser/arch \
+-IUser/bsp/ETH \
+-IUser/bsp/arch \
 
 endif
 

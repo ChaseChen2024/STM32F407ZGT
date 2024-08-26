@@ -1,6 +1,6 @@
 #if 1
 #include "Sdio_demo.h"
-#include "./sdio/bsp_sdio_sd.h"
+#include "bsp_sdio_sd.h"
 #include <string.h>
 
 /* FreeRTOS头文件 */

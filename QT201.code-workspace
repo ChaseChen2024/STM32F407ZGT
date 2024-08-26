@@ -86,7 +86,8 @@
 			"lv_indev.h": "c",
 			"lv_conf_internal.h": "c",
 			"mqttclient.h": "c",
-			"mqttfreertos.h": "c"
+			"mqttfreertos.h": "c",
+			"cc.h": "c"
 		}
 	}
 }

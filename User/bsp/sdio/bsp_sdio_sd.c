@@ -222,7 +222,7 @@
   */ 
 
 /* Includes ------------------------------------------------------------------*/
-#include "./sdio/bsp_sdio_sd.h"
+#include "bsp_sdio_sd.h"
 
 
 /** @addtogroup Utilities
