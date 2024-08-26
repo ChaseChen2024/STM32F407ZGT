@@ -42,7 +42,7 @@
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-void LwIP_Init(void);
+void LwIP_NW_Init(void);
 void LwIP_Periodic_Handle(uint32_t localtime);
 
 #ifdef __cplusplus

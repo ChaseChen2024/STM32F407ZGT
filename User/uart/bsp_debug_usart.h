@@ -5,18 +5,18 @@
 #include <stdio.h>
 #include "stm32f4xx_conf.h"
 
-//引脚定义
+//脪媒陆脜露篓脪氓
 /*******************************************************/
 #define DEBUG_USART                             USART1
 
-/* 不同的串口挂载的总线不一样，时钟使能函数也不一样，移植时要注意
-* 串口1和6是      RCC_APB2PeriphClockCmd
-* 串口2/3/4/5是    RCC_APB1PeriphClockCmd
+/* 虏禄脥卢碌脛麓庐驴脷鹿脪脭脴碌脛脳脺脧脽虏禄脪禄脩霉拢卢脢卤脰脫脢鹿脛脺潞炉脢媒脪虏虏禄脪禄脩霉拢卢脪脝脰虏脢卤脪陋脳垄脪芒
+* 麓庐驴脷1潞脥6脢脟      RCC_APB2PeriphClockCmd
+* 麓庐驴脷2/3/4/5脢脟    RCC_APB1PeriphClockCmd
 */
 
 
 #define DEBUG_USART_CLK                         RCC_APB2Periph_USART1
-#define DEBUG_USART_BAUDRATE                    115200  //串口波特率
+#define DEBUG_USART_BAUDRATE                    115200  //麓庐驴脷虏篓脤脴脗脢
 
 #define DEBUG_USART_RX_GPIO_PORT                GPIOA
 #define DEBUG_USART_RX_GPIO_CLK                 RCC_AHB1Periph_GPIOA

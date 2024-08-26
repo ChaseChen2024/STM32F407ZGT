@@ -17,9 +17,9 @@ static void NVIC_Configuration(void)
   /* 配置USART为中断源 */
   NVIC_InitStructure.NVIC_IRQChannel = DEBUG_USART_IRQ;
   /* 抢断优先级为1 */
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;
   /* 子优先级为1 */
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
+  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
   /* 使能中断 */
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   /* 初始化配置NVIC */

@@ -28,8 +28,8 @@ static void Gnss_Resolve_Task(void* parameter)
           ///解析代码成功 
         }
       }
-      // printf("[%s],[%d],[%d/%d/%d:%d]\r\n",__FUNCTION__,__LINE__,nmea0183.gpsData.date_time.year,nmea0183.gpsData.date_time.month,nmea0183.gpsData.date_time.day,nmea0183.gpsParse.new_time);
-      // printf("[%s],[%d],[卫星数:%d]\r\n",__FUNCTION__,__LINE__,nmea0183.gpsParse.new_satellite_count);
+       printf("[%s],[%d],[%d/%d/%d:%d]\r\n",__FUNCTION__,__LINE__,nmea0183.gpsData.date_time.year,nmea0183.gpsData.date_time.month,nmea0183.gpsData.date_time.day,nmea0183.gpsParse.new_time);
+       printf("[%s],[%d],[卫星数:%d]\r\n",__FUNCTION__,__LINE__,nmea0183.gpsParse.new_satellite_count);
     }
     
 }
@@ -55,5 +55,17 @@ uint8_t get_gnss_satellite_num(void)
 int get_gnss_speed(void)
 {
   return nmea0183.gpsData.ground_speed * 10;
+}
+int get_gnss_time(struct tm *time_info)
+{
+	unsigned int v = nmea0183.gpsParse.new_time;
+    time_info->tm_sec  = v % 100; v /= 100;
+    time_info->tm_min  = v % 100; v /= 100;
+    time_info->tm_hour = v % 100; v /= 100;
+
+	time_info->tm_mday = nmea0183.gpsData.date_time.day;
+	time_info->tm_mon = nmea0183.gpsData.date_time.month;
+	time_info->tm_year = nmea0183.gpsData.date_time.year;
+  	return 0;
 }
 #endif

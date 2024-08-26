@@ -3,85 +3,85 @@
 #include "bsp_exti.h"
 
  /**
-  * @brief  ÅäÖÃÇ¶Ì×ÏòÁ¿ÖĞ¶Ï¿ØÖÆÆ÷NVIC
-  * @param  ÎŞ
-  * @retval ÎŞ
+  * @brief  é…ç½®åµŒå¥—å‘é‡ä¸­æ–­æ§åˆ¶å™¨NVIC
+  * @param  æ— 
+  * @retval æ— 
   */
 static void NVIC_Configuration(void)
 {
   NVIC_InitTypeDef NVIC_InitStructure;
   
-  /* ÅäÖÃNVICÎªÓÅÏÈ¼¶×é1 */
+  /* é…ç½®NVICä¸ºä¼˜å…ˆçº§ç»„1 */
   // NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
   
-  /* ÅäÖÃÖĞ¶ÏÔ´£º°´¼ü1 */
+  /* é…ç½®ä¸­æ–­æºï¼šæŒ‰é”®1 */
   NVIC_InitStructure.NVIC_IRQChannel = KEY1_INT_EXTI_IRQ;
-  /* ÅäÖÃÇÀÕ¼ÓÅÏÈ¼¶£º1 */
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
-  /* ÅäÖÃ×ÓÓÅÏÈ¼¶£º1 */
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
-  /* Ê¹ÄÜÖĞ¶ÏÍ¨µÀ */
+  /* é…ç½®æŠ¢å ä¼˜å…ˆçº§ï¼š1 */
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;
+  /* é…ç½®å­ä¼˜å…ˆçº§ï¼š1 */
+  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+  /* ä½¿èƒ½ä¸­æ–­é€šé“ */
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_Init(&NVIC_InitStructure);
   
-  /* ÅäÖÃÖĞ¶ÏÔ´£º°´¼ü2£¬ÆäËûÊ¹ÓÃÉÏÃæÏà¹ØÅäÖÃ */  
+  /* é…ç½®ä¸­æ–­æºï¼šæŒ‰é”®2ï¼Œå…¶ä»–ä½¿ç”¨ä¸Šé¢ç›¸å…³é…ç½® */  
   NVIC_InitStructure.NVIC_IRQChannel = KEY2_INT_EXTI_IRQ;
   NVIC_Init(&NVIC_InitStructure);
 }
 
  /**
-  * @brief  ÅäÖÃ PA0 ÎªÏßÖĞ¶Ï¿Ú£¬²¢ÉèÖÃÖĞ¶ÏÓÅÏÈ¼¶
-  * @param  ÎŞ
-  * @retval ÎŞ
+  * @brief  é…ç½® PA0 ä¸ºçº¿ä¸­æ–­å£ï¼Œå¹¶è®¾ç½®ä¸­æ–­ä¼˜å…ˆçº§
+  * @param  æ— 
+  * @retval æ— 
   */
 void EXTI_Key_Config(void)
 {
 	GPIO_InitTypeDef GPIO_InitStructure; 
 	EXTI_InitTypeDef EXTI_InitStructure;
   
-	/*¿ªÆô°´¼üGPIO¿ÚµÄÊ±ÖÓ*/
+	/*å¼€å¯æŒ‰é”®GPIOå£çš„æ—¶é’Ÿ*/
 	RCC_AHB1PeriphClockCmd(KEY1_INT_GPIO_CLK|KEY2_INT_GPIO_CLK ,ENABLE);
   
-  /* Ê¹ÄÜ SYSCFG Ê±ÖÓ £¬Ê¹ÓÃGPIOÍâ²¿ÖĞ¶ÏÊ±±ØĞëÊ¹ÄÜSYSCFGÊ±ÖÓ*/
+  /* ä½¿èƒ½ SYSCFG æ—¶é’Ÿ ï¼Œä½¿ç”¨GPIOå¤–éƒ¨ä¸­æ–­æ—¶å¿…é¡»ä½¿èƒ½SYSCFGæ—¶é’Ÿ*/
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
   
-  /* ÅäÖÃ NVIC */
+  /* é…ç½® NVIC */
   NVIC_Configuration();
   
-	/* Ñ¡Ôñ°´¼ü1µÄÒı½Å */ 
+	/* é€‰æ‹©æŒ‰é”®1çš„å¼•è„š */ 
   GPIO_InitStructure.GPIO_Pin = KEY1_INT_GPIO_PIN;
-  /* ÉèÖÃÒı½ÅÎªÊäÈëÄ£Ê½ */ 
+  /* è®¾ç½®å¼•è„šä¸ºè¾“å…¥æ¨¡å¼ */ 
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;	    		
-  /* ÉèÖÃÒı½Å²»ÉÏÀ­Ò²²»ÏÂÀ­ */
+  /* è®¾ç½®å¼•è„šä¸ä¸Šæ‹‰ä¹Ÿä¸ä¸‹æ‹‰ */
   GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-  /* Ê¹ÓÃÉÏÃæµÄ½á¹¹Ìå³õÊ¼»¯°´¼ü */
+  /* ä½¿ç”¨ä¸Šé¢çš„ç»“æ„ä½“åˆå§‹åŒ–æŒ‰é”® */
   GPIO_Init(KEY1_INT_GPIO_PORT, &GPIO_InitStructure); 
 
-	/* Á¬½Ó EXTI ÖĞ¶ÏÔ´ µ½key1Òı½Å */
+	/* è¿æ¥ EXTI ä¸­æ–­æº åˆ°key1å¼•è„š */
   SYSCFG_EXTILineConfig(KEY1_INT_EXTI_PORTSOURCE,KEY1_INT_EXTI_PINSOURCE);
 
-  /* Ñ¡Ôñ EXTI ÖĞ¶ÏÔ´ */
+  /* é€‰æ‹© EXTI ä¸­æ–­æº */
   EXTI_InitStructure.EXTI_Line = KEY1_INT_EXTI_LINE;
-  /* ÖĞ¶ÏÄ£Ê½ */
+  /* ä¸­æ–­æ¨¡å¼ */
   EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
-  /* ÏÂ½µÑØ´¥·¢ */
+  /* ä¸‹é™æ²¿è§¦å‘ */
   EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising;  
-  /* Ê¹ÄÜÖĞ¶Ï/ÊÂ¼şÏß */
+  /* ä½¿èƒ½ä¸­æ–­/äº‹ä»¶çº¿ */
   EXTI_InitStructure.EXTI_LineCmd = ENABLE;
   EXTI_Init(&EXTI_InitStructure);
   
-  /* Ñ¡Ôñ°´¼ü2µÄÒı½Å */ 
+  /* é€‰æ‹©æŒ‰é”®2çš„å¼•è„š */ 
   GPIO_InitStructure.GPIO_Pin = KEY2_INT_GPIO_PIN;  
-  /* ÆäËûÅäÖÃÓëÉÏÃæÏàÍ¬ */
+  /* å…¶ä»–é…ç½®ä¸ä¸Šé¢ç›¸åŒ */
   GPIO_Init(KEY2_INT_GPIO_PORT, &GPIO_InitStructure);      
 
-	/* Á¬½Ó EXTI ÖĞ¶ÏÔ´ µ½key2 Òı½Å */
+	/* è¿æ¥ EXTI ä¸­æ–­æº åˆ°key2 å¼•è„š */
   SYSCFG_EXTILineConfig(KEY2_INT_EXTI_PORTSOURCE,KEY2_INT_EXTI_PINSOURCE);
 
-  /* Ñ¡Ôñ EXTI ÖĞ¶ÏÔ´ */
+  /* é€‰æ‹© EXTI ä¸­æ–­æº */
   EXTI_InitStructure.EXTI_Line = KEY2_INT_EXTI_LINE;
   EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
-  /* ÉÏÉıÑØ´¥·¢ */
+  /* ä¸Šå‡æ²¿è§¦å‘ */
   EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;  
   EXTI_InitStructure.EXTI_LineCmd = ENABLE;
   EXTI_Init(&EXTI_InitStructure);

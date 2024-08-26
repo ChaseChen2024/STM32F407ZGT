@@ -19,10 +19,17 @@
 #include "bsp_sram.h"	
 #include "bsp_led.h"
 #include "bsp_key.h"
+
+#include "usbd_msc_core.h"
+#include "usbd_usr.h"
+#include "usbd_desc.h"
+#include "usb_conf.h"
+
 /*device*/
 
 #include <string.h>
 #include <stdio.h>
+#include <time.h>
 
 //  EXSRAM
 #define __EXRAM  __attribute__ ((section (".ext_sram")))

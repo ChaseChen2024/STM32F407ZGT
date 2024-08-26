@@ -84,7 +84,9 @@
 			"pm_utils.h": "c",
 			"lv_gc.h": "c",
 			"lv_indev.h": "c",
-			"lv_conf_internal.h": "c"
+			"lv_conf_internal.h": "c",
+			"mqttclient.h": "c",
+			"mqttfreertos.h": "c"
 		}
 	}
 }

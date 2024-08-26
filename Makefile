@@ -33,7 +33,11 @@ ASMM_SOURCES =
 
 ######
 #
-BUILE_LWIP = n
+BUILE_LWIP = y
+
+BUILE_LVGL = n
+
+BUILE_MQTT = y
 
 #######################################
 # binaries
@@ -81,9 +85,20 @@ C_DEFS =  \
 
 
 ifeq ($(BUILE_LWIP),y)
-C_DEFS = -DUSE_EMBEDDED_PHY -DUSE_LWIP
+C_DEFS += -DUSE_EMBEDDED_PHY -DUSE_LWIP\
 
 endif
+
+ifeq ($(BUILE_LVGL),y)
+C_DEFS += -DUSE_LVGL\
+
+
+ifeq ($(BUILE_MQTT),y)
+# C_DEFS += -DMQTT_TASK\
+
+endif
+endif
+
 
 # AS includes
 AS_INCLUDES =  \
@@ -171,7 +186,7 @@ clean:
 
 #…’¬º√¸¡Ó
 down:
-	-openocd -f TOOL/debug/stlink-v2.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08000000" -c reset -c shutdown
+	-openocd -f TOOL/debug/stlink.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08000000" -c reset -c shutdown
 download_dap:
 	-openocd -f TOOL/debug/cmsis-dap-v1.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08000000" -c reset -c shutdown
 download_stlinkv2:

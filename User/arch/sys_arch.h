@@ -52,8 +52,8 @@
 /*Static IP ADDRESS: IP_ADDR0.IP_ADDR1.IP_ADDR2.IP_ADDR3 */
 #define IP_ADDR0                    192
 #define IP_ADDR1                    168
-#define IP_ADDR2                      1
-#define IP_ADDR3                    122
+#define IP_ADDR2                     1
+#define IP_ADDR3                     77
 /*NETMASK*/
 #define NETMASK_ADDR0               255
 #define NETMASK_ADDR1               255
@@ -63,7 +63,7 @@
 /*Gateway Address*/
 #define GW_ADDR0                    192
 #define GW_ADDR1                    168
-#define GW_ADDR2                      1
+#define GW_ADDR2                     1
 #define GW_ADDR3                      1
 /** This is returned by _fromisr() sys functions to tell the outermost function
  * that a higher priority task was woken and the scheduler needs to be invoked.

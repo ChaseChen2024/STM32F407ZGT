@@ -9,4 +9,6 @@
 long Gnss_Resolve_Task_Init(void);
 uint8_t get_gnss_satellite_num(void);
 int get_gnss_speed(void);
+int get_gnss_time(struct tm *time_info);
+
 #endif

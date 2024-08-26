@@ -1,4 +1,4 @@
-#if 0
+#if 1
 #include "Rtc_demo.h"
 #include "Sntp_demo.h"
 #include "bsp_rtc.h"
@@ -34,7 +34,8 @@ void sntp_set_time(uint32_t sntp_time);
   ********************************************************************/
 static void SNTP_Demo_Task(void* parameter)
 {	
-	vTaskDelay(10000);
+	LwIP_NW_Init();
+	vTaskDelay(1000);
 //	int a=0,b=0,c=0;
 	Sntp_BSP_Init();
 	// sntp_set_time(1);
@@ -264,9 +265,9 @@ uint32_t osKernelGetTickCount (void) {
   TickType_t ticks;
 
 //   if (IS_IRQ()) {
-    ticks = xTaskGetTickCountFromISR();
+//    ticks = xTaskGetTickCountFromISR();
 //   } else {
-//     ticks = xTaskGetTickCount();
+     ticks = xTaskGetTickCount();
 //   }
 
   return (ticks);
@@ -392,10 +393,17 @@ void lwip_calc_date_time(uint32_t time)
     return;
 
 }
+BaseType_t Dhcp_Client_Task_Init(void);
+
 static void SNTP_Demo_Task(void* parameter)
 {	
-
-	vTaskDelay(2000);
+	
+	printf("sntp init\r\n");
+	
+	LwIP_NW_Init();
+	
+	printf("sntp init111\r\n");
+//	vTaskDelay(100);
 	uint32_t data[12]; //发送数据包
 	uint8_t buf[NTP_PACKET_SIZE];
     size_t nbytes = NTP_PACKET_SIZE;
@@ -405,6 +413,9 @@ static void SNTP_Demo_Task(void* parameter)
 	uint32_t T1,T2,T3,T4,T;
 	uint32_t ip_info_size = 0;
 	int recv_data_len = 0;
+	int block = 1;
+	RTC_TimeTypeDef sTime = {0};
+	RTC_DateTypeDef sDate = {0};
 	//创建套接字  socket_fd
 	socket_fd = socket(AF_INET, SOCK_DGRAM, 0);
 	if(socket_fd < 0)
@@ -413,6 +424,8 @@ static void SNTP_Demo_Task(void* parameter)
 		goto END;
 
 	}
+	//设置使用非阻塞IO，后续的发送和接收函数不是阻塞型
+	ioctlsocket(socket_fd,FIONBIO,&block);
 	//配置服务器信息，IP类型，端口号，服务器地址
 	servaddr.sin_family=AF_INET;
 	servaddr.sin_port = htons(NTP_PORT);
@@ -428,19 +441,27 @@ static void SNTP_Demo_Task(void* parameter)
 
 	
 	memset(buf, 0, NTP_PACKET_SIZE);
-	ip_info_size = sizeof(struct sockaddr);
-	//接收指定服务器数据，阻塞型
-	recv_data_len = recvfrom(socket_fd, buf, NTP_PACKET_SIZE, 0,(struct sockaddr *) &servaddr,&ip_info_size);
-	for (int i = 0; i < recv_data_len; i++)
-	{
-		 printf("%x ", buf[i]);
-	}
 	
-	printf("\r\nrecv_data_len=%d\r\n",recv_data_len);
-	for (int i = 0; i < recv_data_len/4; i++)
-    {
-         printf("[%d]:%x ",i, Data(i));
-    }
+	ip_info_size = sizeof(struct sockaddr);
+	for(int i = 0; i < 10; i++)
+	{
+		recv_data_len = recvfrom(socket_fd, buf, NTP_PACKET_SIZE, 0,(struct sockaddr *) &servaddr,&ip_info_size);
+		for (int i = 0; i < recv_data_len; i++)
+		{
+			 printf("%x ", buf[i]);
+		}
+		
+		printf("\r\nrecv_data_len=%d\r\n",recv_data_len);
+		if(recv_data_len > 0)
+		{
+			break;
+		}
+		else
+		{
+			printf("\r\nSNTP_Demo_Task_0,try cnt:%d\r\n",i);
+			vTaskDelay(200);
+		}
+	}
 	printf("\r\nData(10) %x,JAN_1970 %x \r\n",Data(10),JAN_1970);
 	
 	T1 = Data(6);
@@ -456,7 +477,33 @@ static void SNTP_Demo_Task(void* parameter)
                            g_nowdate.hour + 8,
                            g_nowdate.minute,
                            g_nowdate.second);
+    /*
+	 * 设置 RTC 的 时间
+	 */
+	sTime.RTC_Hours = g_nowdate.hour + 8;
+	sTime.RTC_Minutes = g_nowdate.minute;
+	sTime.RTC_Seconds = g_nowdate.second;
+	if (RTC_SetTime(RTC_Format_BINorBCD, &sTime) != SUCCESS)
+	{
+		printf("\r\nRTC_SetTime fail  \r\n");
+	}
+	
+	/*
+	 * 设置 RTC 的 日期
+	 */
+//	sDate.RTC_WeekDay = time->tm_wday;
+	sDate.RTC_Month = g_nowdate.month + 1;
+	sDate.RTC_Date = g_nowdate.day;
+	sDate.RTC_Year = (g_nowdate.year) + 1900 - 2000;
+	if (RTC_SetDate(RTC_Format_BINorBCD, &sDate) != SUCCESS)
+	{
+		// Error_Handler();
+		printf("\r\nRTC_SetDate fail  \r\n");
+	}
+
 	vTaskDelay(1000);
+	
+	vStartMQTTTasks(1024*4,10);
 	vTaskDelete(NULL); //删除任务
 END:
 	printf("socket creat fail \r\n");
@@ -468,11 +515,11 @@ END:
 long SNTP_Demo_Task_Init(void)
 {
 		BaseType_t xReturn = pdPASS;
-	
+		
 			/* 创建RTC_Task任务 */
 		xReturn = xTaskCreate((TaskFunction_t )SNTP_Demo_Task,  /* 任务入口函数 */
 													(const char*    )"SNTP_Demo_Task",/* 任务名字 */
-													(uint16_t       )1024,  /* 任务栈大小 */
+													(uint16_t       )1024*1,  /* 任务栈大小 */
 													(void*          )NULL,/* 任务入口函数参数 */
 													(UBaseType_t    )3, /* 任务的优先级 */
 													(TaskHandle_t*  )&SNTP_Demo_Task_Handle);/* 任务控制块指针 */ 

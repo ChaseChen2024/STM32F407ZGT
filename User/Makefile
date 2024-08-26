@@ -9,24 +9,26 @@ User/uart/bsp_usart6.c \
 User/key/bsp_key.c \
 User/led/bsp_led.c \
 User/rtc/bsp_rtc.c \
-User/log/log.c \
 User/flash/bsp_spi_flash.c \
 User/sdio/bsp_sdio_sd.c \
 User/sram/bsp_sram.c \
-User/module/module.c \
-User/module/atproc.c \
 User/app/usb_bsp.c \
 User/app/usbd_desc.c \
 User/app/usbd_storage_msd.c \
 User/app/usbd_usr.c \
 User/lcd/lcd.c \
-User/my_gui/my_gui.c \
 User/GNSS/gnss.c \
 User/GNSS/NMEA0183.c \
+
+
+ifeq ($(BUILE_LVGL),y)
+C_SOURCES +=  \
+User/my_gui/my_gui.c \
 User/pg/pm_utils.c \
 User/pg/pm.c \
 User/pg/anima.c \
 
+endif
 
 #demo 
 C_SOURCES +=  \
@@ -47,8 +49,6 @@ C_INCLUDES +=  \
 -IUser/sdio \
 -IUser/app \
 -IUser/sram \
--IUser/log \
--IUser/module \
 -IUser/lcd \
 -IUser/user_demo/inc \
 -IUser/my_gui \

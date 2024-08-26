@@ -63,7 +63,7 @@ void LwIP_DHCP_Process_Handle(void);
   * @param  None
   * @retval None
   */
-void LwIP_Init(void)
+void LwIP_NW_Init(void)
 {
   printf("LwIP_Init-111\r\n");
   ip_addr_t ipaddr;
@@ -71,7 +71,7 @@ void LwIP_Init(void)
   ip_addr_t gw;
 
   // lwip_init();
-  tcpip_init(NULL, NULL);
+ 
 #if LWIP_DHCP
   ipaddr.addr = 0;
   netmask.addr = 0;
@@ -118,9 +118,19 @@ void LwIP_Init(void)
     printf("lwip dhcp init success...\n\n");
   else
     printf("lwip dhcp init fail...\n\n");
+
+   int count=0;
   while(ip_addr_cmp(&(xnetif.ip_addr),&ipaddr))   //等待dhcp分配的ip有效
   {
-    vTaskDelay(1);
+    vTaskDelay(100);
+    count+=100;
+    printf("count:%d\r\n",count);
+    if(count > 5000)
+    {
+    	break;
+    }
+    
+//    dhcp_fine_tmr();
   } 
 #endif
     printf("本地IP地址是:%d.%d.%d.%d\n\n",  \

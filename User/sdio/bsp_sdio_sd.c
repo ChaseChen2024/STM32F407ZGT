@@ -283,7 +283,7 @@ static void NVIC_Configuration(void)
   // NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
 
   NVIC_InitStructure.NVIC_IRQChannel = SDIO_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 4;
   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_Init(&NVIC_InitStructure);
@@ -534,13 +534,13 @@ SD_Error SD_Init(void)
 {
   __IO SD_Error errorstatus = SD_OK;
   //NVIC_Configuration();
-  /**************≈‰÷√SDIO÷–∂œ DMA÷–∂œ**********************/
+  /**************√Ö√§√ñ√ÉSDIO√ñ√ê¬∂√è DMA√ñ√ê¬∂√è**********************/
 	NVIC_InitTypeDef NVIC_InitStructure;
 	
 	// Configure the NVIC Preemption Priority Bits 
 	// NVIC_PriorityGroupConfig (NVIC_PriorityGroup_1);
 	NVIC_InitStructure.NVIC_IRQChannel = SDIO_IRQn;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 5;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init (&NVIC_InitStructure);
@@ -659,7 +659,7 @@ SDCardState SD_GetState(void)
 uint8_t SD_Detect(void)
 {
   __IO uint8_t status = SD_PRESENT;
-//≤ª  ”¶detess
+//¬≤¬ª√ä√ä√ì¬¶detess
 //  /*!< Check GPIO to detect SD */
 //  if (GPIO_ReadInputDataBit(SD_DETECT_GPIO_PORT, SD_DETECT_PIN) != Bit_RESET)
 //  {

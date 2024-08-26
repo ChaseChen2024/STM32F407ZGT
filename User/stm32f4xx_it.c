@@ -30,7 +30,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_it.h"
 
-#include "FreeRTOS.h"					//FreeRTOS使用		  
+#include "FreeRTOS.h"					//FreeRTOS脢鹿脫脙		  
 #include "task.h" 
 #include "queue.h"
 #include "semphr.h"
@@ -43,12 +43,12 @@
 #endif
 #include "bsp_debug_usart.h"
 #include<string.h>
-// #include "./flash/bsp_spi_flash.h"
+#include "bsp_spi_flash.h"
 
-// #include "usbd_msc_core.h"
-// #include "usbd_usr.h"
-// #include "usbd_desc.h"
-// #include "usb_conf.h"
+#include "usbd_msc_core.h"
+#include "usbd_usr.h"
+#include "usbd_desc.h"
+#include "usb_conf.h"
 
 /** @addtogroup STM32F429I_DISCOVERY_Examples
   * @{
@@ -142,7 +142,7 @@ void DebugMon_Handler(void)
   * @retval None
   */
 extern void xPortSysTickHandler(void);
-//systick中断服务函数
+//systick脰脨露脧路镁脦帽潞炉脢媒
 void SysTick_Handler(void)
 {	
     #if (INCLUDE_xTaskGetSchedulerState  == 1 )
@@ -184,24 +184,7 @@ void ETH_IRQHandler(void)
     portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
   }
 }
-#include "module.h"
-// #include "atproc.h"
-void MODULE_USART_IRQHandler(void)
-{
 
-    uint32_t ulReturn;
-  /* 进入临界段，临界段可以嵌套 */
-  ulReturn = taskENTER_CRITICAL_FROM_ISR();
-
-	if(USART_GetITStatus(MODULE_USART,USART_IT_IDLE)!=RESET)
-	{		
-		Uart_DMA_Rx_Data();       /* 释放一个信号量，表示数据已接收 */
-		USART_ReceiveData(MODULE_USART); /* 清除标志位 */
-	}	 
-  
-  /* 退出临界段 */
-  taskEXIT_CRITICAL_FROM_ISR( ulReturn );
-}	
 #endif
 #include "bsp_usart6.h"
 void USART6_IRQHandler(void)  
@@ -216,69 +199,69 @@ void USART6_IRQHandler(void)
 		rec_data = USART_ReceiveData(USART6);
 	}	 
   
-  /* 退出临界段 */
+  /* 脥脣鲁枚脕脵陆莽露脦 */
   taskEXIT_CRITICAL_FROM_ISR( ulReturn );
 } 
 
-// extern USB_OTG_CORE_HANDLE  USB_OTG_dev;
+extern USB_OTG_CORE_HANDLE  USB_OTG_dev;
 
-// /* Private function prototypes -----------------------------------------------*/
-// extern uint32_t USBD_OTG_ISR_Handler (USB_OTG_CORE_HANDLE *pdev);
+/* Private function prototypes -----------------------------------------------*/
+extern uint32_t USBD_OTG_ISR_Handler (USB_OTG_CORE_HANDLE *pdev);
 
-// #ifdef USB_OTG_HS_DEDICATED_EP1_ENABLED 
-// extern uint32_t USBD_OTG_EP1IN_ISR_Handler (USB_OTG_CORE_HANDLE *pdev);
-// extern uint32_t USBD_OTG_EP1OUT_ISR_Handler (USB_OTG_CORE_HANDLE *pdev);
-// #endif
+#ifdef USB_OTG_HS_DEDICATED_EP1_ENABLED 
+extern uint32_t USBD_OTG_EP1IN_ISR_Handler (USB_OTG_CORE_HANDLE *pdev);
+extern uint32_t USBD_OTG_EP1OUT_ISR_Handler (USB_OTG_CORE_HANDLE *pdev);
+#endif
 
-// #ifdef USE_USB_OTG_FS  
-// void OTG_FS_IRQHandler(void)
-// {
-//   uint32_t ulReturn;
-//   /* 进入临界段，临界段可以嵌套 */
-//   ulReturn = taskENTER_CRITICAL_FROM_ISR();
+#ifdef USE_USB_OTG_FS  
+void OTG_FS_IRQHandler(void)
+{
+  uint32_t ulReturn;
+  /* 陆酶脠毛脕脵陆莽露脦拢卢脕脵陆莽露脦驴脡脪脭脟露脤脳 */
+  ulReturn = taskENTER_CRITICAL_FROM_ISR();
 	
-//   USBD_OTG_ISR_Handler (&USB_OTG_dev);
+  USBD_OTG_ISR_Handler (&USB_OTG_dev);
 	
-//   /* 退出临界段 */
-//   taskEXIT_CRITICAL_FROM_ISR( ulReturn );
-// }
-// #endif
+  /* 脥脣鲁枚脕脵陆莽露脦 */
+  taskEXIT_CRITICAL_FROM_ISR( ulReturn );
+}
+#endif
 
-// #ifdef USB_OTG_HS_DEDICATED_EP1_ENABLED 
-// /**
-//   * @brief  This function handles EP1_IN Handler.
-//   * @param  None
-//   * @retval None
-//   */
-// void OTG_HS_EP1_IN_IRQHandler(void)
-// {
-//   uint32_t ulReturn;
-//   /* 进入临界段，临界段可以嵌套 */
-//   ulReturn = taskENTER_CRITICAL_FROM_ISR();
+#ifdef USB_OTG_HS_DEDICATED_EP1_ENABLED 
+/**
+  * @brief  This function handles EP1_IN Handler.
+  * @param  None
+  * @retval None
+  */
+void OTG_HS_EP1_IN_IRQHandler(void)
+{
+  uint32_t ulReturn;
+  /* 陆酶脠毛脕脵陆莽露脦拢卢脕脵陆莽露脦驴脡脪脭脟露脤脳 */
+  ulReturn = taskENTER_CRITICAL_FROM_ISR();
 
-//   USBD_OTG_EP1IN_ISR_Handler (&USB_OTG_dev);
+  USBD_OTG_EP1IN_ISR_Handler (&USB_OTG_dev);
 
-//   /* 退出临界段 */
-//   taskEXIT_CRITICAL_FROM_ISR( ulReturn );
-// }
+  /* 脥脣鲁枚脕脵陆莽露脦 */
+  taskEXIT_CRITICAL_FROM_ISR( ulReturn );
+}
 
-// /**
-//   * @brief  This function handles EP1_OUT Handler.
-//   * @param  None
-//   * @retval None
-//   */
-// void OTG_HS_EP1_OUT_IRQHandler(void)
-// {
-//   uint32_t ulReturn;
-//   /* 进入临界段，临界段可以嵌套 */
-//   ulReturn = taskENTER_CRITICAL_FROM_ISR();
+/**
+  * @brief  This function handles EP1_OUT Handler.
+  * @param  None
+  * @retval None
+  */
+void OTG_HS_EP1_OUT_IRQHandler(void)
+{
+  uint32_t ulReturn;
+  /* 陆酶脠毛脕脵陆莽露脦拢卢脕脵陆莽露脦驴脡脪脭脟露脤脳 */
+  ulReturn = taskENTER_CRITICAL_FROM_ISR();
 	
-//   USBD_OTG_EP1OUT_ISR_Handler (&USB_OTG_dev);
+  USBD_OTG_EP1OUT_ISR_Handler (&USB_OTG_dev);
 	  
-// 	/* 退出临界段 */
-//   taskEXIT_CRITICAL_FROM_ISR( ulReturn );
-// }
-// #endif
+	/* 脥脣鲁枚脕脵陆莽露脦 */
+  taskEXIT_CRITICAL_FROM_ISR( ulReturn );
+}
+#endif
 
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -114,7 +114,7 @@ static void low_level_init(struct netif *netif)
 
   /* set netif MAC hardware address */
   netif->hwaddr[0] =  2;
-  netif->hwaddr[1] =  0;
+  netif->hwaddr[1] =  2;
   netif->hwaddr[2] =  0;
   netif->hwaddr[3] =  0;
   netif->hwaddr[4] =  0;

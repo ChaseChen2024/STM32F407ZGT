@@ -12,9 +12,10 @@
 #include "semphr.h"
 static TaskHandle_t FatFs_Demo_Task_Handle = NULL;/* FatFs_Demo任务句柄 */
 
-#define STR_WRITE  "KEY0,KEY1,所有按键点击次数"
+#define STR_WRITE  "a,b,c"
+BYTE WriteBuffer[] = "欢迎使用野火STM32 F407开发板 今天是个好日子，新建文件系统测试文件\r\n"; 
 
-//#define SPI_FLASH_FATFS 1
+#define SPI_FLASH_FATFS 1
 #ifdef SPI_FLASH_FATFS
 FATFS fs;
 FRESULT res;
@@ -28,7 +29,7 @@ FIL fnew;													/* 文件对象 */
 FRESULT res_sd;                /* 文件操作结果 */
 UINT fnum;            					  /* 文件成功读写数量 */
 BYTE ReadBuffer[1024]={0};        /* 读缓冲区 */
-BYTE WriteBuffer[] =              /* 写缓冲区*/
+ 
 "欢迎使用野火STM32 F407开发板 今天是个好日子，新建文件系统测试文件\r\n";  
 #endif
 
@@ -63,8 +64,8 @@ static void FatFs_Demo_Task(void* parameter)
 		res = f_open(&fil, "1:czs.csv", FA_CREATE_ALWAYS|FA_WRITE);
 		printf("\r\n,%d,f_open res=%d",__LINE__,res);
 
-		res = f_write(&fil, STR_WRITE, strlen(STR_WRITE) ,&bw);
-		printf("\r\n,%d,f_write res=%d len=%d bw=%d",__LINE__,res,strlen(STR_WRITE),bw);
+		res = f_write(&fil, WriteBuffer, strlen(WriteBuffer) ,&bw);
+		printf("\r\n,%d,f_write res=%d len=%d bw=%d",__LINE__,res,strlen(WriteBuffer),bw);
 
 		res = f_close(&fil);
 		printf("\r\n,%d,f_close res=%d",__LINE__,res);
@@ -72,7 +73,7 @@ static void FatFs_Demo_Task(void* parameter)
 
 		res = f_open(&fil, "1:czs.csv", FA_OPEN_EXISTING|FA_READ);
 
-		res = f_read(&fil, read_buff, 20, &br);
+		res = f_read(&fil, read_buff, bw, &br);
 		printf("\r\nf_read res=%d br=%d",res,br);
 		read_buff[br] = '\0';
 		printf("\r\n读取到的文件内容:\r\n");

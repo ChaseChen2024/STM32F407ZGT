@@ -57,7 +57,7 @@
 
 /* MEM_SIZE: the size of the heap memory. If the application will send
 a lot of data that needs to be copied, this should be set high. */
-#define MEM_SIZE                (25*1024)
+#define MEM_SIZE                (30*1024)
 
 /* MEMP_NUM_PBUF: the number of memp struct pbufs. If the application
    sends a lot of data out of ROM (or other static memory), this
@@ -187,11 +187,11 @@ The STM32F4x7 allows computing and verifying the IP, UDP, TCP and ICMP checksums
    ---------- Sequential layer options ----------
    ----------------------------------------------
 */
-// #define LWIP_RAW                        1
+ #define LWIP_RAW                        0
 /**
  * LWIP_NETCONN==1: Enable Netconn API (require to use api_lib.c)
  */
-#define LWIP_NETCONN                    1
+#define LWIP_NETCONN                    0
 
 /*
    ------------------------------------
@@ -219,7 +219,7 @@ The STM32F4x7 allows computing and verifying the IP, UDP, TCP and ICMP checksums
 #define TCPIP_THREAD_NAME              "lwip"
 #define TCPIP_THREAD_STACKSIZE          2048
 #define TCPIP_MBOX_SIZE                 8
-#define TCPIP_THREAD_PRIO               3
+#define TCPIP_THREAD_PRIO               28
 
 //#define IPERF_SERVER_THREAD_NAME            "iperf_server"
 //#define IPERF_SERVER_THREAD_STACKSIZE        1024
@@ -240,14 +240,18 @@ The STM32F4x7 allows computing and verifying the IP, UDP, TCP and ICMP checksums
 #define SNTP_DEBUG   LWIP_DBG_OFF
 #define DNS_DEBUG    LWIP_DBG_OFF
 #define FTPD_DEBUG   LWIP_DBG_OFF
-#define TFTP_DEBUG   LWIP_DBG_ON
+#define TFTP_DEBUG   LWIP_DBG_OFF
 #define UDP_DEBUG   LWIP_DBG_OFF
-#define SOCKETS_DEBUG   LWIP_DBG_ON
+#define SOCKETS_DEBUG   LWIP_DBG_OFF
 #define IP_DEBUG   LWIP_DBG_OFF
+#define TCP_DEBUG    LWIP_DBG_OFF
+#define ETHARP_DEBUG LWIP_DBG_OFF
+
+
 #endif /* __LWIPOPTS_H__ */
 
 
-//¶¨Òå Lwip SNTP µÄ ´¦Àíº¯Êý
+//ï¿½ï¿½ï¿½ï¿½ Lwip SNTP ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 #include "Sntp_demo.h"
 #define SNTP_SET_SYSTEM_TIME		sntp_set_time
 // #define SNTP_SERVER_ADDRESS             1

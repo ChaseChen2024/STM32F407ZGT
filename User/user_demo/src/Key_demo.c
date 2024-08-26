@@ -1,67 +1,64 @@
-#if 1
+#if 0
 #include "lcd.h"
 #include "Key_demo.h"
 #include "bsp_key.h"
 #include "bsp_debug_usart.h"
-#include "module.h"
-#include "atproc.h"
 #include <string.h>
- #include "log.h"
-/* FreeRTOSÍ·ÎÄ¼ş */
+/* FreeRTOSå¤´æ–‡ä»¶ */
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
 #include "FatFs_demo.h"
-static TaskHandle_t KEY_Demo_Task_Handle = NULL;/* KEYÈÎÎñ¾ä±ú */
+static TaskHandle_t KEY_Demo_Task_Handle = NULL;/* KEYä»»åŠ¡å¥æŸ„ */
 extern QueueHandle_t Module_Queue;
 
 /**********************************************************************
-  * @ º¯ÊıÃû  £º Test_Task
-  * @ ¹¦ÄÜËµÃ÷£º Test_TaskÈÎÎñÖ÷Ìå
-  * @ ²ÎÊı    £º   
-  * @ ·µ»ØÖµ  £º ÎŞ
+  * @ å‡½æ•°å  ï¼š Test_Task
+  * @ åŠŸèƒ½è¯´æ˜ï¼š Test_Taskä»»åŠ¡ä¸»ä½“
+  * @ å‚æ•°    ï¼š   
+  * @ è¿”å›å€¼  ï¼š æ— 
   ********************************************************************/
 static void KEY_Demo_Task(void* parameter)
 {	
 	// int a=0,b=0,c=0;
 	// uint8_t ret = 0;
 	// uint8_t Rxdata[256] = {0};
-	//  vTaskDelay(10000);/* ÑÓÊ±20¸ötick */
+	//  vTaskDelay(10000);/* å»¶æ—¶20ä¸ªtick */
 	// ret = send_at((uint8_t*)"ATE0\r\n",NULL,0,10000);
 	// 	printf("ret=%d\r\n",ret);
 	 Lcd_Init();	
-   printf("LCD init\n\n");//³õÊ¼»¯OLED  
+   printf("LCD init\n\n");//åˆå§‹åŒ–OLED  
 	 LCD_Clear(WHITE);
    printf("[%s][%d]\r\n",__FILE__,__LINE__);
 	 BACK_COLOR=WHITE;
    	printf("[%s][%d]\r\n",__FILE__,__LINE__);
 
-		 LCD_ShowChinese(10,0,0,32,RED);   //ÖĞ
-			LCD_ShowChinese(45,0,1,32,RED);   //¾°
-			LCD_ShowChinese(80,0,2,32,RED);   //Ô°
-			LCD_ShowChinese(115,0,3,32,RED);  //µç
-			LCD_ShowChinese(150,0,4,32,RED);  //×Ó
+		 LCD_ShowChinese(10,0,0,32,RED);   //ä¸­
+			LCD_ShowChinese(45,0,1,32,RED);   //æ™¯
+			LCD_ShowChinese(80,0,2,32,RED);   //å›­
+			LCD_ShowChinese(115,0,3,32,RED);  //ç”µ
+			LCD_ShowChinese(150,0,4,32,RED);  //å­
 		 
-		 	LCD_ShowChinese(10,75,0,16,RED);   //ÖĞ
-			LCD_ShowChinese(45,75,1,16,RED);   //¾°
-			LCD_ShowChinese(80,75,2,16,RED);   //Ô°
-			LCD_ShowChinese(115,75,3,16,RED);  //µç
-			LCD_ShowChinese(150,75,4,16,RED);  //×Ó
+		 	LCD_ShowChinese(10,75,0,16,RED);   //ä¸­
+			LCD_ShowChinese(45,75,1,16,RED);   //æ™¯
+			LCD_ShowChinese(80,75,2,16,RED);   //å›­
+			LCD_ShowChinese(115,75,3,16,RED);  //ç”µ
+			LCD_ShowChinese(150,75,4,16,RED);  //å­
   while (1)
   {
 
     if( Key_Scan(KEY0_GPIO_PORT,KEY0_PIN) == KEY_ON )
-    {/* K0 ±»°´ÏÂ */
-      printf("°´¼ü0£¡\n");
+    {/* K0 è¢«æŒ‰ä¸‹ */
+      printf("æŒ‰é”®0ï¼\n");
     }
 		if( Key_Scan(KEY1_GPIO_PORT,KEY1_PIN) == KEY_ON )
-    {/* K1 ±»°´ÏÂ */
-		printf("°´¼ü1£¡\n");
+    {/* K1 è¢«æŒ‰ä¸‹ */
+		printf("æŒ‰é”®1ï¼\n");
 
     } 
 
 	 if( Key_Scan(GPIOA,GPIO_Pin_3) == KEY_ON )
-    {/* K0 ±»°´ÏÂ */
+    {/* K0 è¢«æŒ‰ä¸‹ */
       printf("MID\n");
 	//    LCD_Clear(WHITE);
 	//     BACK_COLOR=WHITE;
@@ -70,14 +67,14 @@ static void KEY_Demo_Task(void* parameter)
 		LCD_DrawLine(0,10,239,10,BLUE);
     }
 		if(  Key_Scan(GPIOA,GPIO_Pin_4) == KEY_ON )
-    {/* K1 ±»°´ÏÂ */
+    {/* K1 è¢«æŒ‰ä¸‹ */
 		printf("R\n");
  	// LCD_Clear(BLUE);
 	//  BACK_COLOR=BLUE;
 	 dma_hal_spi_clear(BLUE);
     } 
 	if(  Key_Scan(GPIOA,GPIO_Pin_5) == KEY_ON )
-    {/* K1 ±»°´ÏÂ */
+    {/* K1 è¢«æŒ‰ä¸‹ */
 		printf("L\n");
 		//  LCD_Clear(BRED);
 		//  BACK_COLOR=BRED;
@@ -85,20 +82,20 @@ static void KEY_Demo_Task(void* parameter)
 		 dma_hal_spi_full(15,15,100,100,RED);
     } 
 	if(  Key_Scan(GPIOA,GPIO_Pin_6) == KEY_ON )
-    {/* K1 ±»°´ÏÂ */
-		printf("D£¡\n");
+    {/* K1 è¢«æŒ‰ä¸‹ */
+		printf("Dï¼\n");
 		//  LCD_Clear(GRED);
 		//  BACK_COLOR=GRED;
 		 dma_hal_spi_clear(GRED);
     } 
 	if(  Key_Scan(GPIOA,GPIO_Pin_8) == KEY_ON )
-    {/* K1 ±»°´ÏÂ */
+    {/* K1 è¢«æŒ‰ä¸‹ */
 		printf("U\n");
 		//  LCD_Clear(YELLOW);
 		//  BACK_COLOR=YELLOW;
 		 dma_hal_spi_clear(YELLOW);
     } 
-    vTaskDelay(10);/* ÑÓÊ±20¸ötick */
+    vTaskDelay(10);/* å»¶æ—¶20ä¸ªtick */
   }
 }
 
@@ -107,18 +104,18 @@ long Key_Demo_Task_Init(void)
 {
 			BaseType_t xReturn = pdPASS;
 	
-			/* ´´½¨KEY_TaskÈÎÎñ */
-		xReturn = xTaskCreate((TaskFunction_t )KEY_Demo_Task,  /* ÈÎÎñÈë¿Úº¯Êı */
-													(const char*    )"KEY_Demo_Task",/* ÈÎÎñÃû×Ö */
-													(uint16_t       )2048,  /* ÈÎÎñÕ»´óĞ¡ */
-													(void*          )NULL,/* ÈÎÎñÈë¿Úº¯Êı²ÎÊı */
-													(UBaseType_t    )3, /* ÈÎÎñµÄÓÅÏÈ¼¶ */
-													(TaskHandle_t*  )&KEY_Demo_Task_Handle);/* ÈÎÎñ¿ØÖÆ¿éÖ¸Õë */ 
+			/* åˆ›å»ºKEY_Taskä»»åŠ¡ */
+		xReturn = xTaskCreate((TaskFunction_t )KEY_Demo_Task,  /* ä»»åŠ¡å…¥å£å‡½æ•° */
+													(const char*    )"KEY_Demo_Task",/* ä»»åŠ¡åå­— */
+													(uint16_t       )2048,  /* ä»»åŠ¡æ ˆå¤§å° */
+													(void*          )NULL,/* ä»»åŠ¡å…¥å£å‡½æ•°å‚æ•° */
+													(UBaseType_t    )3, /* ä»»åŠ¡çš„ä¼˜å…ˆçº§ */
+													(TaskHandle_t*  )&KEY_Demo_Task_Handle);/* ä»»åŠ¡æ§åˆ¶å—æŒ‡é’ˆ */ 
 		return xReturn;
 }
 void Key_Bsp_Init(void)
 {
-	/* °´¼ü³õÊ¼»¯	*/
+	/* æŒ‰é”®åˆå§‹åŒ–	*/
   Key_GPIO_Config();
   Five_Key_GPIO_Init();
 }

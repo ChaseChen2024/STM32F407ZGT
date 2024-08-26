@@ -79,6 +79,22 @@ struct
 
 static lv_style_t main_style;
 
+//全局应用返回应用列表的回调
+static void return_but_event_handler(lv_event_t * e)
+{
+    lv_event_code_t code = lv_event_get_code(e);
+   
+    if(code == LV_EVENT_CLICKED) {
+        LV_LOG_USER("Clicked");
+        lv_pm_open_page(APPLIST_PAGE, &options_self);
+
+    }
+    else if(code == LV_EVENT_VALUE_CHANGED) {
+        LV_LOG_USER("Toggled");
+
+    }
+}
+
 void home_sig_timer_cb(lv_timer_t *timer)
 {
     lv_label_set_text_fmt(LvglHomeViewParm.speed_label,"%d.%d",get_gnss_speed()/10,get_gnss_speed()%10);
@@ -88,20 +104,20 @@ void home_table_view(lv_obj_t *home_tab)
 {
 
    
-        LvglHomeViewParm.speed_label = lv_label_create(home_tab);
-        lv_label_set_text_fmt(LvglHomeViewParm.speed_label,"%d.%d",get_gnss_speed()/10,get_gnss_speed()%10);
+    LvglHomeViewParm.speed_label = lv_label_create(home_tab);
+    lv_label_set_text_fmt(LvglHomeViewParm.speed_label,"%d.%d",get_gnss_speed()/10,get_gnss_speed()%10);
    
     lv_obj_set_style_text_font( LvglHomeViewParm.speed_label,&lv_font_montserrat_40,0);
     //lv_obj_set_style_border_width(speed_label,1,0);
-    lv_obj_set_size( LvglHomeViewParm.speed_label,214,60);
-    lv_obj_align_to( LvglHomeViewParm.speed_label,home_tab,LV_ALIGN_TOP_MID,0,0);
-    lv_obj_set_style_text_color( LvglHomeViewParm.speed_label, lv_color_make(255,255,255), 0);
+    lv_obj_set_size( LvglHomeViewParm.speed_label,200,50);
+    lv_obj_align_to( LvglHomeViewParm.speed_label,home_tab,LV_ALIGN_TOP_MID,0,40);
+    lv_obj_set_style_text_color( LvglHomeViewParm.speed_label, lv_color_make(0,0,0), 0);
 
     auto fontHeight = lv_font_get_line_height(&lv_font_montserrat_40);
-    auto verPad = (40 - fontHeight)/2;
+    auto verPad = (70 - fontHeight)/2;
     lv_obj_set_style_pad_top( LvglHomeViewParm.speed_label, verPad, 0);
     auto textWidth = lv_txt_get_width(lv_label_get_text( LvglHomeViewParm.speed_label), strlen(lv_label_get_text( LvglHomeViewParm.speed_label)), &lv_font_montserrat_40, 0,0);
-    auto horPad = (214 - textWidth)/2;
+    auto horPad = (200 - textWidth)/2;
     lv_obj_set_style_pad_left( LvglHomeViewParm.speed_label, horPad, 0);
 
 
@@ -141,16 +157,16 @@ void home_table_view(lv_obj_t *home_tab)
     lv_label_set_text_fmt(time_label,"%02d:%02d:%02d",h,m,s);
 
    // lv_obj_set_style_border_width(time_label,1,0);
-    lv_obj_set_size(time_label,106,40);
-    lv_obj_align_to(time_label,home_tab,LV_ALIGN_RIGHT_MID,0,10);
-    lv_obj_set_style_text_font(time_label,&lv_font_montserrat_16,0);
-    lv_obj_set_style_text_color(time_label, lv_color_make(255,255,255), 0);
+    lv_obj_set_size(time_label,200,40);
+    lv_obj_align_to(time_label,home_tab,LV_ALIGN_TOP_MID,0,90);
+    lv_obj_set_style_text_font(time_label,&lv_font_montserrat_28,0);
+    lv_obj_set_style_text_color(time_label, lv_color_make(0,0,0), 0);
 
-    fontHeight = lv_font_get_line_height(&lv_font_montserrat_16);
-    verPad = (20 - fontHeight)/2;
+    fontHeight = lv_font_get_line_height(&lv_font_montserrat_28);
+    verPad = (40 - fontHeight)/2;
     lv_obj_set_style_pad_top(time_label, verPad, 0);
-    textWidth = lv_txt_get_width(lv_label_get_text(time_label), strlen(lv_label_get_text(time_label)), &lv_font_montserrat_16, 0,0);
-    horPad = (106 - textWidth)/2;
+    textWidth = lv_txt_get_width(lv_label_get_text(time_label), strlen(lv_label_get_text(time_label)), &lv_font_montserrat_28, 0,0);
+    horPad = (200 - textWidth)/2;
     lv_obj_set_style_pad_left(time_label, horPad, 0);
 
     lv_obj_t * time_label_time = lv_label_create(time_label);
@@ -163,20 +179,20 @@ void home_table_view(lv_obj_t *home_tab)
 
     //距离
      lv_obj_t * distance_label = lv_label_create(home_tab);
-    lv_label_set_text_fmt(distance_label, "%d.%d  km",My_Gps_Data.distance/10,My_Gps_Data.distance%10);
+    lv_label_set_text_fmt(distance_label, "%d.%d",My_Gps_Data.distance/10,My_Gps_Data.distance%10);
     //lv_obj_set_style_border_width(distance_label,1,0);
-    lv_obj_set_size(distance_label,106,40);
-    lv_obj_align_to(distance_label,home_tab,LV_ALIGN_BOTTOM_LEFT,0,0);
+    lv_obj_set_size(distance_label,200,45);
+    lv_obj_align_to(distance_label,home_tab,LV_ALIGN_TOP_MID,0,130);
 
-    lv_obj_set_style_text_font(distance_label,&lv_font_montserrat_16,0);
-    lv_obj_set_style_text_color(distance_label, lv_color_make(255,255,255), 0);
+    lv_obj_set_style_text_font(distance_label,&lv_font_montserrat_28,0);
+    lv_obj_set_style_text_color(distance_label, lv_color_make(0,0,0), 0);
 
 
-    fontHeight = lv_font_get_line_height(&lv_font_montserrat_16);
-    verPad = (20 - fontHeight)/2;
+    fontHeight = lv_font_get_line_height(&lv_font_montserrat_28);
+    verPad = (40 - fontHeight)/2;
     lv_obj_set_style_pad_top(distance_label, verPad, 0);
-    textWidth = lv_txt_get_width(lv_label_get_text(distance_label), strlen(lv_label_get_text(distance_label)), &lv_font_montserrat_16, 0,0);
-    horPad = (106 - textWidth)/2;
+    textWidth = lv_txt_get_width(lv_label_get_text(distance_label), strlen(lv_label_get_text(distance_label)), &lv_font_montserrat_28, 0,0);
+    horPad = (200 - textWidth)/2;
     lv_obj_set_style_pad_left(distance_label, horPad, 0);
 
     lv_obj_t * distance_label_dist = lv_label_create(distance_label);
@@ -259,37 +275,37 @@ void top_label_sig(lv_obj_t *top_label)
     lv_obj_set_style_bg_opa(top_label,LV_OPA_COVER,LV_PART_MAIN);
 
    
-        LvglTopViewParm.satellite_label = lv_label_create(top_label);
-        lv_label_set_text_fmt(LvglTopViewParm.satellite_label,"%s %d",LV_SYMBOL_GPS,get_gnss_satellite_num());
+    LvglTopViewParm.satellite_label = lv_label_create(top_label);
+    lv_label_set_text_fmt(LvglTopViewParm.satellite_label,"%s %d",LV_SYMBOL_GPS,get_gnss_satellite_num());
     lv_obj_set_style_text_font(LvglTopViewParm.satellite_label,&lv_font_montserrat_14,0);
     lv_obj_set_size(LvglTopViewParm.satellite_label,30,20);
     lv_obj_align_to(LvglTopViewParm.satellite_label,top_label,LV_ALIGN_TOP_LEFT,0,0);
-    lv_obj_set_style_text_color(LvglTopViewParm.satellite_label, lv_color_make(255,255,255), 0);
+    lv_obj_set_style_text_color(LvglTopViewParm.satellite_label, lv_color_make(0,0,0), 0);
 
     RTC_TimeTypeDef RTC_TimeStructure_lvgl;
     RTC_GetTime(RTC_Format_BIN, &RTC_TimeStructure_lvgl);
    
-        LvglTopViewParm.rtc_label = lv_label_create(top_label);
-        lv_label_set_text_fmt(LvglTopViewParm.rtc_label,"%02d:%02d:%02d",RTC_TimeStructure_lvgl.RTC_Hours,RTC_TimeStructure_lvgl.RTC_Minutes,RTC_TimeStructure_lvgl.RTC_Seconds);
+    LvglTopViewParm.rtc_label = lv_label_create(top_label);
+    lv_label_set_text_fmt(LvglTopViewParm.rtc_label,"%02d:%02d:%02d",RTC_TimeStructure_lvgl.RTC_Hours,RTC_TimeStructure_lvgl.RTC_Minutes,RTC_TimeStructure_lvgl.RTC_Seconds);
     lv_obj_set_style_text_font(LvglTopViewParm.rtc_label,&lv_font_montserrat_14,0);
     lv_obj_set_size(LvglTopViewParm.rtc_label,60,20);
     lv_obj_align(LvglTopViewParm.rtc_label, LV_ALIGN_TOP_MID, 0, 0);
-    lv_obj_set_style_text_color(LvglTopViewParm.rtc_label, lv_color_make(255,255,255), 0);
+    lv_obj_set_style_text_color(LvglTopViewParm.rtc_label, lv_color_make(0,0,0), 0);
 
 
 
     LvglTopViewParm.bat_label = lv_label_create(top_label);
    
-        lv_label_set_text(LvglTopViewParm.bat_label,LV_SYMBOL_BATTERY_FULL);
+    lv_label_set_text(LvglTopViewParm.bat_label,LV_SYMBOL_BATTERY_FULL);
 
     lv_obj_set_style_text_font(LvglTopViewParm.bat_label,&lv_font_montserrat_14,0);
     lv_obj_set_size(LvglTopViewParm.bat_label,20,20);
     lv_obj_align(LvglTopViewParm.bat_label, LV_ALIGN_TOP_RIGHT, 0, 0);
-    lv_obj_set_style_text_color(LvglTopViewParm.bat_label, lv_color_make(255,255,255), 0);
+    lv_obj_set_style_text_color(LvglTopViewParm.bat_label, lv_color_make(0,0,0), 0);
 
     //创建定时器
 
-        LvglTopViewParm.timer = lv_timer_create(top_sig_timer_cb,1000,NULL);
+    LvglTopViewParm.timer = lv_timer_create(top_sig_timer_cb,1000,NULL);
 
 }
 
@@ -325,7 +341,7 @@ void my_gui_xtrack(lv_obj_t *page)
 {
 
     //创建顶部信息框
-    LvglMainViewParm.top_label = lv_label_create(page);
+    LvglMainViewParm.app_btn = lv_btn_create(page);
 
 
     lv_obj_set_size(LvglMainViewParm.top_label,240,20);
@@ -336,7 +352,7 @@ void my_gui_xtrack(lv_obj_t *page)
     lv_obj_set_style_bg_color(LvglMainViewParm.main_obj,lv_color_make(30,35,45),LV_PART_MAIN);
     lv_obj_align(LvglMainViewParm.main_obj, LV_ALIGN_TOP_MID, 0, 20);
     //设置选项卡的大小，为横240，高220
-    lv_obj_set_size(LvglMainViewParm.main_obj,240,170);
+    lv_obj_set_size(LvglMainViewParm.app_btn,40,40);
     //设置对象为无边框
     lv_obj_set_style_border_width(LvglMainViewParm.main_obj,0,LV_BORDER_SIDE_NONE );
     lv_obj_set_style_radius(LvglMainViewParm.main_obj,0,0);
@@ -348,13 +364,13 @@ void my_gui_xtrack(lv_obj_t *page)
     lv_obj_align(LvglMainViewParm.bottom_obj, LV_ALIGN_BOTTOM_MID, 0, 0);
     lv_obj_set_size(LvglMainViewParm.bottom_obj,240,50);
     lv_obj_set_style_border_width(LvglMainViewParm.bottom_obj,0,LV_BORDER_SIDE_NONE );
-    lv_obj_set_style_radius(LvglMainViewParm.bottom_obj,0,0);
+    //lv_obj_set_style_border_width(LvglMainViewParm.app_btn,10,0);
 
 
     LvglMainViewParm.app_btn = lv_btn_create(LvglMainViewParm.bottom_obj);
     //设置选项卡的大小，为横240，高220
     lv_obj_set_size(LvglMainViewParm.app_btn,30,30);
-    lv_obj_align(LvglMainViewParm.app_btn, LV_ALIGN_BOTTOM_RIGHT, -40, -5);
+    lv_obj_align(LvglMainViewParm.app_btn, LV_ALIGN_BOTTOM_RIGHT, -40, -10);
     //按钮的点击回调
     lv_obj_add_event_cb(LvglMainViewParm.app_btn, return_but_event_handler, LV_EVENT_ALL, NULL);
 
@@ -367,11 +383,11 @@ void my_gui_xtrack(lv_obj_t *page)
     lv_obj_set_style_bg_color(LvglMainViewParm.app_btn,lv_color_make(255,127,39),LV_PART_MAIN);
 
 
-    LvglMainViewParm.start_btn = lv_btn_create(LvglMainViewParm.bottom_obj);
+    LvglMainViewParm.start_btn = lv_btn_create(page);
 
     //设置选项卡的大小，为横240，高220
-    lv_obj_set_size(LvglMainViewParm.start_btn,30,30);
-    lv_obj_align(LvglMainViewParm.start_btn, LV_ALIGN_BOTTOM_LEFT, 40, -5);
+    lv_obj_set_size(LvglMainViewParm.start_btn,40,40);
+    lv_obj_align(LvglMainViewParm.start_btn, LV_ALIGN_BOTTOM_LEFT, 40, -10);
     //按钮的点击回调
     lv_obj_add_event_cb(LvglMainViewParm.start_btn, start_but_event_handler, LV_EVENT_ALL, NULL);
 
@@ -380,15 +396,15 @@ void my_gui_xtrack(lv_obj_t *page)
     lv_obj_center(LvglMainViewParm.start_txt);
     lv_obj_set_style_bg_color(LvglMainViewParm.start_btn,lv_color_make(255,127,39),LV_PART_MAIN);
 
-    top_label_sig(LvglMainViewParm.top_label);
+    top_label_sig(page);
 
-    home_table_view(LvglMainViewParm.main_obj);
-     LvglMainViewParm.g = lv_group_create();
+    home_table_view(page);
+    LvglMainViewParm.g = lv_group_create();
     lv_indev_set_group(indev_keypad,LvglMainViewParm.g );
     
-     lv_group_add_obj(LvglMainViewParm.g ,LvglMainViewParm.start_btn);
+    lv_group_add_obj(LvglMainViewParm.g ,LvglMainViewParm.start_btn);
     lv_group_add_obj(LvglMainViewParm.g ,LvglMainViewParm.app_btn);
-     lv_group_focus_obj(LvglMainViewParm.app_btn);
+    lv_group_focus_obj(LvglMainViewParm.app_btn);
 }
 
 
@@ -412,22 +428,29 @@ void page_stopwatch_unLoad(lv_obj_t *page)
 struct
 {
     lv_obj_t* return_btn;
+    lv_group_t* g;
 }LvglSetViewParm = {0};
 
 void page_set_onLoad(lv_obj_t *page)
 {
   printf("lifecycle: set onLoad\n");
-  lv_obj_set_style_bg_color(page, lv_color_make(0, 0, 0), LV_STATE_DEFAULT);
+  lv_obj_set_style_bg_color(page, lv_color_make(255, 255, 255), LV_STATE_DEFAULT);
   LvglSetViewParm.return_btn = lv_btn_create(page);
-    lv_obj_set_size(LvglSetViewParm.return_btn,30,30);
-    lv_obj_align(LvglSetViewParm.return_btn, LV_ALIGN_BOTTOM_RIGHT, 0, 0);
+    lv_obj_set_size(LvglSetViewParm.return_btn,40,40);
+    lv_obj_align(LvglSetViewParm.return_btn, LV_ALIGN_CENTER, 0, 0);
     lv_obj_add_event_cb(LvglSetViewParm.return_btn, return_but_event_handler, LV_EVENT_ALL, NULL);
+    LvglSetViewParm.g = lv_group_create();
+    lv_indev_set_group(indev_keypad,LvglSetViewParm.g );
+     lv_group_add_obj(LvglSetViewParm.g ,LvglSetViewParm.return_btn);
+    lv_group_focus_obj(LvglSetViewParm.return_btn);
+
 }
 
 void page_set_unLoad(lv_obj_t *page)
 {
   printf("lifecycle: set unLoad\n");
   lv_obj_remove_event_cb(LvglSetViewParm.return_btn,return_but_event_handler);
+  lv_group_del(LvglSetViewParm.g);
 }
 
 //应用列表
@@ -507,7 +530,7 @@ void page_applist_unLoad(lv_obj_t *page)
   printf("lifecycle: applist unLoad\n");
   lv_obj_remove_event_cb(LvglApplistViewParm.stopwatch, app_stopwatch_btn_event_handler);
   lv_obj_remove_event_cb(LvglApplistViewParm.set, app_set_btn_event_handler);
-   lv_group_del(LvglApplistViewParm.g);
+  lv_group_del(LvglApplistViewParm.g);
 }
 
 lv_timer_t * timer11;
@@ -524,7 +547,7 @@ void page_one_onLoad(lv_obj_t *page)
     lv_obj_set_style_text_font(set_txt,&lv_font_montserrat_40,0);
     lv_label_set_text(set_txt, "ONE");
     lv_obj_center(set_txt);
-    timer11 = lv_timer_create(one_sig_timer_cb,2000,NULL);
+    timer11 = lv_timer_create(one_sig_timer_cb,500,NULL);
 
 }
 

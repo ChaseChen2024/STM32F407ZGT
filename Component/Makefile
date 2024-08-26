@@ -56,6 +56,7 @@ Component/FatFs/ff.c \
 Component/FatFs/option/cc936.c \
 Component/FatFs/option/syscall.c \
 
+ifeq ($(BUILE_LVGL),y)
 #lvgl
 C_SOURCES +=  \
 Component/lvgl/src/core/lv_disp.c \
@@ -231,6 +232,26 @@ Component/lvgl/demos/stress/assets/lv_font_montserrat_12_compr_az.c \
 Component/lvgl/demos/stress/assets/lv_font_montserrat_16_compr_az.c \
 Component/lvgl/demos/stress/assets/lv_font_montserrat_28_compr_az.c \
 
+endif
+
+ifeq ($(BUILE_MQTT),y)
+C_SOURCES +=  \
+Component/pahoMqtt/MQTTClient-C/src/FreeRTOS/MQTTFreeRTOS.c \
+Component/pahoMqtt/MQTTPacket/src/MQTTConnectClient.c \
+Component/pahoMqtt/MQTTPacket/src/MQTTConnectServer.c \
+Component/pahoMqtt/MQTTPacket/src/MQTTDeserializePublish.c \
+Component/pahoMqtt/MQTTPacket/src/MQTTFormat.c \
+Component/pahoMqtt/MQTTPacket/src/MQTTPacket.c \
+Component/pahoMqtt/MQTTPacket/src/MQTTSerializePublish.c \
+Component/pahoMqtt/MQTTPacket/src/MQTTSubscribeClient.c \
+Component/pahoMqtt/MQTTPacket/src/MQTTSubscribeServer.c \
+Component/pahoMqtt/MQTTPacket/src/MQTTUnsubscribeClient.c \
+Component/pahoMqtt/MQTTPacket/src/MQTTUnsubscribeServer.c \
+Component/pahoMqtt/MQTTClient-C/src/MQTTClient.c \
+Component/pahoMqtt/MQTTClient-C/samples/FreeRTOS/MQTTEcho.c \
+Component/pahoMqtt/MQTTClient-C/samples/FreeRTOS/aiot_mqtt_sign.c \
+
+endif
 
 ifeq ($(BUILE_LWIP),y)
 C_INCLUDES +=  \
@@ -244,10 +265,13 @@ C_INCLUDES +=  \
 
 endif
 
+
+
 #fatfs
 C_INCLUDES +=  \
 -IComponent/FatFs \
 
+ifeq ($(BUILE_LVGL),y)
 #lvgl
 C_INCLUDES +=  \
 -IComponent/lvgl \
@@ -307,6 +331,17 @@ C_INCLUDES +=  \
 -IComponent/lvgl/demos/widgets \
 -IComponent/lvgl/demos/widgets/assets \
 
+endif
+
+ifeq ($(BUILE_MQTT),y)
+C_INCLUDES +=  \
+-IComponent/pahoMqtt/MQTTClient-C/src/FreeRTOS \
+-IComponent/pahoMqtt/MQTTPacket/src \
+-IComponent/pahoMqtt/MQTTClient-C/src \
+
+
+
+endif
 
 CFLAGS += $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
 

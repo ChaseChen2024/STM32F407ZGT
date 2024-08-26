@@ -131,7 +131,7 @@
 #define ETH_RMII_TXD1_SOURCE            GPIO_PinSource14
 
 /* Ethernet Flags for EthStatus variable */   
-#define ETH_INIT_FLAG           0x01 /* Ethernet Init Flag */
+#define ETH_INIT_FLAG           0x00 /* Ethernet Init Flag */
 #define ETH_LINK_FLAG           0x10 /* Ethernet Link Flag */
 
 /* Exported macro ------------------------------------------------------------*/
