@@ -15,7 +15,7 @@ User/bsp/sram/bsp_sram.c \
 User/bsp/usb/usb_bsp.c \
 User/bsp/usb/usbd_desc.c \
 User/bsp/usb/usbd_storage_msd.c \
-User/usb/usbd_usr.c \
+User/bsp/usb/usbd_usr.c \
 User/bsp/lcd/lcd.c \
 User/bsp/GNSS/gnss.c \
 User/bsp/GNSS/NMEA0183.c \
@@ -23,21 +23,21 @@ User/bsp/GNSS/NMEA0183.c \
 
 ifeq ($(BUILE_LVGL),y)
 C_SOURCES +=  \
-User/my_gui/my_gui.c \
-User/pg/pm_utils.c \
-User/pg/pm.c \
-User/pg/anima.c \
+User/app/my_gui/my_gui.c \
+User/app/pg/pm_utils.c \
+User/app/pg/pm.c \
+User/app/pg/anima.c \
 
 endif
 
 #demo 
 C_SOURCES +=  \
-User/user_demo/src/FatFs_demo.c \
-User/user_demo/src/Sdio_demo.c \
-User/user_demo/src/Key_demo.c \
-User/user_demo/src/Usb_demo.c \
-User/user_demo/src/Rtc_demo.c \
-User/user_demo/src/Lcd_demo.c \
+User/app/user_demo/src/FatFs_demo.c \
+User/app/user_demo/src/Sdio_demo.c \
+User/app/user_demo/src/Key_demo.c \
+User/app/user_demo/src/Usb_demo.c \
+User/app/user_demo/src/Rtc_demo.c \
+User/app/user_demo/src/Lcd_demo.c \
 
 C_INCLUDES +=  \
 -IUser \
@@ -50,10 +50,10 @@ C_INCLUDES +=  \
 -IUser/bsp/usb \
 -IUser/bsp/sram \
 -IUser/bsp/lcd \
--IUser/user_demo/inc \
--IUser/my_gui \
 -IUser/bsp/GNSS \
--IUser/pg \
+-IUser/app/pg \
+-IUser/app/user_demo/inc \
+-IUser/app/my_gui \
 
 ifeq ($(BUILE_LWIP),y)
 C_SOURCES +=  \
@@ -64,10 +64,10 @@ User/bsp/arch/netconf.c \
 
 #demo 
 C_SOURCES +=  \
-User/user_demo/src/Lwip_Tcp_Client_Socket_demo.c \
-User/user_demo/src/Sntp_demo.c \
-User/user_demo/src/Tftp_demo.c \
-User/user_demo/src/client.c \
+User/app/user_demo/src/Lwip_Tcp_Client_Socket_demo.c \
+User/app/user_demo/src/Sntp_demo.c \
+User/app/user_demo/src/Tftp_demo.c \
+User/app/user_demo/src/client.c \
 
 
 C_INCLUDES +=  \
