@@ -12,9 +12,13 @@
 // #include "./flash/bsp_spi_flash.h"
 // #include "./sdio/bsp_sdio_sd.h"
 #include "bsp_spi_flash.h"
+#ifdef SDIO_SD
 #include "bsp_sdio_sd.h"
+#endif // SDIO_SD
+
 #include "bsp_rtc.h"
 #include "string.h"
+
 
 //需要拓展设备时增加
 //#include "usbdisk.h"	/* Example: Header file of existing USB MSD control module */
@@ -32,12 +36,12 @@
 
 //定义扇区大小
 #define FLASH_SECTOP_SIZE 4096
-
+#ifdef SDIO_SD
 //SD卡散区大小
 #define SD_BLOCKSIZE     512 
 
 extern  SD_CardInfo SDCardInfo;
-
+#endif
 /*-----------------------------------------------------------------------*/
 /* Get Drive Status                                                      */
 /*-----------------------------------------------------------------------*/
@@ -97,6 +101,7 @@ DSTATUS disk_initialize (
 	uint16_t i;
 //	uint8_t result = 0;
 	switch (pdrv) {
+#ifdef SDIO_SD
 	case SD_CARD :
 		//初始化SD 卡
 
@@ -110,7 +115,7 @@ DSTATUS disk_initialize (
 		}
 
 		return stat;
-
+#endif
 	case SPI_FLASH :
 		//初始化SPI_FLASH
 //		result = GET_SPIFLASH_STATE();
@@ -156,9 +161,11 @@ DRESULT disk_read (
 {
 	DRESULT res;
 	uint32_t read_addr = 0;
+	#ifdef SDIO_SD
 	SD_Error SD_state = SD_OK;
-
+#endif
 	switch (pdrv) {
+#ifdef SDIO_SD
 	case SD_CARD :
 		
 		if((DWORD)buff&3)
@@ -193,11 +200,12 @@ DRESULT disk_read (
 		break;   
 
 		//return res;
-
+#endif
 	case SPI_FLASH :
 		// translate the arguments here
 		//要读取的扇区号转换称为地址
-		sector+=1536;
+		/* 扇区偏移6MB，外部Flash文件系统空间放在SPI Flash后面10MB空间 */
+		 sector+=1536;
 		read_addr = sector*FLASH_SECTOP_SIZE;
 		SPI_FLASH_BufferRead((u8*) buff, read_addr, count*FLASH_SECTOP_SIZE);
 	
@@ -235,9 +243,11 @@ DRESULT disk_write (
 {
 	DRESULT res;
 	uint32_t write_addr = 0;
+	#ifdef SDIO_SD
 	SD_Error SD_state = SD_OK;
-
+#endif
 	switch (pdrv) {
+#ifdef SDIO_SD
 	case SD_CARD :
 		
 		if((DWORD)buff&3)
@@ -273,7 +283,7 @@ DRESULT disk_write (
 		break;
 
 		//return res;
-
+#endif
 	case SPI_FLASH :
 		
 		// translate the arguments here
@@ -325,6 +335,7 @@ DRESULT disk_ioctl (
 
 
 	switch (pdrv) {
+#ifdef SDIO_SD
 	case SD_CARD :
 
 		switch (cmd) 
@@ -346,7 +357,7 @@ DRESULT disk_ioctl (
 		}
 		res = RES_OK;
 		return res;
-
+#endif
 	case SPI_FLASH :
 		
 		switch(cmd)

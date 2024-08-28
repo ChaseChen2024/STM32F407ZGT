@@ -120,3 +120,14 @@ download_jlink:
 BUILE_LWIP = y
 BUILE_LVGL = n
 BUILE_MQTT = y
+
+
+# 20240828修改
+
+封装Fatfs 的读写函数
+nv_read() 直接调用进行数据
+nv_write() 直接调用进行写数据
+
+优化内存占用
+   text    data     bss     dec     hex filename
+ 143172     164  101620  244956   3bcdc Build/QT201.elf

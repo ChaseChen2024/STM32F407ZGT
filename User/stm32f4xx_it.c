@@ -45,10 +45,10 @@
 #include<string.h>
 #include "bsp_spi_flash.h"
 
-#include "usbd_msc_core.h"
-#include "usbd_usr.h"
-#include "usbd_desc.h"
-#include "usb_conf.h"
+// #include "usbd_msc_core.h"
+// #include "usbd_usr.h"
+// #include "usbd_desc.h"
+// #include "usb_conf.h"
 
 /** @addtogroup STM32F429I_DISCOVERY_Examples
   * @{
@@ -186,82 +186,82 @@ void ETH_IRQHandler(void)
 }
 
 #endif
-#include "bsp_usart6.h"
-void USART6_IRQHandler(void)  
-{
-	uint32_t ulReturn;
-  u8 rec_data;
-  ulReturn = taskENTER_CRITICAL_FROM_ISR();
+// #include "bsp_usart6.h"
+// void USART6_IRQHandler(void)  
+// {
+// 	uint32_t ulReturn;
+//   u8 rec_data;
+//   ulReturn = taskENTER_CRITICAL_FROM_ISR();
 
-	if(USART_GetITStatus(USART6,USART_IT_IDLE)!=RESET)
-	{		
-		Uart6_DMA_Rx_Data();
-		rec_data = USART_ReceiveData(USART6);
-	}	 
+// 	if(USART_GetITStatus(USART6,USART_IT_IDLE)!=RESET)
+// 	{		
+// 		Uart6_DMA_Rx_Data();
+// 		rec_data = USART_ReceiveData(USART6);
+// 	}	 
   
-  /* ÍË³öÁÙ½ç¶Î */
-  taskEXIT_CRITICAL_FROM_ISR( ulReturn );
-} 
+//   /* ÍË³öÁÙ½ç¶Î */
+//   taskEXIT_CRITICAL_FROM_ISR( ulReturn );
+// } 
 
-extern USB_OTG_CORE_HANDLE  USB_OTG_dev;
+// extern USB_OTG_CORE_HANDLE  USB_OTG_dev;
 
 /* Private function prototypes -----------------------------------------------*/
-extern uint32_t USBD_OTG_ISR_Handler (USB_OTG_CORE_HANDLE *pdev);
+// extern uint32_t USBD_OTG_ISR_Handler (USB_OTG_CORE_HANDLE *pdev);
 
-#ifdef USB_OTG_HS_DEDICATED_EP1_ENABLED 
-extern uint32_t USBD_OTG_EP1IN_ISR_Handler (USB_OTG_CORE_HANDLE *pdev);
-extern uint32_t USBD_OTG_EP1OUT_ISR_Handler (USB_OTG_CORE_HANDLE *pdev);
-#endif
+// #ifdef USB_OTG_HS_DEDICATED_EP1_ENABLED 
+// extern uint32_t USBD_OTG_EP1IN_ISR_Handler (USB_OTG_CORE_HANDLE *pdev);
+// extern uint32_t USBD_OTG_EP1OUT_ISR_Handler (USB_OTG_CORE_HANDLE *pdev);
+// #endif
 
-#ifdef USE_USB_OTG_FS  
-void OTG_FS_IRQHandler(void)
-{
-  uint32_t ulReturn;
-  /* ½øÈëÁÙ½ç¶Î£¬ÁÙ½ç¶Î¿ÉÒÔÇ¶Ì× */
-  ulReturn = taskENTER_CRITICAL_FROM_ISR();
+// #ifdef USE_USB_OTG_FS  
+// void OTG_FS_IRQHandler(void)
+// {
+//   uint32_t ulReturn;
+//   /* ½øÈëÁÙ½ç¶Î£¬ÁÙ½ç¶Î¿ÉÒÔÇ¶Ì× */
+//   ulReturn = taskENTER_CRITICAL_FROM_ISR();
 	
-  USBD_OTG_ISR_Handler (&USB_OTG_dev);
+//   USBD_OTG_ISR_Handler (&USB_OTG_dev);
 	
-  /* ÍË³öÁÙ½ç¶Î */
-  taskEXIT_CRITICAL_FROM_ISR( ulReturn );
-}
-#endif
+//   /* ÍË³öÁÙ½ç¶Î */
+//   taskEXIT_CRITICAL_FROM_ISR( ulReturn );
+// }
+// #endif
 
-#ifdef USB_OTG_HS_DEDICATED_EP1_ENABLED 
-/**
-  * @brief  This function handles EP1_IN Handler.
-  * @param  None
-  * @retval None
-  */
-void OTG_HS_EP1_IN_IRQHandler(void)
-{
-  uint32_t ulReturn;
-  /* ½øÈëÁÙ½ç¶Î£¬ÁÙ½ç¶Î¿ÉÒÔÇ¶Ì× */
-  ulReturn = taskENTER_CRITICAL_FROM_ISR();
+// #ifdef USB_OTG_HS_DEDICATED_EP1_ENABLED 
+// /**
+//   * @brief  This function handles EP1_IN Handler.
+//   * @param  None
+//   * @retval None
+//   */
+// void OTG_HS_EP1_IN_IRQHandler(void)
+// {
+//   uint32_t ulReturn;
+//   /* ½øÈëÁÙ½ç¶Î£¬ÁÙ½ç¶Î¿ÉÒÔÇ¶Ì× */
+//   ulReturn = taskENTER_CRITICAL_FROM_ISR();
 
-  USBD_OTG_EP1IN_ISR_Handler (&USB_OTG_dev);
+//   USBD_OTG_EP1IN_ISR_Handler (&USB_OTG_dev);
 
-  /* ÍË³öÁÙ½ç¶Î */
-  taskEXIT_CRITICAL_FROM_ISR( ulReturn );
-}
+//   /* ÍË³öÁÙ½ç¶Î */
+//   taskEXIT_CRITICAL_FROM_ISR( ulReturn );
+// }
 
-/**
-  * @brief  This function handles EP1_OUT Handler.
-  * @param  None
-  * @retval None
-  */
-void OTG_HS_EP1_OUT_IRQHandler(void)
-{
-  uint32_t ulReturn;
-  /* ½øÈëÁÙ½ç¶Î£¬ÁÙ½ç¶Î¿ÉÒÔÇ¶Ì× */
-  ulReturn = taskENTER_CRITICAL_FROM_ISR();
+// /**
+//   * @brief  This function handles EP1_OUT Handler.
+//   * @param  None
+//   * @retval None
+//   */
+// void OTG_HS_EP1_OUT_IRQHandler(void)
+// {
+//   uint32_t ulReturn;
+//   /* ½øÈëÁÙ½ç¶Î£¬ÁÙ½ç¶Î¿ÉÒÔÇ¶Ì× */
+//   ulReturn = taskENTER_CRITICAL_FROM_ISR();
 	
-  USBD_OTG_EP1OUT_ISR_Handler (&USB_OTG_dev);
+//   USBD_OTG_EP1OUT_ISR_Handler (&USB_OTG_dev);
 	  
-	/* ÍË³öÁÙ½ç¶Î */
-  taskEXIT_CRITICAL_FROM_ISR( ulReturn );
-}
-#endif
+// 	/* ÍË³öÁÙ½ç¶Î */
+//   taskEXIT_CRITICAL_FROM_ISR( ulReturn );
+// }
+// #endif
 
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

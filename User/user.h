@@ -14,16 +14,9 @@
 #endif
 /*bsp driver*/
 #include "bsp_debug_usart.h"
-#include "bsp_usart6.h"
 #include "bsp_spi_flash.h"
 #include "bsp_sram.h"	
-#include "bsp_led.h"
-#include "bsp_key.h"
 
-#include "usbd_msc_core.h"
-#include "usbd_usr.h"
-#include "usbd_desc.h"
-#include "usb_conf.h"
 
 /*device*/
 

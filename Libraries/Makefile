@@ -27,8 +27,6 @@ Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_hash_md5.c \
 Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_hash_sha1.c \
 Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_i2c.c \
 Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_iwdg.c \
-Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_lptim.c \
-Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_ltdc.c \
 Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_pwr.c \
 Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_qspi.c \
 Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_rcc.c \
@@ -43,17 +41,20 @@ Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_tim.c \
 Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_usart.c \
 Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_wwdg.c \
 Libraries/CMSIS/Device/ST/STM32F4xx/Source/Templates/system_stm32f4xx.c \
-Libraries/STM32_USB_Device_Library/Core/src/usbd_core.c \
-Libraries/STM32_USB_Device_Library/Core/src/usbd_ioreq.c \
-Libraries/STM32_USB_Device_Library/Core/src/usbd_req.c \
-Libraries/STM32_USB_Device_Library/Class/msc/src/usbd_msc_bot.c \
-Libraries/STM32_USB_Device_Library/Class/msc/src/usbd_msc_core.c \
-Libraries/STM32_USB_Device_Library/Class/msc/src/usbd_msc_data.c \
-Libraries/STM32_USB_Device_Library/Class/msc/src/usbd_msc_scsi.c \
-Libraries/STM32_USB_OTG_Driver/src/usb_core.c \
-Libraries/STM32_USB_OTG_Driver/src/usb_dcd.c \
-Libraries/STM32_USB_OTG_Driver/src/usb_dcd_int.c \
 Libraries/STM32F4x7_ETH_Driver/src/stm32f4x7_eth.c \
+# Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_lptim.c \
+# Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_ltdc.c \
+# Libraries/STM32_USB_Device_Library/Core/src/usbd_core.c \
+# Libraries/STM32_USB_Device_Library/Core/src/usbd_ioreq.c \
+# Libraries/STM32_USB_Device_Library/Core/src/usbd_req.c \
+# Libraries/STM32_USB_Device_Library/Class/msc/src/usbd_msc_bot.c \
+# Libraries/STM32_USB_Device_Library/Class/msc/src/usbd_msc_core.c \
+# Libraries/STM32_USB_Device_Library/Class/msc/src/usbd_msc_data.c \
+# Libraries/STM32_USB_Device_Library/Class/msc/src/usbd_msc_scsi.c \
+# Libraries/STM32_USB_OTG_Driver/src/usb_core.c \
+# Libraries/STM32_USB_OTG_Driver/src/usb_dcd.c \
+# Libraries/STM32_USB_OTG_Driver/src/usb_dcd_int.c \
+
 
 
 
@@ -61,10 +62,11 @@ C_INCLUDES +=  \
 -ILibraries/STM32F4xx_StdPeriph_Driver/inc \
 -ILibraries/CMSIS/Include \
 -ILibraries/CMSIS/Device/ST/STM32F4xx/Include \
--ILibraries/STM32_USB_Device_Library/Core/inc \
--ILibraries/STM32_USB_Device_Library/Class/msc/inc \
--ILibraries/STM32_USB_OTG_Driver/inc \
 -ILibraries/STM32F4x7_ETH_Driver/inc \
+# -ILibraries/STM32_USB_Device_Library/Core/inc \
+# -ILibraries/STM32_USB_Device_Library/Class/msc/inc \
+# -ILibraries/STM32_USB_OTG_Driver/inc \
+
 
 
 CFLAGS += $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections

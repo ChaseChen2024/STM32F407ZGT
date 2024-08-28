@@ -42,6 +42,8 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
+
+#include "user.h"
 /* Private typedef -----------------------------------------------------------*/
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -56,7 +58,7 @@
 #define ETH_LINK_FLAG           0x10 /* Ethernet Link Flag */
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-ETH_InitTypeDef ETH_InitStructure;
+ETH_InitTypeDef ETH_InitStructure __EXRAM;
 __IO uint32_t  EthStatus = 0;
 extern struct netif xnetif;
 #ifdef USE_DHCP

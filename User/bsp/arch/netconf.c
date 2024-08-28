@@ -42,19 +42,21 @@
 #include "sys_arch.h"
 #include "tcpip.h"
 
+#include "user.h"
+
 #define MAX_DHCP_TRIES 20
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 uint32_t TCPTimer = 0;
-uint32_t ARPTimer = 0;
-uint32_t DHCPfineTimer = 0;
-uint32_t DHCPcoarseTimer = 0;
-uint32_t IPaddress = 0;
-__IO uint8_t DHCP_state;
+uint32_t ARPTimer = 0 ;
+uint32_t DHCPfineTimer = 0 ;
+uint32_t DHCPcoarseTimer = 0 ;
+uint32_t IPaddress = 0 ;
+__IO uint8_t DHCP_state __EXRAM;
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-struct netif xnetif; /* network interface structure */
+struct netif xnetif __EXRAM; /* network interface structure */
 
 /* Private functions ---------------------------------------------------------*/
 void LwIP_DHCP_Process_Handle(void);

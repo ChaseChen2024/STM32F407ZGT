@@ -87,7 +87,13 @@
 			"lv_conf_internal.h": "c",
 			"mqttclient.h": "c",
 			"mqttfreertos.h": "c",
-			"cc.h": "c"
+			"cc.h": "c",
+			"diskio.h": "c",
+			"integer.h": "c",
+			"bsp_sdio_sd.h": "c",
+			"sntp.h": "c",
+			"tcpip.h": "c",
+			"nv.h": "c"
 		}
 	}
 }

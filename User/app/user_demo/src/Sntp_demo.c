@@ -7,7 +7,7 @@
 #include <string.h>
 #include <time.h>
 
-
+#include "ff.h"
 #include "lwip/opt.h"
 #include <sys/time.h>
 #include "lwip/sys.h"
@@ -19,7 +19,7 @@
 /* FreeRTOS头文件 */
 #include "FreeRTOS.h"
 #include "task.h"
-
+#include "user.h"
 
 static TaskHandle_t SNTP_Demo_Task_Handle = NULL;/* RTC任务句柄 */
 #if 0
@@ -206,16 +206,16 @@ void Sntp_BSP_Init(void)
  
 #define JAN_1970            0x83aa7e80
  
-#define NTP_CONV_FRAC32(x)  (uint64_t) ((x) * ((uint64_t)1<<32))    
-#define NTP_REVE_FRAC32(x)  ((double) ((double) (x) / ((uint64_t)1<<32)))   
+// #define NTP_CONV_FRAC32(x)  (uint64_t) ((x) * ((uint64_t)1<<32))    
+// #define NTP_REVE_FRAC32(x)  ((double) ((double) (x) / ((uint64_t)1<<32)))   
  
-#define NTP_CONV_FRAC16(x)  (uint32_t) ((x) * ((uint32_t)1<<16))    
-#define NTP_REVE_FRAC16(x)  ((double)((double) (x) / ((uint32_t)1<<16)))    
-#define NTP_TIMESTAMP_DELTA  2208988800UL
+// #define NTP_CONV_FRAC16(x)  (uint32_t) ((x) * ((uint32_t)1<<16))    
+// #define NTP_REVE_FRAC16(x)  ((double)((double) (x) / ((uint32_t)1<<16)))    
+// #define NTP_TIMESTAMP_DELTA  2208988800UL
  
-#define USEC2FRAC(x)        ((uint32_t) NTP_CONV_FRAC32( (x) / 1000000.0 )) 
-#define FRAC2USEC(x)        ((uint32_t) NTP_REVE_FRAC32( (x) * 1000000.0 )) 
-#define NTP_LFIXED2DOUBLE(x)    ((double) ( ntohl(((struct l_fixedpt *) (x))->intpart) - JAN_1970 + FRAC2USEC(ntohl(((struct l_fixedpt *) (x))->fracpart)) / 1000000.0 ))   
+// #define USEC2FRAC(x)        ((uint32_t) NTP_CONV_FRAC32( (x) / 1000000.0 )) 
+// #define FRAC2USEC(x)        ((uint32_t) NTP_REVE_FRAC32( (x) * 1000000.0 )) 
+// #define NTP_LFIXED2DOUBLE(x)    ((double) ( ntohl(((struct l_fixedpt *) (x))->intpart) - JAN_1970 + FRAC2USEC(ntohl(((struct l_fixedpt *) (x))->fracpart)) / 1000000.0 ))   
 
 
 struct s_fixedpt {
@@ -249,7 +249,7 @@ struct ntphdr {
 #define NTP_PACKET_SIZE 48
 #define Data(i) ntohl(((uint32_t *)buf)[i])
 
-uint8_t g_lwip_time_buf[100];
+uint8_t g_lwip_time_buf[100] __EXRAM;
 const char g_days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 typedef struct _DateTime  /*此结构体定义了NTP时间同步的相关变量*/
 {
@@ -260,7 +260,7 @@ typedef struct _DateTime  /*此结构体定义了NTP时间同步的相关变量*/
     int  minute;      /* 分 */
     int  second;      /* 秒 */
 } DateTime;
-DateTime g_nowdate;   
+DateTime g_nowdate __EXRAM;   
 uint32_t osKernelGetTickCount (void) {
   TickType_t ticks;
 
@@ -399,7 +399,6 @@ static void SNTP_Demo_Task(void* parameter)
 {	
 	
 	printf("sntp init\r\n");
-	
 	LwIP_NW_Init();
 	
 	printf("sntp init111\r\n");
@@ -500,9 +499,10 @@ static void SNTP_Demo_Task(void* parameter)
 		printf("\r\nRTC_SetDate fail  \r\n");
 	}
 
+
 	vTaskDelay(1000);
 	
-	vStartMQTTTasks(1024*4,10);
+	vStartMQTTTasks(1024*2,10);
 	vTaskDelete(NULL); //删除任务
 END:
 	printf("socket creat fail \r\n");
@@ -518,7 +518,7 @@ long SNTP_Demo_Task_Init(void)
 			/* 创建RTC_Task任务 */
 		xReturn = xTaskCreate((TaskFunction_t )SNTP_Demo_Task,  /* 任务入口函数 */
 													(const char*    )"SNTP_Demo_Task",/* 任务名字 */
-													(uint16_t       )1024*1,  /* 任务栈大小 */
+													(uint16_t       )1024*2,  /* 任务栈大小 */
 													(void*          )NULL,/* 任务入口函数参数 */
 													(UBaseType_t    )3, /* 任务的优先级 */
 													(TaskHandle_t*  )&SNTP_Demo_Task_Handle);/* 任务控制块指针 */ 

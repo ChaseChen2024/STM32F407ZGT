@@ -7,10 +7,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
-
-/* FreeRTOS+TCP includes. */
-//#include "FreeRTOS_IP.h"
-//#include "FreeRTOS_Sockets.h"
+#include "user.h"
 
 //#define MQTT_TASK 1
 #include "MQTTClient.h"
@@ -19,14 +16,14 @@
 #define EXAMPLE_DEVICE_NAME            "f407_mqtt_chase"
 #define EXAMPLE_DEVICE_SECRET       "deb7b39b25f6ca12097889bde615b532"
 
-	const char *subTopic = "/"EXAMPLE_PRODUCT_KEY"/"EXAMPLE_DEVICE_NAME"/user/get";
+const char *subTopic = "/"EXAMPLE_PRODUCT_KEY"/"EXAMPLE_DEVICE_NAME"/user/get";
 //	const char *pubTopic = "/"EXAMPLE_PRODUCT_KEY"/"EXAMPLE_DEVICE_NAME"/user/update";
 const char *attribute_report_pubTopic = "/sys/"EXAMPLE_PRODUCT_KEY"/"EXAMPLE_DEVICE_NAME"/thing/event/property/post";
 const char *attribute_report_subTopic = "/sys/"EXAMPLE_PRODUCT_KEY"/"EXAMPLE_DEVICE_NAME"/thing/event/property/post_reply";
 
 const char *attribute_set_subTopic = "/sys/"EXAMPLE_PRODUCT_KEY"/"EXAMPLE_DEVICE_NAME"/thing/service/property/set";
 
-MQTTClient aiot_client;
+MQTTClient aiot_client __EXRAM;
 
 
 extern int aiotMqttSign(const char *productKey, const char *deviceName, const char *deviceSecret, 

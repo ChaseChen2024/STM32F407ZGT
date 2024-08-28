@@ -2,7 +2,7 @@
 #include "FatFs_demo.h"
 
 #include "ff.h"
-
+#include <nv.h>
 #include <string.h>
 
 /* FreeRTOS头文件 */
@@ -12,17 +12,17 @@
 #include "semphr.h"
 static TaskHandle_t FatFs_Demo_Task_Handle = NULL;/* FatFs_Demo任务句柄 */
 
-#define STR_WRITE  "a,b,c"
-BYTE WriteBuffer[] = "欢迎使用野火STM32 F407开发板 今天是个好日子，新建文件系统测试文件\r\n"; 
+// #define STR_WRITE  "a,b,c"
+// BYTE WriteBuffer[] = "33333333333333\r\n"; 
 
 #define SPI_FLASH_FATFS 1
 #ifdef SPI_FLASH_FATFS
-FATFS fs;
-FRESULT res;
-FIL fil;
-UINT bw;
-UINT br;
-char read_buff[100];
+// FATFS fs;
+// FRESULT res;
+// FIL fil;
+// UINT bw;
+// UINT br;
+// char read_buff[50];
 #else
 FATFS fs;													/* FatFs文件系统对象 */
 FIL fnew;													/* 文件对象 */
@@ -42,7 +42,13 @@ BYTE ReadBuffer[1024]={0};        /* 读缓冲区 */
 static void FatFs_Demo_Task(void* parameter)
 {	
 #ifdef SPI_FLASH_FATFS
-
+		char read_buf[4] = {0};
+		  nv_init();
+  FRESULT err = FR_OK;
+  nv_write("1:test.txt","1024",4);
+  err = nv_read("1:test.txt",read_buf,4);
+  printf("\r\n1:20240828.txt,read:%d,%d,%d,%d,err:%d\r\n",read_buf[0],read_buf[1],read_buf[2],read_buf[3],err);
+#if 0
 		printf("\r\n这是一个文件系统移植实验 \r\n");
 
 		res = f_mount(&fs,"1:",1);
@@ -80,6 +86,8 @@ static void FatFs_Demo_Task(void* parameter)
 		printf("%s", read_buff);
 
 		res = f_close(&fil);
+#endif
+
 #else
 
 	//在外部SPI Flash挂载文件系统，文件系统挂载时会对SPI设备初始化
@@ -171,10 +179,11 @@ static void FatFs_Demo_Task(void* parameter)
 	/* 不再使用文件系统，取消挂载文件系统 */
 	f_mount(NULL,"0:",1);		
 #endif		
-		while (1)
-		{
-			vTaskDelay(500);   /* 延时500个tick */
-		}
+		// while (1)
+		// {
+		// 	vTaskDelay(500);   /* 延时500个tick */
+		// }
+		vTaskDelete(NULL);
 }
 
 long FatFs_Demo_Task_Init(void)
@@ -195,25 +204,25 @@ long FatFs_Demo_Task_Init(void)
 //将一串数据加入文件末尾，默认文件系统已经挂载
 #ifdef SPI_FLASH_FATFS
 
-int add_data_file(int a,int b,int c)
-{
+// int add_data_file(int a,int b,int c)
+// {
 
-	char writ_buf[64]={0};
-	sprintf(writ_buf,"%d,%d,%d\r\n",a,b,c);
-	res = f_open(&fil, "1:czs.csv", FA_OPEN_EXISTING|FA_WRITE);
-	printf("\r\n,%d,f_open res=%d",__LINE__,res);
+// 	char writ_buf[64]={0};
+// 	sprintf(writ_buf,"%d,%d,%d\r\n",a,b,c);
+// 	res = f_open(&fil, "1:czs.csv", FA_OPEN_EXISTING|FA_WRITE);
+// 	printf("\r\n,%d,f_open res=%d",__LINE__,res);
 	
-	res=f_lseek(&fil,f_size(&fil));
-	printf("\r\n,%d,f_lseek res=%d",__LINE__,res);
+// 	res=f_lseek(&fil,f_size(&fil));
+// 	printf("\r\n,%d,f_lseek res=%d",__LINE__,res);
 	
 	
-	res = f_write(&fil, writ_buf, strlen(writ_buf) ,&bw);
-	printf("\r\n,%d,f_write res=%d len=%d bw=%d",__LINE__,res,strlen(writ_buf),bw);
+// 	res = f_write(&fil, writ_buf, strlen(writ_buf) ,&bw);
+// 	printf("\r\n,%d,f_write res=%d len=%d bw=%d",__LINE__,res,strlen(writ_buf),bw);
 	
-	res = f_close(&fil);
+// 	res = f_close(&fil);
 
-	return 0;
-}
+// 	return 0;
+// }
 
 #endif
 

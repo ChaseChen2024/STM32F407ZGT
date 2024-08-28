@@ -186,7 +186,7 @@
 // //将内存定义在SDRAM上
 #define configAPPLICATION_ALLOCATED_HEAP        0
 //系统所有总的堆大小
-#define configTOTAL_HEAP_SIZE					((size_t)(40*1024))    
+#define configTOTAL_HEAP_SIZE					((size_t)(30*1024))    
 // #define configTOTAL_HEAP_SIZE					((size_t)(20*1024))  
 
 /***************************************************************
