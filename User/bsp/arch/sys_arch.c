@@ -31,7 +31,6 @@
  */
 
 /* lwIP includes. */
-#include "user_define.h"
 #ifdef USE_LWIP_CODE
 #include "lwip/debug.h"
 #include "lwip/def.h"

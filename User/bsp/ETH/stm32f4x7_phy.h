@@ -29,7 +29,6 @@
 #ifndef __STM32F4X7_ETH_BSP_H
 #define __STM32F4X7_ETH_BSP_H
 
-#include "user_define.h"
 #ifdef USE_LWIP_CODE
 
 

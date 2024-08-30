@@ -93,7 +93,15 @@
 			"bsp_sdio_sd.h": "c",
 			"sntp.h": "c",
 			"tcpip.h": "c",
-			"nv.h": "c"
+			"nv.h": "c",
+			"shell.h": "c",
+			"shell_cfg.h": "c",
+			"shell_ext.h": "c",
+			"array": "c",
+			"initializer_list": "c",
+			"utility": "c",
+			"sstream": "c",
+			"bsp_usart3.h": "c"
 		}
 	}
 }

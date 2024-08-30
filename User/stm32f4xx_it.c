@@ -35,7 +35,6 @@
 #include "queue.h"
 #include "semphr.h"
 
-#include "user_define.h"
 #ifdef USE_LWIP_CODE
 /* lwip includes */
 #include "lwip/sys.h"
@@ -44,7 +43,7 @@
 #include "bsp_debug_usart.h"
 #include<string.h>
 #include "bsp_spi_flash.h"
-
+#include "bsp_usart3.h"
 // #include "usbd_msc_core.h"
 // #include "usbd_usr.h"
 // #include "usbd_desc.h"
@@ -135,6 +134,45 @@ void UsageFault_Handler(void)
 void DebugMon_Handler(void)
 {}
 
+#include "shell_port.h"
+extern uint8_t READ_IT_FLAG;
+extern uint8_t uart3_shell_data;
+// void USART1_IRQHandler(void)  
+// {
+//   	// uint32_t ulReturn;
+//   // ulReturn = taskENTER_CRITICAL_FROM_ISR();
+
+//   if( USART_GetITStatus(USART1, USART_IT_RXNE)!= RESET)
+//   {
+    
+//     uart1_rec_data = (uint8_t)USART_ReceiveData(USART1);
+//     // shellHandler(&shell, rec_data);
+//     // printf("%c",uart1_rec_data);
+//     // USART_SendData(DEBUG_USART,uart1_rec_data);
+//     READ_IT_FLAG = 1;
+//     // USART_ClearITPendingBit(USART1,USART_IT_RXNE);
+
+//   }
+//   // taskEXIT_CRITICAL_FROM_ISR( ulReturn );
+// }
+extern uint8_t uart3_shell_buf_len;
+void USART3_IRQHandler(void)  
+{
+  	// uint32_t ulReturn;
+  // ulReturn = taskENTER_CRITICAL_FROM_ISR();
+
+  if( USART_GetITStatus(USART3, USART_IT_RXNE)!= RESET)
+  {
+    
+    uart3_shell_data = (uint8_t)USART_ReceiveData(USART3);
+    // USART_SendData(USART3,uart3_shell_buf[uart3_shell_buf_len-1]);
+    READ_IT_FLAG = 1;
+    // USART_ClearITPendingBit(USART1,USART_IT_RXNE);
+
+  }
+  // taskEXIT_CRITICAL_FROM_ISR( ulReturn );
+}
+
 
 /**
   * @brief  This function handles SysTick Handler.
@@ -186,6 +224,8 @@ void ETH_IRQHandler(void)
 }
 
 #endif
+
+
 // #include "bsp_usart6.h"
 // void USART6_IRQHandler(void)  
 // {

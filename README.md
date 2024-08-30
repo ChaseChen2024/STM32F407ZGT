@@ -131,3 +131,14 @@ nv_write() 直接调用进行写数据
 优化内存占用
    text    data     bss     dec     hex filename
  143172     164  101620  244956   3bcdc Build/QT201.elf
+
+
+# 20240830修改
+
+新增letter-shell 串口终端，用于串口调试功能。
+功能源码来源：https://github.com/NevermindZZT/letter-shell
+
+本工程使用uart3作为通信口，中断方式进行数据接收。
+
+新增BUILE_LETTER_SHELL控制，且默认打开
+

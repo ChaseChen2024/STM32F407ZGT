@@ -8,7 +8,7 @@
 #include "task.h"
 #include "queue.h"
 #include "user.h"
-
+#include "shell_port.h"
 //#define MQTT_TASK 1
 #include "MQTTClient.h"
 
@@ -24,7 +24,7 @@ const char *attribute_report_subTopic = "/sys/"EXAMPLE_PRODUCT_KEY"/"EXAMPLE_DEV
 const char *attribute_set_subTopic = "/sys/"EXAMPLE_PRODUCT_KEY"/"EXAMPLE_DEVICE_NAME"/thing/service/property/set";
 
 MQTTClient aiot_client __EXRAM;
-
+unsigned int msgid = 0;
 
 extern int aiotMqttSign(const char *productKey, const char *deviceName, const char *deviceSecret, 
                      	char clientId[150], char username[65], char password[65]);
@@ -46,7 +46,7 @@ static void prvMQTTEchoTask(void *pvParameters)
 	int rc = 0, 
 		count = 0;
 	MQTTPacket_connectData connectData = MQTTPacket_connectData_initializer;
-	printf("\r\nprvMQTTEchoTask--------------------------------------\r\n");
+	// printf("\r\nprvMQTTEchoTask--------------------------------------\r\n");
 	char *host = EXAMPLE_PRODUCT_KEY".iot-as-mqtt.cn-shanghai.aliyuncs.com";
 	short port = 1883;
 
@@ -60,22 +60,22 @@ static void prvMQTTEchoTask(void *pvParameters)
 		printf("aiotMqttSign -%0x4x\n", -rc);
 		return -1;
 	}
-	printf("clientid: %s\r\n", clientId);
-	printf("username: %s\r\n", username);
-	printf("password: %s\r\n", password);
+	// printf("clientid: %s\r\n", clientId);
+	// printf("username: %s\r\n", username);
+	// printf("password: %s\r\n", password);
 
 
 	pvParameters = 0;
 	NetworkInit(&network);
-	printf("\r\nNetworkInit\r\n");
+	// printf("\r\nNetworkInit\r\n");
 	MQTTClientInit(&aiot_client, &network, 30000, sendbuf, sizeof(sendbuf), readbuf, sizeof(readbuf));
-	printf("\r\nMQTTClientInit\r\n");
+	// printf("\r\nMQTTClientInit\r\n");
 
 //	network.defaultMessageHandler = messageArrived;
 	if ((rc = NetworkConnect(&network, host, port)) != 0)
 		printf("Return code from network connect is %d\n", rc);
 
-	printf("\r\nNetworkConnect,rc:%d\r\n",rc);
+	// printf("\r\nNetworkConnect,rc:%d\r\n",rc);
 #if defined(MQTT_TASK)
 	if ((rc = MQTTStartTask(&aiot_client)) != pdPASS)
 		printf("Return code from start tasks is %d\n", rc);
@@ -100,7 +100,7 @@ static void prvMQTTEchoTask(void *pvParameters)
 
 	if ((rc = MQTTSubscribe(&aiot_client, subTopic, 1, messageArrived)) != 0)
 		printf("Return code from MQTT subscribe is %d\r\n", rc);
-	unsigned int msgid = 0;
+	// unsigned int msgid = 0;
 	char pub_payload[128]={0};
 	
 	MQTTMessage msg = {0};
@@ -136,4 +136,23 @@ void vStartMQTTTasks(uint16_t usTaskStackSize, UBaseType_t uxTaskPriority)
 }
 /*-----------------------------------------------------------*/
 
+int mqtt_send(int i)
+{
+    MQTTMessage msg = {0};
+	int rc =0;
+	
+	char pub_payload[128]={0};
+	msg.qos = QOS0;		
+	sprintf(pub_payload,"{\"id\":\"1\",\"version\":\"1.0\",\"params\":{\"LightSwitch\":%d}}",i);
+	Usart_SendString(USART3,"\r\n");
+	Usart_SendString(USART3,pub_payload);
+	Usart_SendString(USART3,"\r\n");
+	msg.id = ++msgid;
+	msg.payload = pub_payload;
+	msg.payloadlen = sizeof(pub_payload);
+	rc = MQTTPublish(&aiot_client, attribute_report_pubTopic, &msg);
+	printf("----------------MQTTPublish %d, msgid %d----------------\r\n", rc, msgid);
+    
+}
+SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_FUNC), mqttsend, mqtt_send, test1);
 

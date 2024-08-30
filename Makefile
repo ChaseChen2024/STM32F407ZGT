@@ -39,6 +39,10 @@ BUILE_LVGL = n
 
 BUILE_MQTT = y
 
+BUILE_LETTER_SHELL = y
+
+BUILE_USB = n
+
 #######################################
 # binaries
 #######################################
@@ -81,11 +85,10 @@ AS_DEFS =
 C_DEFS =  \
 -DUSE_STDPERIPH_DRIVER\
 -DSTM32F40_41xxx\
--DUSE_USB_OTG_FS\
 
 
 ifeq ($(BUILE_LWIP),y)
-C_DEFS += -DUSE_EMBEDDED_PHY -DUSE_LWIP\
+C_DEFS += -DUSE_EMBEDDED_PHY -DUSE_LWIP -DUSE_LWIP_CODE\
 
 endif
 
@@ -99,6 +102,15 @@ ifeq ($(BUILE_MQTT),y)
 endif
 endif
 
+ifeq ($(BUILE_LETTER_SHELL),y)
+C_DEFS += -DUSER_LEETTER_SHELL\
+
+endif
+
+ifeq ($(BUILE_USB),y)
+C_DEFS += -DUSE_USB_OTG_FS -DUSE_USB_CODE -DUSB_CODE\
+
+endif
 
 # AS includes
 AS_INCLUDES =  \

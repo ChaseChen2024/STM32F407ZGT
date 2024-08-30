@@ -27,7 +27,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 
-#include "user_define.h"
 #ifdef USE_LWIP_CODE
 #include "lwip/opt.h"
 #include "stm32f4x7_eth.h"

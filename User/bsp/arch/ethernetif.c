@@ -42,7 +42,6 @@
 * search-and-replace for the word "ethernetif" to replace it with
 * something that better describes your network interface.
 */
-#include "user_define.h"
 #ifdef USE_LWIP_CODE
 #include "lwip/opt.h"
 #include "lwip/def.h"

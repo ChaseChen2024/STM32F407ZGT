@@ -503,6 +503,7 @@ static void SNTP_Demo_Task(void* parameter)
 	vTaskDelay(1000);
 	
 	vStartMQTTTasks(1024*2,10);
+
 	vTaskDelete(NULL); //É¾³ıÈÎÎñ
 END:
 	printf("socket creat fail \r\n");

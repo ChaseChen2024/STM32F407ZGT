@@ -17,7 +17,7 @@ static void NVIC_Configuration(void)
   /* 配置USART为中断源 */
   NVIC_InitStructure.NVIC_IRQChannel = DEBUG_USART_IRQ;
   /* 抢断优先级为1 */
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
   /* 子优先级为1 */
   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
   /* 使能中断 */
@@ -114,6 +114,16 @@ void Usart_SendString( USART_TypeDef * pUSARTx, char *str)
   {}
 }
 
+void Usart_Transmit( USART_TypeDef * pUSARTx, char *pBuffer, unsigned int len )
+{
+	  for (int i = 0; i < len; i++)
+    {
+        while (USART_GetFlagStatus(pUSARTx, USART_FLAG_TXE) == RESET);
+        USART_SendData(pUSARTx, (uint8_t) pBuffer[i]);
+    }
+    // return size;
+
+}
 /*****************  发送一个16位数 **********************/
 void Usart_SendHalfWord( USART_TypeDef * pUSARTx, uint16_t ch)
 {

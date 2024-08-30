@@ -5,18 +5,13 @@
 #include <stdio.h>
 #include "stm32f4xx_conf.h"
 
-//Òý½Å¶¨Òå
+
 /*******************************************************/
 #define DEBUG_USART                             USART1
 
-/* ²»Í¬µÄ´®¿Ú¹ÒÔØµÄ×ÜÏß²»Ò»Ñù£¬Ê±ÖÓÊ¹ÄÜº¯ÊýÒ²²»Ò»Ñù£¬ÒÆÖ²Ê±Òª×¢Òâ
-* ´®¿Ú1ºÍ6ÊÇ      RCC_APB2PeriphClockCmd
-* ´®¿Ú2/3/4/5ÊÇ    RCC_APB1PeriphClockCmd
-*/
-
 
 #define DEBUG_USART_CLK                         RCC_APB2Periph_USART1
-#define DEBUG_USART_BAUDRATE                    115200  //´®¿Ú²¨ÌØÂÊ
+#define DEBUG_USART_BAUDRATE                    115200
 
 #define DEBUG_USART_RX_GPIO_PORT                GPIOA
 #define DEBUG_USART_RX_GPIO_CLK                 RCC_AHB1Periph_GPIOA
@@ -39,5 +34,5 @@ void Usart_SendByte( USART_TypeDef * pUSARTx, uint8_t ch);
 void Usart_SendString( USART_TypeDef * pUSARTx, char *str);
 
 void Usart_SendHalfWord( USART_TypeDef * pUSARTx, uint16_t ch);
-
+void Usart_Transmit( USART_TypeDef * pUSARTx, char *pBuffer, unsigned int len );
 #endif /* __USART1_H */

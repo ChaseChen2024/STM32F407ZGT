@@ -253,6 +253,17 @@ Component/pahoMqtt/MQTTClient-C/samples/FreeRTOS/aiot_mqtt_sign.c \
 
 endif
 
+
+ifeq ($(BUILE_LETTER_SHELL),y)
+C_SOURCES +=  \
+Component/LetterShell/src/shell.c \
+Component/LetterShell/src/shell_cmd_list.c \
+Component/LetterShell/src/shell_companion.c \
+Component/LetterShell/src/shell_ext.c \
+Component/LetterShell/stm32-freertos/shell_port.c \
+
+endif
+
 ifeq ($(BUILE_LWIP),y)
 C_INCLUDES +=  \
 -IComponent/LWIP/include \
@@ -342,6 +353,14 @@ C_INCLUDES +=  \
 
 
 endif
+
+ifeq ($(BUILE_LETTER_SHELL),y)
+C_INCLUDES +=  \
+-IComponent/LetterShell/src \
+-IComponent/LetterShell/stm32-freertos \
+
+endif
+
 
 CFLAGS += $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
 

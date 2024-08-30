@@ -5,22 +5,27 @@ C_SOURCES +=  \
 User/main.c \
 User/stm32f4xx_it.c \
 User/bsp/uart/bsp_debug_usart.c \
+User/bsp/uart/bsp_usart3.c \
 User/bsp/key/bsp_key.c \
 User/bsp/rtc/bsp_rtc.c \
 User/bsp/flash/bsp_spi_flash.c \
 User/bsp/sram/bsp_sram.c \
 User/app/nv/nv.c \
-# User/bsp/led/bsp_led.c \
 # User/bsp/uart/bsp_usart6.c \
+# User/bsp/led/bsp_led.c \
 # User/bsp/sdio/bsp_sdio_sd.c \
 # User/bsp/lcd/lcd.c \
-# User/bsp/usb/usb_bsp.c \
-# User/bsp/usb/usbd_desc.c \
-# User/bsp/usb/usbd_storage_msd.c \
-# User/bsp/usb/usbd_usr.c \
 # User/bsp/GNSS/gnss.c \
 # User/bsp/GNSS/NMEA0183.c \
 
+ifeq ($(BUILE_USB),y)
+C_SOURCES +=  \
+User/bsp/usb/usb_bsp.c \
+User/bsp/usb/usbd_desc.c \
+User/bsp/usb/usbd_storage_msd.c \
+User/bsp/usb/usbd_usr.c \
+
+endif
 
 ifeq ($(BUILE_LVGL),y)
 C_SOURCES +=  \
@@ -50,14 +55,17 @@ C_INCLUDES +=  \
 -IUser/bsp/sram \
 -IUser/app/user_demo/inc \
 -IUser/app/nv \
-# -IUser/bsp/usb \
 # -IUser/bsp/sdio \
 # -IUser/bsp/lcd \
 # -IUser/app/pg \
 # -IUser/app/my_gui \
-
-
 # -IUser/bsp/GNSS \
+
+ifeq ($(BUILE_USB),y)
+C_INCLUDES +=  \
+-IUser/bsp/usb \
+
+endif
 
 ifeq ($(BUILE_LWIP),y)
 C_SOURCES +=  \

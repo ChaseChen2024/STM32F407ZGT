@@ -20,7 +20,6 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include "user_define.h"
 #ifdef USE_LWIP_CODE
 #include "lwip/mem.h"
 #include "lwip/memp.h"
@@ -30,7 +29,6 @@
 #include "lwip/dhcp.h"
 #include "lwip/priv/tcp_priv.h"
 #include "ethernetif.h"
-//#include "main.h"
 #include "netconf.h"
 #include <stdio.h>
 #include "FreeRTOS.h"
@@ -38,7 +36,6 @@
 #include "timers.h"
 #include "semphr.h"
 
-#include "app_log.h"
 #include "sys_arch.h"
 #include "tcpip.h"
 
