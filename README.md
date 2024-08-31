@@ -142,3 +142,21 @@ nv_write() 直接调用进行写数据
 
 新增BUILE_LETTER_SHELL控制，且默认打开
 
+# 20240831修改
+
+1 修复letter-shell方向键不匹配问题
+原因：串口丢数据导致。
+解决方法：修改终端串口usart3为空闲中断 DMA接收不定长数据的方法。
+在shellTask中将数据将数据逐个推到shellHandler()
+
+优化：删除shellTask中的delay函数，采用信号量的方式进行，阻塞task.当串口进入空闲中断后，抛出信号量，通知shellTask读取数据进行处理
+
+
+2 基于letter-shell ,实现简单的文件系统操作指令，ls,cd,mkdir,rm,nvread,nvwrite
+
+3 基于letter-shell ,实现简单网络操作指令，dhcp(触发dhcp),ifconfig(仅能查询IP)
+
+   text    data     bss     dec     hex filename
+
+ 349768     316  112580  462664   70f48 Build/QT201.elf
+

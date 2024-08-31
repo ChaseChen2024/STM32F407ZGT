@@ -57,7 +57,7 @@
 #define ETH_LINK_FLAG           0x10 /* Ethernet Link Flag */
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-ETH_InitTypeDef ETH_InitStructure __EXRAM;
+ETH_InitTypeDef ETH_InitStructure;
 __IO uint32_t  EthStatus = 0;
 extern struct netif xnetif;
 #ifdef USE_DHCP
@@ -191,6 +191,7 @@ static void ETH_MACDMA_Config(void)
   /* Configure Ethernet */
 	/* ≈‰÷√ETH */
   EthStatus = ETH_Init(&ETH_InitStructure, ETHERNET_PHY_ADDRESS);
+  printf("ETH_Init:EthStatus:%d\r\n",EthStatus);
   ETH_DMAITConfig(ETH_DMA_IT_NIS | ETH_DMA_IT_R, ENABLE);
 }
 

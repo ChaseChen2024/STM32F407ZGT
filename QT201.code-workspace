@@ -101,7 +101,14 @@
 			"initializer_list": "c",
 			"utility": "c",
 			"sstream": "c",
-			"bsp_usart3.h": "c"
+			"bsp_usart3.h": "c",
+			"shell_fs.h": "c",
+			"stddef.h": "c",
+			"shell_port.h": "c",
+			"stdarg.h": "c",
+			"tcp.h": "c",
+			"udp.h": "c",
+			"tcp_priv.h": "c"
 		}
 	}
 }

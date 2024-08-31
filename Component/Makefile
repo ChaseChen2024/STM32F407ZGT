@@ -261,6 +261,7 @@ Component/LetterShell/src/shell_cmd_list.c \
 Component/LetterShell/src/shell_companion.c \
 Component/LetterShell/src/shell_ext.c \
 Component/LetterShell/stm32-freertos/shell_port.c \
+# Component/LetterShell/extensions/fs_support/shell_fs.c \
 
 endif
 
@@ -358,6 +359,7 @@ ifeq ($(BUILE_LETTER_SHELL),y)
 C_INCLUDES +=  \
 -IComponent/LetterShell/src \
 -IComponent/LetterShell/stm32-freertos \
+# -IComponent/LetterShell/extensions/fs_support \
 
 endif
 

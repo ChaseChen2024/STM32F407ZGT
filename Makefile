@@ -85,21 +85,21 @@ AS_DEFS =
 C_DEFS =  \
 -DUSE_STDPERIPH_DRIVER\
 -DSTM32F40_41xxx\
-
+-DUSE_EMBEDDED_PHY\
 
 ifeq ($(BUILE_LWIP),y)
-C_DEFS += -DUSE_EMBEDDED_PHY -DUSE_LWIP -DUSE_LWIP_CODE\
+C_DEFS +=  -DUSE_LWIP -DUSE_LWIP_CODE\
+
+ifeq ($(BUILE_MQTT),y)
+C_DEFS += -DUSE_MQTT_CODE\
+
+endif
 
 endif
 
 ifeq ($(BUILE_LVGL),y)
 C_DEFS += -DUSE_LVGL\
 
-
-ifeq ($(BUILE_MQTT),y)
-# C_DEFS += -DMQTT_TASK\
-
-endif
 endif
 
 ifeq ($(BUILE_LETTER_SHELL),y)

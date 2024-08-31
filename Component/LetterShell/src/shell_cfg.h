@@ -39,7 +39,7 @@
  * @brief 是否使用shell伴生对象
  *        一些扩展的组件(文件系统支持，日志工具等)需要使用伴生对象
  */
-#define     SHELL_USING_COMPANION       0
+#define     SHELL_USING_COMPANION       1
 #endif /** SHELL_USING_COMPANION */
 
 #ifndef SHELL_SUPPORT_END_LINE
@@ -115,7 +115,7 @@
  * @brief shell命令参数最大数量
  *        包含命令名在内，超过16个参数并且使用了参数自动转换的情况下，需要修改源码
  */
-#define     SHELL_PARAMETER_MAX_NUMBER  8
+#define     SHELL_PARAMETER_MAX_NUMBER  16
 #endif /** SHELL_PARAMETER_MAX_NUMBER */
 
 #ifndef SHELL_HISTORY_MAX_NUMBER
@@ -154,7 +154,7 @@
 /**
  * @brief 管理的最大shell数量
  */
-#define     SHELL_MAX_NUMBER            5
+#define     SHELL_MAX_NUMBER            1
 #endif /** SHELL_MAX_NUMBER */
 
 #ifndef SHELL_PRINT_BUFFER
@@ -196,7 +196,7 @@
  * @brief shell内存分配
  *        shell本身不需要此接口，若使用shell伴生对象，需要进行定义
  */
-#define     SHELL_MALLOC(size)          0
+#define     SHELL_MALLOC(size)      pvPortMalloc(size)    
 #endif /** SHELL_MALLOC */
 
 #ifndef SHELL_FREE
@@ -204,7 +204,7 @@
  * @brief shell内存释放
  *        shell本身不需要此接口，若使用shell伴生对象，需要进行定义
  */
-#define     SHELL_FREE(obj)             0
+#define     SHELL_FREE(obj)             vPortFree(obj)
 #endif /** SHELL_FREE */
 
 #ifndef SHELL_SHOW_INFO

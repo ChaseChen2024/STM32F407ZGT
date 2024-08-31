@@ -20,7 +20,7 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#ifdef USE_LWIP_CODE
+// #ifdef USE_LWIP_CODE
 #include "lwip/mem.h"
 #include "lwip/memp.h"
 #include "lwip/tcp.h"
@@ -49,11 +49,11 @@ uint32_t ARPTimer = 0 ;
 uint32_t DHCPfineTimer = 0 ;
 uint32_t DHCPcoarseTimer = 0 ;
 uint32_t IPaddress = 0 ;
-__IO uint8_t DHCP_state __EXRAM;
+__IO uint8_t DHCP_state;
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-struct netif xnetif __EXRAM; /* network interface structure */
+struct netif xnetif; /* network interface structure */
 
 /* Private functions ---------------------------------------------------------*/
 void LwIP_DHCP_Process_Handle(void);
@@ -68,8 +68,6 @@ void LwIP_NW_Init(void)
   ip_addr_t ipaddr;
   ip_addr_t netmask;
   ip_addr_t gw;
-
-  // lwip_init();
  
 #if LWIP_DHCP
   ipaddr.addr = 0;
@@ -129,7 +127,6 @@ void LwIP_NW_Init(void)
     	break;
     }
     
-//    dhcp_fine_tmr();
   } 
 #endif
     printf("本地IP地址是:%d.%d.%d.%d\n\n",  \
@@ -139,6 +136,49 @@ void LwIP_NW_Init(void)
         ((xnetif.ip_addr.addr)&0xff000000)>>24);
 }
 
+
+#if LWIP_DHCP
+int LwIP_DHCP(ip_addr_t *addr)
+{
+  ip_addr_t ipaddr;
+  ip_addr_t netmask;
+  ip_addr_t gw;
+  int err;
+  int count=0;
+ 
+  ipaddr.addr = 0;
+  netmask.addr = 0;
+  gw.addr = 0;
+  DHCP_state = DHCP_START;
+
+  
+  err = dhcp_start(&xnetif);      //开启dhcp
+  if(err == ERR_OK)
+    printf("lwip dhcp init success...\n\n");
+  else
+    printf("lwip dhcp init fail...\n\n");
+
+   
+  while(ip_addr_cmp(&(xnetif.ip_addr),&ipaddr))   //等待dhcp分配的ip有效
+  {
+    vTaskDelay(100);
+    count+=100;
+    printf("count:%d\r\n",count);
+    if(count > 5000)
+    {
+		printf("dhcp获取IP超时...\n\n");
+		return -1;
+    }
+  } 
+  addr->addr = xnetif.ip_addr.addr;
+    printf("本地IP地址是:%d.%d.%d.%d\n\n",  \
+        ((xnetif.ip_addr.addr)&0x000000ff),       \
+        (((xnetif.ip_addr.addr)&0x0000ff00)>>8),  \
+        (((xnetif.ip_addr.addr)&0x00ff0000)>>16), \
+        ((xnetif.ip_addr.addr)&0xff000000)>>24);
+	return 0;
+}
+#endif
 /**
   * @brief  LwIP periodic tasks
   * @param  localtime the current LocalTime value
@@ -254,4 +294,4 @@ void LwIP_DHCP_Process_Handle()
 #endif      
 
 /******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
-#endif   
+// #endif   

@@ -11,7 +11,8 @@
                 "_UNICODE",
                 "USE_STDPERIPH_DRIVER",
                 "STM32F40_41xxx",
-                "USE_LWIP_CODE"
+                "USE_LWIP_CODE",
+                "USER_LEETTER_SHELL"
             ],
             "compilerPath": "C:\\i686-8.1.0-release-posix-dwarf-rt_v6-rev0\\mingw32\\bin\\gcc.exe",
             "cStandard": "c17",

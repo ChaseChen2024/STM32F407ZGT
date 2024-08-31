@@ -14,7 +14,7 @@
 #include "stdio.h"
 #include "stdarg.h"
 #include "shell_ext.h"
-
+#include "bsp_usart3.h"
 
 #if SHELL_USING_CMD_EXPORT == 1
 /**
@@ -1885,12 +1885,21 @@ void shellTask(void *param)
     while(1)
     {
 #endif
-        
-        if (shell->read && shell->read(&data, 1) == 1)
+        xSemaphoreTake(Uart3_BinarySem_Handle, portMAX_DELAY);
+        if(READ_IT_FLAG == 1)
         {
-            shellHandler(shell, data);
+            READ_IT_FLAG = 0;
+            // printf("%d\r\n",strlen(Usart3_Rx_Buf));
+            // printf("%s\r\n",Usart3_Rx_Buf);
+            if(strlen(Usart3_Rx_Buf) >= 1)
+            {
+                for(int i = 0; i < strlen(Usart3_Rx_Buf); i++)
+                {
+                    shellHandler(shell, Usart3_Rx_Buf[i]);
+                }
+            }
+            memset(Usart3_Rx_Buf, 0, UART3_BUFF_SIZE);
         }
-        vTaskDelay(50);
 #if SHELL_TASK_WHILE == 1
     }
 #endif

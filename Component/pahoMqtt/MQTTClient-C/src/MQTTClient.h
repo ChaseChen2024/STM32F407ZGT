@@ -129,8 +129,6 @@ typedef struct MQTTClient
     Mutex mutex;
     Thread thread;
 #endif
-	int trynum;//尝试重新保活次数
-	int trytimemax;
 } MQTTClient;
 
 #define DefaultClient {0, 0, 0, 0, NULL, NULL, 0, 0, 0}

@@ -36,7 +36,8 @@
 #ifdef __cplusplus
  extern "C" {
 #endif
-   
+  
+extern struct netif xnetif;
 /* Includes ------------------------------------------------------------------*/
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
@@ -44,7 +45,7 @@
 /* Exported functions ------------------------------------------------------- */
 void LwIP_NW_Init(void);
 void LwIP_Periodic_Handle(uint32_t localtime);
-
+int LwIP_DHCP(ip_addr_t *addr);
 #ifdef __cplusplus
 }
 #endif

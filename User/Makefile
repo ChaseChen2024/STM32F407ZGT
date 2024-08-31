@@ -81,10 +81,16 @@ User/app/user_demo/src/Sntp_demo.c \
 # User/app/user_demo/src/Tftp_demo.c \
 # User/app/user_demo/src/client.c \
 
+C_SOURCES +=  \
+User/app/nw/nw.c \
+
 
 C_INCLUDES +=  \
 -IUser/bsp/ETH \
 -IUser/bsp/arch \
+
+C_INCLUDES +=  \
+-IUser/app/nw \
 
 endif
 

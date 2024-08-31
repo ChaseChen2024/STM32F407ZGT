@@ -134,45 +134,23 @@ void UsageFault_Handler(void)
 void DebugMon_Handler(void)
 {}
 
-#include "shell_port.h"
-extern uint8_t READ_IT_FLAG;
-extern uint8_t uart3_shell_data;
-// void USART1_IRQHandler(void)  
-// {
-//   	// uint32_t ulReturn;
-//   // ulReturn = taskENTER_CRITICAL_FROM_ISR();
-
-//   if( USART_GetITStatus(USART1, USART_IT_RXNE)!= RESET)
-//   {
-    
-//     uart1_rec_data = (uint8_t)USART_ReceiveData(USART1);
-//     // shellHandler(&shell, rec_data);
-//     // printf("%c",uart1_rec_data);
-//     // USART_SendData(DEBUG_USART,uart1_rec_data);
-//     READ_IT_FLAG = 1;
-//     // USART_ClearITPendingBit(USART1,USART_IT_RXNE);
-
-//   }
-//   // taskEXIT_CRITICAL_FROM_ISR( ulReturn );
-// }
-extern uint8_t uart3_shell_buf_len;
+#include "bsp_usart3.h"
 void USART3_IRQHandler(void)  
 {
-  	// uint32_t ulReturn;
-  // ulReturn = taskENTER_CRITICAL_FROM_ISR();
+	uint32_t ulReturn;
+  u8 rec_data;
+  ulReturn = taskENTER_CRITICAL_FROM_ISR();
 
-  if( USART_GetITStatus(USART3, USART_IT_RXNE)!= RESET)
-  {
-    
-    uart3_shell_data = (uint8_t)USART_ReceiveData(USART3);
-    // USART_SendData(USART3,uart3_shell_buf[uart3_shell_buf_len-1]);
+	if(USART_GetITStatus(USART3,USART_IT_IDLE)!=RESET)
+	{		
+		Uart3_DMA_Rx_Data();
     READ_IT_FLAG = 1;
-    // USART_ClearITPendingBit(USART1,USART_IT_RXNE);
-
-  }
-  // taskEXIT_CRITICAL_FROM_ISR( ulReturn );
-}
-
+		rec_data = USART_ReceiveData(USART3);
+	}	 
+  
+  /* ÍË³öÁÙ½ç¶Î */
+  taskEXIT_CRITICAL_FROM_ISR( ulReturn );
+} 
 
 /**
   * @brief  This function handles SysTick Handler.

@@ -72,8 +72,6 @@ void MQTTClientInit(MQTTClient* c, Network* network, unsigned int command_timeou
     c->ping_outstanding = 0;
     c->defaultMessageHandler = NULL;
 	c->next_packetid = 1;
-	c->trynum = 0;
-	c->trytimemax = 5;
     TimerInit(&c->last_sent);
     TimerInit(&c->last_received);
 #if defined(MQTT_TASK)
@@ -230,13 +228,12 @@ int keepalive(MQTTClient* c)
 
     if (TimerIsExpired(&c->last_sent) || TimerIsExpired(&c->last_received))
     {
-    	printf("keepalive---1,c->ping_outstanding:%d,c->trynum:%d\r\n",c->ping_outstanding,c->trynum);
-        if (c->ping_outstanding && c->trynum >= c->trytimemax)
+    	printf("keepalive---1,c->ping_outstanding:%d\r\n",c->ping_outstanding);
+        if (c->ping_outstanding)
             	rc = FAILURE; /* PINGRESP not received in keepalive interval */
         else
         {
         	
-			c->trynum++;
         	printf("\r\n------------------keepalive--------------------------\r\n");
             Timer timer;
             TimerInit(&timer);
@@ -346,7 +343,6 @@ int cycle(MQTTClient* c, Timer* timer)
         case PUBCOMP:
             break;
         case PINGRESP:
-        	c->trynum = 0;
             c->ping_outstanding = 0;
             break;
     }

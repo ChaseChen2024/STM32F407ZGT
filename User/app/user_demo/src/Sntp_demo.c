@@ -21,6 +21,10 @@
 #include "task.h"
 #include "user.h"
 
+#ifdef USER_LEETTER_SHELL
+#include "shell_port.h"
+#endif
+
 static TaskHandle_t SNTP_Demo_Task_Handle = NULL;/* RTC任务句柄 */
 #if 0
 uint32_t get_timestamp(void);
@@ -249,7 +253,7 @@ struct ntphdr {
 #define NTP_PACKET_SIZE 48
 #define Data(i) ntohl(((uint32_t *)buf)[i])
 
-uint8_t g_lwip_time_buf[100] __EXRAM;
+uint8_t g_lwip_time_buf[100];
 const char g_days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 typedef struct _DateTime  /*此结构体定义了NTP时间同步的相关变量*/
 {
@@ -260,7 +264,7 @@ typedef struct _DateTime  /*此结构体定义了NTP时间同步的相关变量*/
     int  minute;      /* 分 */
     int  second;      /* 秒 */
 } DateTime;
-DateTime g_nowdate __EXRAM;   
+DateTime g_nowdate;   
 uint32_t osKernelGetTickCount (void) {
   TickType_t ticks;
 
@@ -502,14 +506,19 @@ static void SNTP_Demo_Task(void* parameter)
 
 	vTaskDelay(1000);
 	
-	vStartMQTTTasks(1024*2,10);
+	
+	
 
-	vTaskDelete(NULL); //删除任务
+	// vTaskDelete(NULL); //删除任务
 END:
 	printf("socket creat fail \r\n");
 	close(socket_fd);
-	//重试 流程
 
+	#ifdef USE_MQTT_CODE
+	vStartMQTTTasks(1024*2,10);
+	#endif // USE_MQTT_CODE
+	//重试 流程
+	vTaskDelete(NULL); //删除任务
 	
 }
 long SNTP_Demo_Task_Init(void)
@@ -519,7 +528,7 @@ long SNTP_Demo_Task_Init(void)
 			/* 创建RTC_Task任务 */
 		xReturn = xTaskCreate((TaskFunction_t )SNTP_Demo_Task,  /* 任务入口函数 */
 													(const char*    )"SNTP_Demo_Task",/* 任务名字 */
-													(uint16_t       )1024*2,  /* 任务栈大小 */
+													(uint16_t       )1024*3,  /* 任务栈大小 */
 													(void*          )NULL,/* 任务入口函数参数 */
 													(UBaseType_t    )3, /* 任务的优先级 */
 													(TaskHandle_t*  )&SNTP_Demo_Task_Handle);/* 任务控制块指针 */ 
@@ -527,3 +536,4 @@ long SNTP_Demo_Task_Init(void)
 }
 #endif
 #endif
+

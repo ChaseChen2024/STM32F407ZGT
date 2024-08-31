@@ -23,7 +23,7 @@ const char *attribute_report_subTopic = "/sys/"EXAMPLE_PRODUCT_KEY"/"EXAMPLE_DEV
 
 const char *attribute_set_subTopic = "/sys/"EXAMPLE_PRODUCT_KEY"/"EXAMPLE_DEVICE_NAME"/thing/service/property/set";
 
-MQTTClient aiot_client __EXRAM;
+MQTTClient aiot_client;
 unsigned int msgid = 0;
 
 extern int aiotMqttSign(const char *productKey, const char *deviceName, const char *deviceSecret, 
@@ -85,7 +85,7 @@ static void prvMQTTEchoTask(void *pvParameters)
 	connectData.clientID.cstring = clientId;
 	connectData.username.cstring = username;
 	connectData.password.cstring = password;
-	connectData.keepAliveInterval = 120;
+	connectData.keepAliveInterval = 60*10;
 	connectData.cleansession = 0;
 	if ((rc = MQTTConnect(&aiot_client, &connectData)) != 0)
 		printf("Return code from MQTT connect is %d--------------\r\n", rc);
@@ -114,7 +114,7 @@ static void prvMQTTEchoTask(void *pvParameters)
 	while (1)
 	{
 //		printf("---------------------------\r\n");
-		vTaskDelay(1000);
+		// vTaskDelay(1000);
 		MQTTYield(&aiot_client, 1000);
 
 	}
