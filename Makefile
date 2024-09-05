@@ -29,7 +29,7 @@ Startup/startup_stm32f40xx.s \
 
 # ASM sources
 ASMM_SOURCES = \
-Component/CmBacktrace/cm_backtrace/fault_handler/gcc/cmb_fault.S \
+Component/CmBacktrace/src/fault_handler/gcc/cmb_fault.S \
 
 ######
 #

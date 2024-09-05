@@ -267,7 +267,7 @@ endif
 
 ifeq ($(BUILE_CMBACKTRACE),y)
 C_SOURCES +=  \
-Component/CmBacktrace/cm_backtrace/cm_backtrace.c \
+Component/CmBacktrace/src/cm_backtrace.c \
 
 endif
 
@@ -371,7 +371,7 @@ endif
 
 ifeq ($(BUILE_CMBACKTRACE),y)
 C_INCLUDES +=  \
--IComponent/CmBacktrace/cm_backtrace \
+-IComponent/CmBacktrace/src \
 
 endif
 
