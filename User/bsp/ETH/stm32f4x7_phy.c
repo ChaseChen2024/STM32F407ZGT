@@ -27,7 +27,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 
-#ifdef USE_LWIP_CODE
 #include "lwip/opt.h"
 #include "stm32f4x7_eth.h"
 #include "stm32f4x7_phy.h"
@@ -51,7 +50,7 @@
 #define ETH_LINK_TASK_STACK_SIZE		( configMINIMAL_STACK_SIZE * 2 )
 #define ETH_LINK_TASK_PRIORITY		        ( tskIDLE_PRIORITY + 3 )
 #define emacBLOCK_TIME_WAITING_ETH_LINK_IT	( ( portTickType ) 100 )
-#define DP83848_PHY_ADDRESS       0x01 /* Relative to STM322xG-EVAL Board */
+#define DP83848_PHY_ADDRESS       0x00 /* Relative to STM322xG-EVAL Board */
 /* Ethernet Flags for EthStatus variable */   
 #define ETH_INIT_FLAG           0x01 /* Ethernet Init Flag */
 #define ETH_LINK_FLAG           0x10 /* Ethernet Link Flag */
@@ -88,6 +87,14 @@ void ETH_BSP_Config(void)
   /* Configure the Ethernet MAC/DMA */
   ETH_MACDMA_Config();
   printf("ETH_MACDMA_Config();\n\n");
+
+uint16_t ID1 = 0;
+uint16_t ID2 = 0;
+
+  printf("read phy id\r\n");
+	ID1 = ETH_ReadPHYRegister(ETHERNET_PHY_ADDRESS, 0X02);
+	ID2 = ETH_ReadPHYRegister(ETHERNET_PHY_ADDRESS, 0X03);
+	printf("PHY ID:%02x %02x\r\n", ID1, ID2);
   /* Get Ethernet link status*/
   if(GET_PHY_LINK_STATUS())
   {
@@ -132,7 +139,7 @@ static void ETH_MACDMA_Config(void)
   /* Fill ETH_InitStructure parametrs */
   /*------------------------   MAC   -----------------------------------*/
 	/* 开启网络自适应功能 */
-  ETH_InitStructure.ETH_AutoNegotiation = ETH_AutoNegotiation_Enable;
+  // ETH_InitStructure.ETH_AutoNegotiation = ETH_AutoNegotiation_Enable;
 //  ETH_InitStructure.ETH_AutoNegotiation = ETH_AutoNegotiation_Disable; 
 //  ETH_InitStructure.ETH_Speed = ETH_Speed_10M;
 //  ETH_InitStructure.ETH_Mode = ETH_Mode_FullDuplex;   
@@ -547,4 +554,3 @@ void ETH_link_callback(struct netif *netif)
 }
 #endif
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-#endif

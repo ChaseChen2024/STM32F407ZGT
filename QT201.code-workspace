@@ -108,7 +108,9 @@
 			"stdarg.h": "c",
 			"tcp.h": "c",
 			"udp.h": "c",
-			"tcp_priv.h": "c"
+			"tcp_priv.h": "c",
+			"typeinfo": "c",
+			"cm_backtrace.h": "c"
 		}
 	}
 }

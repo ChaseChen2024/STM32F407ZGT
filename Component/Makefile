@@ -265,6 +265,12 @@ Component/LetterShell/stm32-freertos/shell_port.c \
 
 endif
 
+ifeq ($(BUILE_CMBACKTRACE),y)
+C_SOURCES +=  \
+Component/CmBacktrace/cm_backtrace/cm_backtrace.c \
+
+endif
+
 ifeq ($(BUILE_LWIP),y)
 C_INCLUDES +=  \
 -IComponent/LWIP/include \
@@ -360,6 +366,12 @@ C_INCLUDES +=  \
 -IComponent/LetterShell/src \
 -IComponent/LetterShell/stm32-freertos \
 # -IComponent/LetterShell/extensions/fs_support \
+
+endif
+
+ifeq ($(BUILE_CMBACKTRACE),y)
+C_INCLUDES +=  \
+-IComponent/CmBacktrace/cm_backtrace \
 
 endif
 

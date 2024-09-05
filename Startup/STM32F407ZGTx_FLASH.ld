@@ -82,6 +82,7 @@ SECTIONS
   .text :
   {
     . = ALIGN(4);
+    _stext = .;
     *(.text)           /* .text sections (code) */
     *(.text*)          /* .text* sections (code) */
     *(.glue_7)         /* glue arm to thumb code */
@@ -190,11 +191,13 @@ SECTIONS
   ._user_heap_stack :
   {
     . = ALIGN(8);
+    _sstack = .;
     PROVIDE ( end = . );
     PROVIDE ( _end = . );
     . = . + _Min_Heap_Size;
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
+    _estack = .;
   } >RAM
 
    /* external sram data, do not initialize at startup  */

@@ -160,3 +160,11 @@ nv_write() 直接调用进行写数据
 
  349768     316  112580  462664   70f48 Build/QT201.elf
 
+
+ # 20240905修改
+
+ 1、添加cmbacktrace 错误追踪库，移植源码：https://gitee.com/Armink/CmBacktrace
+
+ 2、添加os_asssert 指令主动dump模组
+
+

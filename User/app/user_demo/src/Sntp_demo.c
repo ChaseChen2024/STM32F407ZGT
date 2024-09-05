@@ -515,7 +515,7 @@ END:
 	close(socket_fd);
 
 	#ifdef USE_MQTT_CODE
-	vStartMQTTTasks(1024*2,10);
+	vStartMQTTTasks(128*15,10);
 	#endif // USE_MQTT_CODE
 	//重试 流程
 	vTaskDelete(NULL); //删除任务
@@ -528,7 +528,7 @@ long SNTP_Demo_Task_Init(void)
 			/* 创建RTC_Task任务 */
 		xReturn = xTaskCreate((TaskFunction_t )SNTP_Demo_Task,  /* 任务入口函数 */
 													(const char*    )"SNTP_Demo_Task",/* 任务名字 */
-													(uint16_t       )1024*3,  /* 任务栈大小 */
+													(uint16_t       )128*22,  /* 任务栈大小 */
 													(void*          )NULL,/* 任务入口函数参数 */
 													(UBaseType_t    )3, /* 任务的优先级 */
 													(TaskHandle_t*  )&SNTP_Demo_Task_Handle);/* 任务控制块指针 */ 

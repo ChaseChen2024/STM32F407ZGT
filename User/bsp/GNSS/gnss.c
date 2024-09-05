@@ -2,17 +2,20 @@
 
 #include "gnss.h"
 
+#ifdef USE_GNSS_NMEA
 NMEA0183 nmea0183; 
+#endif // USE_GNSS_NMEA
+
 
 char Usart6_Rx_Buf[UART6_BUFF_SIZE];
-static TaskHandle_t Gnss_Resolve_Task_Handle = NULL;
 SemaphoreHandle_t Uart6_BinarySem_Handle =NULL;
+static TaskHandle_t Gnss_Resolve_Task_Handle = NULL;
+
 static void Gnss_Resolve_Task(void* parameter)
 {
     uint16_t index = 0;
 		uint8_t recv_data[UART6_BUFF_SIZE];
     uint32_t recv_data_len = 0;
-    // Usart_SendString(USART6,"111111111");
     while (1)
     {
       xSemaphoreTake(Uart6_BinarySem_Handle, portMAX_DELAY);
@@ -21,15 +24,19 @@ static void Gnss_Resolve_Task(void* parameter)
 	    memset(Usart6_Rx_Buf,0,UART6_BUFF_SIZE);
       // printf("[%s],[%d],[%s]\r\n",__FUNCTION__,__LINE__,recv_data);
 
+      #ifdef USE_GNSS_NMEA
       for(index=0; index<sizeof(recv_data); ++index)
       {
+        
         if(nmea_decode(&nmea0183, recv_data[index])) 
         { 
           ///解析代码成功 
         }
+        
       }
        printf("[%s],[%d],[%d/%d/%d:%d]\r\n",__FUNCTION__,__LINE__,nmea0183.gpsData.date_time.year,nmea0183.gpsData.date_time.month,nmea0183.gpsData.date_time.day,nmea0183.gpsParse.new_time);
        printf("[%s],[%d],[卫星数:%d]\r\n",__FUNCTION__,__LINE__,nmea0183.gpsParse.new_satellite_count);
+       #endif // USE_GNSS_NMEA
     }
     
 }

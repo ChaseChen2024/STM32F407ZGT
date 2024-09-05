@@ -31,7 +31,6 @@
  */
 
 /* lwIP includes. */
-#ifdef USE_LWIP_CODE
 #include "lwip/debug.h"
 #include "lwip/def.h"
 #include "lwip/sys.h"
@@ -607,4 +606,3 @@ sys_check_core_locking(void)
 }
 
 #endif /* LWIP_FREERTOS_CHECK_CORE_LOCKING*/
-#endif

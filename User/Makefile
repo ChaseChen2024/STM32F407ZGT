@@ -11,12 +11,10 @@ User/bsp/rtc/bsp_rtc.c \
 User/bsp/flash/bsp_spi_flash.c \
 User/bsp/sram/bsp_sram.c \
 User/app/nv/nv.c \
-# User/bsp/uart/bsp_usart6.c \
 # User/bsp/led/bsp_led.c \
 # User/bsp/sdio/bsp_sdio_sd.c \
 # User/bsp/lcd/lcd.c \
-# User/bsp/GNSS/gnss.c \
-# User/bsp/GNSS/NMEA0183.c \
+
 
 ifeq ($(BUILE_USB),y)
 C_SOURCES +=  \
@@ -59,7 +57,19 @@ C_INCLUDES +=  \
 # -IUser/bsp/lcd \
 # -IUser/app/pg \
 # -IUser/app/my_gui \
-# -IUser/bsp/GNSS \
+
+
+
+ifeq ($(BUILE_GNSS),y)
+C_SOURCES +=  \
+User/bsp/uart/bsp_usart6.c \
+User/bsp/GNSS/gnss.c \
+User/bsp/GNSS/NMEA0183.c \
+
+C_INCLUDES +=  \
+-IUser/bsp/GNSS \
+
+endif
 
 ifeq ($(BUILE_USB),y)
 C_INCLUDES +=  \

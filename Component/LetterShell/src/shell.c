@@ -359,6 +359,7 @@ static unsigned short shellWriteCommandDesc(Shell *shell, const char *string)
  * @param newline 新行
  * 
  */
+extern char patch_name[64];
 static void shellWritePrompt(Shell *shell, unsigned char newline)
 {
     if (shell->status.isChecked)
@@ -367,9 +368,11 @@ static void shellWritePrompt(Shell *shell, unsigned char newline)
         {
             shellWriteString(shell, "\r\n");
         }
+        shell->info.path = patch_name;
         shellWriteString(shell, shell->info.user->data.user.name);
         shellWriteString(shell, ":");
         shellWriteString(shell, shell->info.path ? shell->info.path : "/");
+
         shellWriteString(shell, "$ ");
     }
     else
@@ -1336,6 +1339,8 @@ void shellSetUser(Shell *shell, const ShellCommand *user)
  */
 static void shellWriteReturnValue(Shell *shell, int value)
 {
+    // 不需要返回值，所以屏蔽掉源码
+    /*
     char buffer[12] = "00000000000";
     shellWriteString(shell, "Return: ");
     shellWriteString(shell, &buffer[11 - shellToDec(value, buffer)]);
@@ -1350,6 +1355,7 @@ static void shellWriteReturnValue(Shell *shell, int value)
 #if SHELL_KEEP_RETURN_VALUE == 1
     shell->info.retVal = value;
 #endif
+    */
 }
 
 

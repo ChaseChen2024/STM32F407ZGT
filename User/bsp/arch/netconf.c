@@ -68,7 +68,9 @@ void LwIP_NW_Init(void)
   ip_addr_t ipaddr;
   ip_addr_t netmask;
   ip_addr_t gw;
- 
+ printf("%s %d\r\n0:0x%x\r\n1:0x%x\r\n",__func__,__LINE__,ETH_ReadPHYRegister(0,0),ETH_ReadPHYRegister(0,1));
+printf("%s %d\r\n2:0x%x\r\n3:0x%x\r\n",__func__,__LINE__,ETH_ReadPHYRegister(0,2),ETH_ReadPHYRegister(0,3));
+
 #if LWIP_DHCP
   ipaddr.addr = 0;
   netmask.addr = 0;
@@ -79,6 +81,8 @@ void LwIP_NW_Init(void)
   IP4_ADDR(&netmask, NETMASK_ADDR0, NETMASK_ADDR1 , NETMASK_ADDR2, NETMASK_ADDR3);
   IP4_ADDR(&gw, GW_ADDR0, GW_ADDR1, GW_ADDR2, GW_ADDR3);
 #endif
+printf("%s %d\r\n0:0x%x\r\n1:0x%x\r\n",__func__,__LINE__,ETH_ReadPHYRegister(0,0),ETH_ReadPHYRegister(0,1));
+printf("%s %d\r\n2:0x%x\r\n3:0x%x\r\n",__func__,__LINE__,ETH_ReadPHYRegister(0,2),ETH_ReadPHYRegister(0,3));
 
   /* - netif_add(struct xnetif *xnetif, ip_addr_t *ipaddr,
             ip_addr_t *netmask, ip_addr_t *gw,
@@ -94,9 +98,13 @@ void LwIP_NW_Init(void)
   your ethernet xnetif interface. The following code illustrates it's use.*/
 
   netif_add(&xnetif, &ipaddr, &netmask, &gw, NULL, &ethernetif_init, &ethernet_input);
+printf("%s %d\r\n0:0x%x\r\n1:0x%x\r\n",__func__,__LINE__,ETH_ReadPHYRegister(0,0),ETH_ReadPHYRegister(0,1));
+printf("%s %d\r\n2:0x%x\r\n3:0x%x\r\n",__func__,__LINE__,ETH_ReadPHYRegister(0,2),ETH_ReadPHYRegister(0,3));
 
   /*  Registers the default network interface.*/
   netif_set_default(&xnetif);
+printf("%s %d\r\n0:0x%x\r\n1:0x%x\r\n",__func__,__LINE__,ETH_ReadPHYRegister(0,0),ETH_ReadPHYRegister(0,1));
+printf("%s %d\r\n2:0x%x\r\n3:0x%x\r\n",__func__,__LINE__,ETH_ReadPHYRegister(0,2),ETH_ReadPHYRegister(0,3));
 
   /*  When the xnetif is fully configured this function must be called.*/
   netif_set_up(&xnetif);
@@ -107,7 +115,9 @@ void LwIP_NW_Init(void)
   Note: you must call dhcp_fine_tmr() and dhcp_coarse_tmr() at
   the predefined regular intervals after starting the client.
   You can peek in the netif->dhcp struct for the actual DHCP status.*/
-  
+  printf("%s %d\r\n0:0x%x\r\n1:0x%x\r\n",__func__,__LINE__,ETH_ReadPHYRegister(0,0),ETH_ReadPHYRegister(0,1));
+printf("%s %d\r\n2:0x%x\r\n3:0x%x\r\n",__func__,__LINE__,ETH_ReadPHYRegister(0,2),ETH_ReadPHYRegister(0,3));
+
   printf("本例程将使用DHCP动态分配IP地址,如果不需要则在lwipopts.h中将LWIP_DHCP定义为0\n\n");
   
   err = dhcp_start(&xnetif);      //开启dhcp

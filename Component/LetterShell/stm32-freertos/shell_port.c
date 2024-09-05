@@ -8,7 +8,7 @@
  * @copyright (c) 2019 Letter
  * 
  */
-
+#include "user.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
@@ -116,6 +116,9 @@ size_t userShellListDir(char *path, char *buffer, size_t maxLen)
     f_closedir(dir);
     return ret;
 }
+// #define START_STK_SIZE 128*10
+// StaticTask_t __EXRAM StartTaskTCB; 
+// StackType_t __EXRAM StartTaskStack[START_STK_SIZE]; 
 /**
  * @brief 用户shell初始化
  * 
@@ -123,28 +126,29 @@ size_t userShellListDir(char *path, char *buffer, size_t maxLen)
 void userShellInit(void)
 {
     shellMutex = xSemaphoreCreateMutex();
-    // shellFs.getcwd = f_getcwd;
-    // shellFs.chdir = f_chdir;
-    // shellFs.listdir = userShellListDir;
-    // strcpy(shellFs.info.path,"1:");
-    // shellFs.info.pathLen = strlen(shellFs.info.path);
-    // shellFsInit(&shellFs, shellPathBuffer, 512);
-
 
     shell.write = userShellWrite;
     // shell.read = userShellRead;
     shell.lock = userShellLock;
     shell.unlock = userShellUnlock;
-    // shellSetPath(&shell, shellPathBuffer);
     shellInit(&shell, shellBuffer, 512);
-    // shellCompanionAdd(&shell, SHELL_COMPANION_ID_FS, &shellFs);
     Uart3_BinarySem_Handle = xSemaphoreCreateBinary();	
+    BaseType_t pass = pdPASS;
     printf("userShellInit\r\n");
-
-    if (xTaskCreate(shellTask, "shell", 1024*2, &shell, 5, NULL) != pdPASS)
+    printf("2-rtos free size: %d B\r\n",xPortGetFreeHeapSize());
+    if ((pass = xTaskCreate(shellTask, "shell", 128*10, &shell, 5, NULL) )!= pdPASS)
     {
-        // logError("shell task creat failed");
+       printf("userShellInit-fail:%d\r\n",pass);
     }
+    // xTaskCreateStatic(shellTask,"shell",START_STK_SIZE,NULL,5,StartTaskStack,&StartTaskTCB);
 }
 CEVENT_EXPORT(EVENT_INIT_STAGE2, userShellInit);
 
+// void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
+//                                     StackType_t ** ppxIdleTaskStackBuffer,
+//                                     uint32_t * pulIdleTaskStackSize )
+// {
+//     *ppxIdleTaskTCBBuffer = &StartTaskTCB;
+//     *ppxIdleTaskStackBuffer = StartTaskStack;
+//     *pulIdleTaskStackSize = START_STK_SIZE;
+// }

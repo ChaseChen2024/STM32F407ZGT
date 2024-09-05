@@ -3,7 +3,9 @@
 
 
 #include "user.h"
+#ifdef USE_GNSS_NMEA
 #include "NMEA0183.h"
+#endif
 
 
 long Gnss_Resolve_Task_Init(void);

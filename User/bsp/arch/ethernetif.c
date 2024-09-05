@@ -42,7 +42,6 @@
 * search-and-replace for the word "ethernetif" to replace it with
 * something that better describes your network interface.
 */
-#ifdef USE_LWIP_CODE
 #include "lwip/opt.h"
 #include "lwip/def.h"
 #include "lwip/mem.h"
@@ -62,8 +61,8 @@
 
 
 #define netifMTU                                (1500)
-#define netifINTERFACE_TASK_STACK_SIZE		( 350 )
-#define netifINTERFACE_TASK_PRIORITY		( configMAX_PRIORITIES - 1 )
+#define netifINTERFACE_TASK_STACK_SIZE		( 128*3 )
+#define netifINTERFACE_TASK_PRIORITY		( configMAX_PRIORITIES - 2 )
 #define netifGUARD_BLOCK_TIME			( 250 )
 /* The time to block waiting for input. */
 #define emacBLOCK_TIME_WAITING_FOR_INPUT	( ( portTickType ) 100 )
@@ -158,10 +157,14 @@ static void low_level_init(struct netif *netif)
   } 
 #endif
 printf("low_level_init-2\r\n");
+BaseType_t pass = pdPASS;
+  printf("7-Eth_if create beform rtos free size: %d B\r\n",xPortGetFreeHeapSize());
   /* create the task that handles the ETH_MAC */
-  xTaskCreate(ethernetif_input, (signed char*) "Eth_if", netifINTERFACE_TASK_STACK_SIZE, NULL,
+  pass = xTaskCreate(ethernetif_input, (signed char*) "Eth_if", netifINTERFACE_TASK_STACK_SIZE, NULL,
               netifINTERFACE_TASK_PRIORITY,NULL);
-printf("low_level_init-3\r\n");
+
+  printf("8-rtos free size: %d B\r\n",xPortGetFreeHeapSize());
+printf("low_level_init-3-----%d\r\n",pass);
     /* Enable MAC and DMA transmission and reception */
     ETH_Start();   
 }
@@ -356,7 +359,7 @@ static struct pbuf * low_level_input(struct netif *netif)
 */
 void ethernetif_input( void * pvParameters )
 {
-  printf("ethernetif_input-1\r\n");
+  printf("---------------------ethernetif_input-1---------------------------------------\r\n");
   struct pbuf *p;
   
   for( ;; )
@@ -410,4 +413,3 @@ err_t ethernetif_init(struct netif *netif)
   return ERR_OK;
 }
 
-#endif

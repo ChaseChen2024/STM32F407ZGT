@@ -115,9 +115,10 @@ static void prvMQTTEchoTask(void *pvParameters)
 	{
 //		printf("---------------------------\r\n");
 		// vTaskDelay(1000);
-		MQTTYield(&aiot_client, 1000);
-
+		rc = MQTTYield(&aiot_client, 1000);
+		if(MQTT_SUCCESS != rc) break;	
 	}
+	printf("MQTTvTaskDelete,rc:%d\r\n", rc);
 	vTaskDelete(NULL);
 	/* do not return */
 }

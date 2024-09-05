@@ -41,8 +41,8 @@ FRESULT nv_read(char *file_name,char *p_read_buf, UINT read_len)
 		printf("read file failed,err:%d\r\n", err);
 		return err;
     }
-printf("\r\nread file,err:%d,br:%d,%s\r\n", err,br,p_read_buf);
-err = f_close(&fd);
+	printf("\r\nread,err:%d,br:%d,%s\r\n", err,br,p_read_buf);
+	err = f_close(&fd);
 	printf("\r\n,%d,f_close res=%d",__LINE__,err);
     return err;	
 }
@@ -110,7 +110,7 @@ FRESULT nv_init(void)
 	return err;
 }
 #ifdef USER_LEETTER_SHELL
-
+char patch_name[64] = "1:";
 void nv_read_test(char *str,int len)
 {
 	FRESULT err = FR_OK;
@@ -123,24 +123,68 @@ void nv_read_test(char *str,int len)
 }
 SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_FUNC), nvread, nv_read_test, fatfs file read);
 
-void nv_wirte_test(char *filename,char *str,int len)
+// void nv_wirte_test(char *filename,char *str,int len)
+void nv_wirte_test(int argc, char *argv[])
 {
 	FRESULT err = FR_OK;
+	DIR dir_info;
+    FILINFO fno;
+	int len = 0;
 	char buf[128]= {0};
-	err = nv_write(filename,str,len);
-    
-    sprintf(buf, "write string: %s\r\nlen:%d,err:%d\r\n",str,len,err);
-    Usart_SendString(USART3,buf);
-}
-SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_FUNC), nvwrite, nv_wirte_test, fatfs file wirte);
+	printf("cmd :%s,%s,%s,%s\r\n",argv[0],argv[1],argv[2],argv[3]);
+	if(argv[1][0] == '.' && argv[1][1] == '.' )
+	{
+		//返回路径，不作处理
+	}
+	else if(argv[1][0] == '1' && argv[1][1] == ':' )
+	{
+		//绝对路径
+		strcpy(buf,argv[1]);
+		char *p = strchr(buf,'/');
+		*p = '\0';
+		if(f_opendir(&dir_info, buf) == FR_OK)
+		{
+			err = nv_write(argv[1],argv[2],strlen(argv[2]));
+			f_closedir(&dir_info);
+		}
+		else
+		{
+			shellPrint(&shell,"no such file or directory\r\n");
+		}
+	}
+	else
+	{
+		//相对路径
 
-void nv_size_test(char *LDriveId)
+		if(f_opendir(&dir_info, patch_name) == FR_OK)
+		{
+			strcpy(buf,patch_name);
+			strcat(buf,"/");
+			strcat(buf, argv[1]);
+			err = nv_write(buf,argv[2],strlen(argv[2]));
+			f_closedir(&dir_info);
+		}
+		else
+		{
+			shellPrint(&shell,"no such file or directory\r\n");
+		}
+	}
+	// err = nv_write(filename,str,len);
+    
+    // sprintf(buf, "write string: %s\r\nlen:%d,err:%d\r\n",str,len,err);
+    // Usart_SendString(USART3,buf);
+	return 0;
+}
+SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN), write, nv_wirte_test, fatfs file wirte);
+
+int nv_size_test(int argc, char *argv[])
 {
 	FRESULT err = FR_OK;
 	FATFS *pfs;
 	char buf[64]= {0};
+
 	DWORD fre_clust, fre_size, tot_size;
-    err = f_getfree(LDriveId, &fre_clust, &pfs);
+    err = f_getfree(argv[1], &fre_clust, &pfs);
     
     if( err == FR_OK )
     {
@@ -156,9 +200,10 @@ void nv_size_test(char *LDriveId)
     }
     
     sprintf(buf, "tot_size:%10lu KB\r\nfre_size:%10lu KB\r\n",tot_size *4, fre_size *4);
-    Usart_SendString(USART3,buf);
+	shellPrint(&shell, buf);
+	return 0;
 }
-SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_FUNC), nvsize, nv_size_test, fatfs size);
+SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN), fatfs_size, nv_size_test, fatfs size);
 
 void nv_scan_all_files_test(char* path)
 {
@@ -189,7 +234,7 @@ void nv_scan_all_files_test(char* path)
 }
 SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_FUNC), nvscanall, nv_scan_all_files_test, fatfs scan all files);
 
-char patch_name[64] = "1:";
+
 void nv_scan_files_test(void)
 {
 	FRESULT res;
@@ -224,38 +269,104 @@ void nv_scan_files_test(void)
 }
 SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_FUNC), ls, nv_scan_files_test, fatfs scan files);
 
-void nv_open_dir_test(char *dir)
+void nv_open_dir_test(int argc, char *argv[])
 {
-	if(dir[0] == '.' && dir[1] == '.')
+	char buf[64] = {0};
+	DIR dir_info;
+	FRESULT ret = FR_OK;
+	printf("argv[1]:%s\r\n",argv[1]);
+	if(argv[1][0] == '.' && argv[1][1] == '.')
 	{
 		char *p = strrchr(patch_name,'/');
         if(p) *p = 0;
 	}
+	else if(argv[1][0] == '1' && argv[1][1] == ':')
+	{
+		printf("argv[0]:%s\r\n",argv[1]);
+		if(f_opendir(&dir_info, argv[1]) == FR_OK)
+		{
+			strcpy(patch_name,argv[1]);
+			f_closedir(&dir_info);
+		}
+		else
+		{
+			shellPrint(&shell,"dir no such\r\n");
+		}
+	}
 	else
 	{
-		strcat(patch_name,"/");	
-		strcat(patch_name,dir);
+		strcat(buf,patch_name);
+		strcat(buf,"/");
+		strcat(buf,argv[1]);
+		printf("%s\r\n",buf);
+		ret = f_opendir(&dir_info, buf);
+		if(ret == FR_OK)
+		{
+			strcat(patch_name,"/");	
+			strcat(patch_name,argv[1]);
+			f_closedir(&dir_info);
+		}
+		else
+		{
+			shellPrint(&shell,"dir no such\r\n");
+		}
+		
 	}
-	
-	printf("%s\r\n",patch_name);
+	printf("%s,ret:%d\r\n",patch_name,ret);
 }
-SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_FUNC), cd, nv_open_dir_test, fatfs open dir);
+SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN), cd, nv_open_dir_test, fatfs open dir);
 
 
-void nv_mkdir_dir_test(char *dir)
+int nv_mkdir_dir_test(int argc, char *argv[])
 {
 	FRESULT res;
+	DIR dir_info;
 	char patch_mk[32] = {0};
-	sprintf(patch_mk,"%s/%s",patch_name,dir);
-
-	printf("%s\r\n",patch_mk);
-	res = f_mkdir(patch_mk);
-	if(res != FR_OK)
+	if(argc < 2)
 	{
-		Usart_SendString(USART3,"error\r\n");
+		shellPrint(&shell,"command no such\r\n");
 	}
+	else
+	{
+		printf("argv[1]:%s\r\n",argv[1]);
+		if(argv[1][0] == '.' && argv[1][1] == '.')
+		{
+
+		}
+		else if(argv[1][0] == '1' && argv[1][1] == ':')
+		{
+			strcpy(patch_mk,argv[1]);
+			char *p = strrchr(patch_mk,'/');
+        	if(p) *p = 0;
+			printf("patch_mk:%s\r\n",patch_mk);
+			if(f_opendir(&dir_info, patch_mk) == FR_OK)
+			{
+				f_closedir(&dir_info);
+				res = f_mkdir(argv[1]);
+				if(res != FR_OK)
+				{
+					Usart_SendString(USART3,"error\r\n");
+				}
+			}
+			else
+			{
+				shellPrint(&shell,"dir no such\r\n");
+			}
+		}
+		else
+		{
+			sprintf(patch_mk,"%s/%s",patch_name,argv[1]);
+			printf("%s\r\n",patch_mk);
+			res = f_mkdir(patch_mk);
+			if(res != FR_OK)
+			{
+				Usart_SendString(USART3,"error\r\n");
+			}
+		}
+	}
+	
 }
-SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_FUNC), mkdir, nv_mkdir_dir_test, fatfs mkdir dir);
+SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN), mkdir, nv_mkdir_dir_test, fatfs mkdir dir);
 void nv_rm_test(char *dir)
 {
 	FRESULT res;
@@ -275,7 +386,7 @@ void nv_pwd_test(void)
 	char patch_mk[64] = {0};
 	printf("%s\r\n",patch_name);
 	sprintf(patch_mk,"%s",patch_name);
-	Usart_SendString(USART3,patch_mk);
+	shellPrint(&shell,patch_mk);
 
 }
 SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_FUNC), pwd, nv_pwd_test, fatfs pwd);
@@ -301,3 +412,46 @@ SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_FUNC),
 keyTest, shellKeyTest, key test);
 
 #endif
+
+
+int nv_copy_test(int argc, char *argv[])
+{
+	shellPrint(&shell,"%s\r\n%s\r\n", argv[1], argv[2]);
+
+
+}
+SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN),cp,nv_copy_test,file copy cmd);
+
+
+int nv_rstset_test(int argc, char *argv[])
+{
+	FRESULT err = FR_OK;
+	FATFS *pfs;
+	memset(&UserFaftsParams,0,sizeof(UserFaftsParams));
+	DWORD fre_clust, fre_size, tot_size;
+	strcpy(UserFaftsParams.LDriveId,"1:");
+		
+	err = f_mkfs("1:",0,1024*1024*10);
+	printf("\r\nnv_init_3,f_mkfs res=%d\r\n",err);
+	err = f_mount(NULL,(UserFaftsParams.LDriveId),1);
+	err = f_mount(&(UserFaftsParams.fs),(UserFaftsParams.LDriveId),1);		
+
+    err = f_getfree(UserFaftsParams.LDriveId, &fre_clust, &pfs );
+    
+    if( err == FR_OK )
+    {
+        // 总容量计算方法
+        // pfs->csize 该参数代表一个簇占用几个 SD卡物理扇区，每个扇区512字节
+        // pfs->n_fatent 簇的数量+2
+        // 总容量 = 总簇数*一个簇占用大小
+        // 剩余容量 = 剩余簇数*一个簇占用大小
+        tot_size = (pfs->n_fatent - 2) * pfs->csize; // 总容量    单位Kbyte
+        fre_size = fre_clust * pfs->csize;           // 可用容量  单位Kbyte
+
+        printf("\r\nnv_init_4\r\ntot_size:%10lu KB\r\nfre_size:%10lu KB\r\n",tot_size *4, fre_size *4);
+    }
+	shellPrint(&shell,"\r\ntot_size:%10lu KB\r\nfre_size:%10lu KB\r\n",tot_size *4, fre_size *4);
+
+
+}
+SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN),fatfs_rstset,nv_rstset_test,file rstset cmd);

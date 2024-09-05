@@ -82,13 +82,13 @@ void NMI_Handler(void)
   * @param  None
   * @retval None
   */
-void HardFault_Handler(void)
-{
-	printf("\r\n  HardFault_Handler");
-  /* Go to infinite loop when Hard Fault exception occurs */
-  while (1)
-  {}
-}
+// void HardFault_Handler(void)
+// {
+// 	printf("\r\n  HardFault_Handler");
+//   /* Go to infinite loop when Hard Fault exception occurs */
+//   while (1)
+//   {}
+// }
 
 /**
   * @brief  This function handles Memory Manage exception.
@@ -134,6 +134,7 @@ void UsageFault_Handler(void)
 void DebugMon_Handler(void)
 {}
 
+#ifdef USER_LEETTER_SHELL
 #include "bsp_usart3.h"
 void USART3_IRQHandler(void)  
 {
@@ -147,10 +148,10 @@ void USART3_IRQHandler(void)
     READ_IT_FLAG = 1;
 		rec_data = USART_ReceiveData(USART3);
 	}	 
-  
-  /* ÍË³öÁÙ½ç¶Î */
   taskEXIT_CRITICAL_FROM_ISR( ulReturn );
 } 
+#endif // USER_LEETTER_SHELL
+
 
 /**
   * @brief  This function handles SysTick Handler.
@@ -158,7 +159,6 @@ void USART3_IRQHandler(void)
   * @retval None
   */
 extern void xPortSysTickHandler(void);
-//systickÖÐ¶Ï·þÎñº¯Êý
 void SysTick_Handler(void)
 {	
     #if (INCLUDE_xTaskGetSchedulerState  == 1 )
@@ -203,23 +203,25 @@ void ETH_IRQHandler(void)
 
 #endif
 
+#ifdef USE_GNSS_CODE
+#include "bsp_usart6.h"
+void USART6_IRQHandler(void)  
+{
+	uint32_t ulReturn;
+  u8 rec_data;
+  ulReturn = taskENTER_CRITICAL_FROM_ISR();
 
-// #include "bsp_usart6.h"
-// void USART6_IRQHandler(void)  
-// {
-// 	uint32_t ulReturn;
-//   u8 rec_data;
-//   ulReturn = taskENTER_CRITICAL_FROM_ISR();
+	if(USART_GetITStatus(USART6,USART_IT_IDLE)!=RESET)
+	{		
+		Uart6_DMA_Rx_Data();
+		rec_data = USART_ReceiveData(USART6);
+	}	 
 
-// 	if(USART_GetITStatus(USART6,USART_IT_IDLE)!=RESET)
-// 	{		
-// 		Uart6_DMA_Rx_Data();
-// 		rec_data = USART_ReceiveData(USART6);
-// 	}	 
-  
-//   /* ÍË³öÁÙ½ç¶Î */
-//   taskEXIT_CRITICAL_FROM_ISR( ulReturn );
-// } 
+  taskEXIT_CRITICAL_FROM_ISR( ulReturn );
+} 
+
+#endif // USE_GNSS_CODE
+
 
 // extern USB_OTG_CORE_HANDLE  USB_OTG_dev;
 

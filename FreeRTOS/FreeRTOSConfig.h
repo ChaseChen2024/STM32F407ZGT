@@ -182,11 +182,11 @@
 //支持动态内存申请
 #define configSUPPORT_DYNAMIC_ALLOCATION        1
 //支持静态内存
-#define configSUPPORT_STATIC_ALLOCATION					0
+#define configSUPPORT_STATIC_ALLOCATION			0
 // //将内存定义在SDRAM上
 #define configAPPLICATION_ALLOCATED_HEAP        0
 //系统所有总的堆大小
-#define configTOTAL_HEAP_SIZE					((size_t)(40*1024))    
+#define configTOTAL_HEAP_SIZE					((size_t)(35*1024))    
 // #define configTOTAL_HEAP_SIZE					((size_t)(20*1024))  
 
 /***************************************************************
@@ -232,7 +232,7 @@
 //启用运行时间统计功能
 #define configGENERATE_RUN_TIME_STATS	        0             
  //启用可视化跟踪调试
-#define configUSE_TRACE_FACILITY				      0    
+#define configUSE_TRACE_FACILITY				      1
 /* 与宏configUSE_TRACE_FACILITY同时为1时会编译下面3个函数
  * prvWriteNameToBuffer()
  * vTaskList(),
@@ -308,8 +308,8 @@
 
 /* 以下为使用Percepio Tracealyzer需要的东西，不需要时将 configUSE_TRACE_FACILITY 定义为 0 */
 #if ( configUSE_TRACE_FACILITY == 1 )
-#include "trcRecorder.h"
-#define INCLUDE_xTaskGetCurrentTaskHandle               1   // 启用一个可选函数（该函数被 Trace源码使用，默认该值为0 表示不用）
+// #include "trcRecorder.h"
+// #define INCLUDE_xTaskGetCurrentTaskHandle               1   // 启用一个可选函数（该函数被 Trace源码使用，默认该值为0 表示不用）
 #endif
 
 

@@ -25,11 +25,11 @@ C_SOURCES = \
 
 # ASM sources
 ASM_SOURCES =  \
-Startup/startup_stm32f40xx.s
+Startup/startup_stm32f40xx.s \
 
 # ASM sources
-ASMM_SOURCES = 
-
+ASMM_SOURCES = \
+Component/CmBacktrace/cm_backtrace/fault_handler/gcc/cmb_fault.S \
 
 ######
 #
@@ -43,6 +43,9 @@ BUILE_LETTER_SHELL = y
 
 BUILE_USB = n
 
+BUILE_GNSS = n
+
+BUILE_CMBACKTRACE = y
 #######################################
 # binaries
 #######################################
@@ -109,6 +112,16 @@ endif
 
 ifeq ($(BUILE_USB),y)
 C_DEFS += -DUSE_USB_OTG_FS -DUSE_USB_CODE -DUSB_CODE\
+
+endif
+
+ifeq ($(BUILE_GNSS),y)
+C_DEFS += -DUSE_GNSS_NMEA -DUSE_GNSS_CODE \
+
+endif
+
+ifeq ($(BUILE_CMBACKTRACE),y)
+C_DEFS += -DUSE_CMBACKTRACE_CODE\
 
 endif
 
@@ -205,6 +218,7 @@ download_stlinkv2:
 	-openocd -f TOOL/debug/stlink-v2.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08000000" -c reset -c shutdown
 download_jlink:
 	-openocd -f TOOL/debug/jlink.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08000000" -c reset -c shutdown
+
 #######################################
 # dependencies
 #######################################
