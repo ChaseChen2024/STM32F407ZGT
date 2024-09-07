@@ -83,13 +83,13 @@ FRESULT nv_init(void)
 	memset(&UserFaftsParams,0,sizeof(UserFaftsParams));
 	DWORD fre_clust, fre_size, tot_size;
 	strcpy(UserFaftsParams.LDriveId,"1:");
-	printf("\r\nnv_init_1,UserFaftsParams.LDriveId:%s\r\n",UserFaftsParams.LDriveId);
+	elog_i(ELOG_APP,"nv_init_1,UserFaftsParams.LDriveId:%s",UserFaftsParams.LDriveId);
 	err = f_mount(&(UserFaftsParams.fs),(UserFaftsParams.LDriveId),1);
-	printf("\r\nnv_init_2,%d,fmount err=%d",__LINE__,err);
+	elog_i(ELOG_APP,"nv_init_2,fmount err=%d",err);
 	if(err == FR_NO_FILESYSTEM)
 	{
 		err = f_mkfs("1:",0,1024*1024*10);
-		printf("\r\nnv_init_3,f_mkfs res=%d\r\n",err);
+		elog_i(ELOG_APP,"nv_init_3,f_mkfs res=%d",err);
 		err = f_mount(NULL,(UserFaftsParams.LDriveId),1);
 		err = f_mount(&(UserFaftsParams.fs),(UserFaftsParams.LDriveId),1);		
 	}
@@ -105,7 +105,7 @@ FRESULT nv_init(void)
         tot_size = (pfs->n_fatent - 2) * pfs->csize; // 总容量    单位Kbyte
         fre_size = fre_clust * pfs->csize;           // 可用容量  单位Kbyte
 
-        printf("\r\nnv_init_4\r\ntot_size:%10lu KB\r\nfre_size:%10lu KB\r\n",tot_size *4, fre_size *4);
+        elog_i(ELOG_APP,"nv_init_4\r\ntot_size:%10lu KB\r\nfre_size:%10lu KB",tot_size *4, fre_size *4);
     }
 	return err;
 }
@@ -131,7 +131,7 @@ void nv_wirte_test(int argc, char *argv[])
     FILINFO fno;
 	int len = 0;
 	char buf[128]= {0};
-	printf("cmd :%s,%s,%s,%s\r\n",argv[0],argv[1],argv[2],argv[3]);
+	elog_i(ELOG_APP,"cmd :%s,%s,%s,%s",argv[0],argv[1],argv[2],argv[3]);
 	if(argv[1][0] == '.' && argv[1][1] == '.' )
 	{
 		//返回路径，不作处理
@@ -196,7 +196,7 @@ int nv_size_test(int argc, char *argv[])
         tot_size = (pfs->n_fatent - 2) * pfs->csize; // 总容量    单位Kbyte
         fre_size = fre_clust * pfs->csize;           // 可用容量  单位Kbyte
 
-        printf("\r\nnv_size_test_1\r\ntot_size:%10lu KB\r\nfre_size:%10lu KB\r\n",tot_size *4, fre_size *4);
+        elog_i(ELOG_APP,"nv_size_test_1\r\ntot_size:%10lu KB\r\nfre_size:%10lu KB",tot_size *4, fre_size *4);
     }
     
     sprintf(buf, "tot_size:%10lu KB\r\nfre_size:%10lu KB\r\n",tot_size *4, fre_size *4);
@@ -225,7 +225,7 @@ void nv_scan_all_files_test(char* path)
                 if (res != FR_OK) break;
                 path[i] = 0;
             } else {                                       /* It is a file. */
-                printf("%s/%s\n", path, fno.fname);
+                elog_i(ELOG_APP,"%s/%s", path, fno.fname);
 				// shellPrint(&shell,"%s/%s\n", path, fno.fname);
             }
         }
@@ -252,13 +252,13 @@ void nv_scan_files_test(void)
             if (fno.fattrib & AM_DIR) {                    /* It is a directory */
                 i = strlen(patch_name);
 				
-				printf("/%s\n", fno.fname);
+				elog_i(ELOG_APP,"/%s", fno.fname);
 				sprintf(buf, "/%s\r\n",fno.fname);
     			Usart_SendString(USART3,buf);
                 if (res != FR_OK) break;
                 patch_name[i] = 0;
             } else {                                       /* It is a file. */
-                printf("%s\n",fno.fname);
+                elog_i(ELOG_APP,"%s",fno.fname);
 				sprintf(buf, "%s\r\n",fno.fname);
     			Usart_SendString(USART3,buf);
 

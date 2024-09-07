@@ -46,6 +46,8 @@ BUILE_USB = n
 BUILE_GNSS = n
 
 BUILE_CMBACKTRACE = y
+
+BUILE_EASYLOGGER = y
 #######################################
 # binaries
 #######################################
@@ -125,6 +127,11 @@ C_DEFS += -DUSE_CMBACKTRACE_CODE\
 
 endif
 
+
+ifeq ($(BUILE_EASYLOGGER),y)
+C_DEFS += -DUSE_EASYLOGGER_CODE\
+
+endif
 # AS includes
 AS_INCLUDES =  \
 -IUser \

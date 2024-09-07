@@ -93,9 +93,9 @@ size_t userShellListDir(char *path, char *buffer, size_t maxLen)
     // struct dirent *ptr;
     static FILINFO fno;
     int i;
-     printf("userShellListDir_1\r\n");
+     elog_i(ELOG_APP,"userShellListDir_1");
     ret = f_opendir(dir,path);
-    printf("userShellListDir_2\r\n");
+    elog_i(ELOG_APP,"userShellListDir_2");
     memset(buffer, 0, maxLen);
     // while(f_readdir(dir, &fno) == FR_OK)
     // {
@@ -104,15 +104,15 @@ size_t userShellListDir(char *path, char *buffer, size_t maxLen)
     //     printf("%s", buffer);
     // }
      for (;;) {
-        printf("userShellListDir_3\r\n");
+        elog_i(ELOG_APP,"userShellListDir_3\r\n");
         ret = f_readdir(&dir, &fno);                   /* Read a directory item */
         if (ret != FR_OK || fno.fname[0] == 0) break;  /* Break on error or end of dir */
         strcat(buffer, fno.fname);
         strcat(buffer, "\r\n");
-        printf("%s", buffer);
+        elog_i(ELOG_APP,"%s", buffer);
             
         }
-        printf("userShellListDir_4\r\n");
+        elog_i(ELOG_APP,"userShellListDir_4");
     f_closedir(dir);
     return ret;
 }
@@ -134,11 +134,11 @@ void userShellInit(void)
     shellInit(&shell, shellBuffer, 512);
     Uart3_BinarySem_Handle = xSemaphoreCreateBinary();	
     BaseType_t pass = pdPASS;
-    printf("userShellInit\r\n");
-    printf("2-rtos free size: %d B\r\n",xPortGetFreeHeapSize());
+    elog_i(ELOG_APP,"userShellInit");
+    elog_i(ELOG_APP,"2-rtos free size: %d B",xPortGetFreeHeapSize());
     if ((pass = xTaskCreate(shellTask, "shell", 128*10, &shell, 5, NULL) )!= pdPASS)
     {
-       printf("userShellInit-fail:%d\r\n",pass);
+       elog_i(ELOG_APP,"userShellInit-fail:%d",pass);
     }
     // xTaskCreateStatic(shellTask,"shell",START_STK_SIZE,NULL,5,StartTaskStack,&StartTaskTCB);
 }

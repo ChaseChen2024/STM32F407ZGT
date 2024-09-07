@@ -7,6 +7,8 @@
 #include "shell_port.h"
 #include "bsp_usart3.h"
 #endif
+
+
 #ifdef USE_CMBACKTRACE_CODE
 #include <cm_backtrace.h>
 
@@ -56,7 +58,7 @@ static void AppTaskCreate(void)
  #ifdef USE_LWIP_CODE
 	xReturn = SNTP_Demo_Task_Init();
 	if(pdPASS == xReturn)
-		printf("SNTP Client\r\n");
+		elog_i(ELOG_APP,"SNTP Client");
 
 #endif
 
@@ -69,13 +71,26 @@ static void AppTaskCreate(void)
 
 static void BSP_Init(void)
 {
-  #ifdef USE_CMBACKTRACE_CODE
-	cm_backtrace_init("CmBacktrace", HARDWARE_VERSION, SOFTWARE_VERSION);
-  #endif
+  
 	NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
   FSMC_SRAM_Init();
 	Debug_USART_Config();
-  printf("[%s],[%d],[%s]\r\n",__FUNCTION__,__LINE__,"BSP init");
+  #ifdef USE_CMBACKTRACE_CODE
+	cm_backtrace_init("CmBacktrace", HARDWARE_VERSION, SOFTWARE_VERSION);
+  #endif
+  #ifdef USE_EASYLOGGER_CODE
+  elog_init();
+
+  elog_set_fmt(ELOG_LVL_ASSERT, ELOG_FMT_ALL & ~ELOG_FMT_P_INFO);
+  elog_set_fmt(ELOG_LVL_ERROR, ELOG_FMT_LVL | ELOG_FMT_TAG | ELOG_FMT_TIME);
+  elog_set_fmt(ELOG_LVL_WARN, ELOG_FMT_LVL | ELOG_FMT_TAG | ELOG_FMT_TIME);
+  elog_set_fmt(ELOG_LVL_INFO, ELOG_FMT_LVL | ELOG_FMT_TAG | ELOG_FMT_TIME);
+  elog_set_fmt(ELOG_LVL_DEBUG, ELOG_FMT_ALL & ~(ELOG_FMT_FUNC | ELOG_FMT_P_INFO));
+  elog_set_fmt(ELOG_LVL_VERBOSE, ELOG_FMT_ALL & ~(ELOG_FMT_FUNC | ELOG_FMT_P_INFO));
+
+  elog_start();
+  #endif
+  elog_i(ELOG_BSP, "BSP init");
   
  	 #ifdef USER_LEETTER_SHELL
   USART3_Config();
@@ -89,7 +104,7 @@ static void BSP_Init(void)
 
 static void APP_Init(void)
 {
-  printf("[%s],[%d],[%s]\r\n",__FUNCTION__,__LINE__,"APP init");
+  elog_i(ELOG_APP, "APP init");
   nv_init();
   #ifdef USER_LEETTER_SHELL
 	userShellInit();

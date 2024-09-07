@@ -81,20 +81,16 @@ void ETH_BSP_Config(void)
 {
   /* Configure the GPIO ports for ethernet pins */
   ETH_GPIO_Config();
-  printf("ETH_GPIO_Config();\n\n");
+  elog_i(ELOG_BSP,"ETH_GPIO_Config");
   ETH_NVIC_Config();
-  printf("ETH_NVIC_Config();\n\n");
+  elog_i(ELOG_BSP,"ETH_NVIC_Config");
   /* Configure the Ethernet MAC/DMA */
   ETH_MACDMA_Config();
-  printf("ETH_MACDMA_Config();\n\n");
+  elog_i(ELOG_BSP,"ETH_MACDMA_Config");
 
 uint16_t ID1 = 0;
 uint16_t ID2 = 0;
 
-  printf("read phy id\r\n");
-	ID1 = ETH_ReadPHYRegister(ETHERNET_PHY_ADDRESS, 0X02);
-	ID2 = ETH_ReadPHYRegister(ETHERNET_PHY_ADDRESS, 0X03);
-	printf("PHY ID:%02x %02x\r\n", ID1, ID2);
   /* Get Ethernet link status*/
   if(GET_PHY_LINK_STATUS())
   {
@@ -198,7 +194,7 @@ static void ETH_MACDMA_Config(void)
   /* Configure Ethernet */
 	/* ≈‰÷√ETH */
   EthStatus = ETH_Init(&ETH_InitStructure, ETHERNET_PHY_ADDRESS);
-  printf("ETH_Init:EthStatus:%d\r\n",EthStatus);
+  elog_i(ELOG_BSP,"ETH_Init:EthStatus:%d",EthStatus);
   ETH_DMAITConfig(ETH_DMA_IT_NIS | ETH_DMA_IT_R, ENABLE);
 }
 

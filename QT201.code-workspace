@@ -110,7 +110,8 @@
 			"udp.h": "c",
 			"tcp_priv.h": "c",
 			"typeinfo": "c",
-			"cm_backtrace.h": "c"
+			"cm_backtrace.h": "c",
+			"elog.h": "c"
 		}
 	}
 }

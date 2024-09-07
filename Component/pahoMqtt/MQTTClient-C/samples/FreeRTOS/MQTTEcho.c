@@ -57,7 +57,7 @@ static void prvMQTTEchoTask(void *pvParameters)
 	char password[65] = {0};
 
 	if ((rc = aiotMqttSign(EXAMPLE_PRODUCT_KEY, EXAMPLE_DEVICE_NAME, EXAMPLE_DEVICE_SECRET, clientId, username, password) < 0)) {
-		printf("aiotMqttSign -%0x4x\n", -rc);
+		elog_i(ELOG_MQTT,"aiotMqttSign -%0x4x", -rc);
 		return -1;
 	}
 	// printf("clientid: %s\r\n", clientId);
@@ -73,7 +73,7 @@ static void prvMQTTEchoTask(void *pvParameters)
 
 //	network.defaultMessageHandler = messageArrived;
 	if ((rc = NetworkConnect(&network, host, port)) != 0)
-		printf("Return code from network connect is %d\n", rc);
+		elog_i(ELOG_MQTT,"Return code from network connect is %d", rc);
 
 	// printf("\r\nNetworkConnect,rc:%d\r\n",rc);
 #if defined(MQTT_TASK)
@@ -88,18 +88,18 @@ static void prvMQTTEchoTask(void *pvParameters)
 	connectData.keepAliveInterval = 60*10;
 	connectData.cleansession = 0;
 	if ((rc = MQTTConnect(&aiot_client, &connectData)) != 0)
-		printf("Return code from MQTT connect is %d--------------\r\n", rc);
+		elog_i(ELOG_MQTT,"Return code from MQTT connect is %d", rc);
 	else
-		printf("MQTT Connected %d-------------------\r\n", rc);
+		elog_i(ELOG_MQTT,"MQTT Connected %d", rc);
 
 	if ((rc = MQTTSubscribe(&aiot_client, attribute_report_subTopic, 1, messageArrived)) != 0)
-		printf("Return code from MQTT subscribe is %d\r\n", rc);
+		elog_i(ELOG_MQTT,"Return code from MQTT subscribe is %d", rc);
 
 	if ((rc = MQTTSubscribe(&aiot_client, attribute_set_subTopic, 1, messageArrived)) != 0)
-		printf("Return code from MQTT subscribe is %d\r\n", rc);
+		elog_i(ELOG_MQTT,"Return code from MQTT subscribe is %d", rc);
 
 	if ((rc = MQTTSubscribe(&aiot_client, subTopic, 1, messageArrived)) != 0)
-		printf("Return code from MQTT subscribe is %d\r\n", rc);
+		elog_i(ELOG_MQTT,"Return code from MQTT subscribe is %d", rc);
 	// unsigned int msgid = 0;
 	char pub_payload[128]={0};
 	
@@ -110,15 +110,15 @@ static void prvMQTTEchoTask(void *pvParameters)
 	msg.payload = pub_payload;
 	msg.payloadlen = sizeof(pub_payload);
 	rc = MQTTPublish(&aiot_client, attribute_report_pubTopic, &msg);
-	printf("MQTTPublish %d, msgid %d\n", rc, msgid);
+	elog_i(ELOG_MQTT,"MQTTPublish %d, msgid %d", rc, msgid);
 	while (1)
 	{
 //		printf("---------------------------\r\n");
 		// vTaskDelay(1000);
-		rc = MQTTYield(&aiot_client, 1000);
+		rc = MQTTYield(&aiot_client, 3000);
 		if(MQTT_SUCCESS != rc) break;	
 	}
-	printf("MQTTvTaskDelete,rc:%d\r\n", rc);
+	elog_i(ELOG_MQTT,"MQTTvTaskDelete,rc:%d", rc);
 	vTaskDelete(NULL);
 	/* do not return */
 }
@@ -127,7 +127,7 @@ static void prvMQTTEchoTask(void *pvParameters)
 void vStartMQTTTasks(uint16_t usTaskStackSize, UBaseType_t uxTaskPriority)
 {
 	BaseType_t x = 0L;
-	printf("\r\nvStartMQTTTasks--------------------------------------\r\n");
+	elog_i(ELOG_MQTT,"vStartMQTTTasks");
 	xTaskCreate(prvMQTTEchoTask,	/* The function that implements the task. */
 			"MQTTEcho0",			/* Just a text name for the task to aid debugging. */
 			usTaskStackSize,	/* The stack size is defined in FreeRTOSIPConfig.h. */
@@ -152,7 +152,7 @@ int mqtt_send(int i)
 	msg.payload = pub_payload;
 	msg.payloadlen = sizeof(pub_payload);
 	rc = MQTTPublish(&aiot_client, attribute_report_pubTopic, &msg);
-	printf("----------------MQTTPublish %d, msgid %d----------------\r\n", rc, msgid);
+	elog_i(ELOG_MQTT,"----------------MQTTPublish %d, msgid %d----------------", rc, msgid);
     
 }
 SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_FUNC), mqttsend, mqtt_send, test1);

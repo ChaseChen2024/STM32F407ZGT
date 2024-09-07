@@ -19,7 +19,7 @@
 
 #include <stdio.h>
 #include <string.h>
-
+#include "user.h"
 static void NewMessageData(MessageData* md, MQTTString* aTopicName, MQTTMessage* aMessage) {
     md->topicName = aTopicName;
     md->message = aMessage;
@@ -277,7 +277,7 @@ int cycle(MQTTClient* c, Timer* timer)
        
     int packet_type = readPacket(c, timer);     /* read the socket, see what work is due */
     
-	printf("1-cycle  packet_type:%d\r\n",packet_type);
+	elog_i(ELOG_MQTT,"1-cycle  packet_type:%d",packet_type);
     switch (packet_type)
     {
         default:

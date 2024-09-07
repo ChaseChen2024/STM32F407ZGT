@@ -18,6 +18,9 @@
 #include "bsp_sram.h"	
 
 
+#ifdef USE_EASYLOGGER_CODE
+#include "elog.h"
+#endif // DEBUG
 /*device*/
 
 #include <string.h>
@@ -27,7 +30,21 @@
 //  EXSRAM
 #define __EXRAM  __attribute__ ((section (".ext_sram")))
 
-
+#ifdef USE_EASYLOGGER_CODE
+#define ELOG_BSP "ELOG_BSP"
+#define ELOG_APP "ELOG_APP"
+#define ELOG_NW "ELOG_NW"
+#define ELOG_LVGL "ELOG_LVGL"
+#define ELOG_LWIP "ELOG_LWIP"
+#define ELOG_MQTT "ELOG_MQTT"
+#define ELOG_LETTERSHELL "ELOG_LETTERSHELL"
+#else
+#define elog_a(tag, ...)     printf(__VA_ARGS__);printf("\r\n")
+#define elog_e(tag, ...)     printf(__VA_ARGS__);printf("\r\n")
+#define elog_w(tag, ...)     printf(__VA_ARGS__);printf("\r\n")
+#define elog_i(tag, ...)     printf(__VA_ARGS__);printf("\r\n")
+#define elog_d(tag, ...)     printf(__VA_ARGS__);printf("\r\n")
+#endif
 #endif //__USER_H
 
 

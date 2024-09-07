@@ -210,17 +210,6 @@ void Sntp_BSP_Init(void)
  
 #define JAN_1970            0x83aa7e80
  
-// #define NTP_CONV_FRAC32(x)  (uint64_t) ((x) * ((uint64_t)1<<32))    
-// #define NTP_REVE_FRAC32(x)  ((double) ((double) (x) / ((uint64_t)1<<32)))   
- 
-// #define NTP_CONV_FRAC16(x)  (uint32_t) ((x) * ((uint32_t)1<<16))    
-// #define NTP_REVE_FRAC16(x)  ((double)((double) (x) / ((uint32_t)1<<16)))    
-// #define NTP_TIMESTAMP_DELTA  2208988800UL
- 
-// #define USEC2FRAC(x)        ((uint32_t) NTP_CONV_FRAC32( (x) / 1000000.0 )) 
-// #define FRAC2USEC(x)        ((uint32_t) NTP_REVE_FRAC32( (x) * 1000000.0 )) 
-// #define NTP_LFIXED2DOUBLE(x)    ((double) ( ntohl(((struct l_fixedpt *) (x))->intpart) - JAN_1970 + FRAC2USEC(ntohl(((struct l_fixedpt *) (x))->fracpart)) / 1000000.0 ))   
-
 
 struct s_fixedpt {
     uint16_t    intpart;
@@ -320,7 +309,7 @@ int get_ntp_packet(uint32_t *data)  //构建并发送NTP请求报文
 	
 	data[10]= htonl(tv_sce);
 	data[11]= htonl(tv_usec);
-	printf("组NTP请求包\r\n");
+	elog_i(ELOG_NW,"组NTP请求包");
     return 0;
 }
 
@@ -402,10 +391,10 @@ BaseType_t Dhcp_Client_Task_Init(void);
 static void SNTP_Demo_Task(void* parameter)
 {	
 	
-	printf("sntp init\r\n");
+	elog_i(ELOG_NW,"sntp init");
 	LwIP_NW_Init();
 	
-	printf("sntp init111\r\n");
+	elog_i(ELOG_NW,"sntp init111");
 	uint32_t data[12]; //发送数据包
 	uint8_t buf[NTP_PACKET_SIZE];
     size_t nbytes = NTP_PACKET_SIZE;
@@ -422,7 +411,7 @@ static void SNTP_Demo_Task(void* parameter)
 	socket_fd = socket(AF_INET, SOCK_DGRAM, 0);
 	if(socket_fd < 0)
 	{
-		printf("socket creat fail \r\n");
+		elog_i(ELOG_NW,"socket creat fail");
 		goto END;
 
 	}
@@ -439,7 +428,7 @@ static void SNTP_Demo_Task(void* parameter)
 
 	//发送到指定服务器
 	sendto(socket_fd,data,nbytes,0,(struct sockaddr *) &servaddr,sizeof(struct sockaddr));
-	printf("send\r\n");
+	elog_i(ELOG_NW,"send");
 
 	
 	memset(buf, 0, NTP_PACKET_SIZE);
@@ -448,23 +437,23 @@ static void SNTP_Demo_Task(void* parameter)
 	for(int i = 0; i < 10; i++)
 	{
 		recv_data_len = recvfrom(socket_fd, buf, NTP_PACKET_SIZE, 0,(struct sockaddr *) &servaddr,&ip_info_size);
-		for (int i = 0; i < recv_data_len; i++)
-		{
-			 printf("%x ", buf[i]);
-		}
+		// for (int i = 0; i < recv_data_len; i++)
+		// {
+		// 	 printf("%x ", buf[i]);
+		// }
 		
-		printf("\r\nrecv_data_len=%d\r\n",recv_data_len);
+		elog_i(ELOG_NW,"recv_data_len=%d",recv_data_len);
 		if(recv_data_len > 0)
 		{
 			break;
 		}
 		else
 		{
-			printf("\r\nSNTP_Demo_Task_0,try cnt:%d\r\n",i);
+			elog_i(ELOG_NW,"SNTP_Demo_Task_0,try cnt:%d",i);
 			vTaskDelay(200);
 		}
 	}
-	printf("\r\nData(10) %x,JAN_1970 %x \r\n",Data(10),JAN_1970);
+	elog_i(ELOG_NW,"Data(10) %x,JAN_1970 %x",Data(10),JAN_1970);
 	
 	T1 = Data(6);
 	T3 = Data(10) - JAN_1970;
@@ -472,7 +461,7 @@ static void SNTP_Demo_Task(void* parameter)
 	
 	//数据转换
 	lwip_calc_date_time(T3);
-	printf("北京时间：%02d-%02d-%02d %02d:%02d:%02d\r\n",  
+	elog_i(ELOG_NW,"北京时间：%02d-%02d-%02d %02d:%02d:%02d\r\n",  
                            g_nowdate.year, 
                            g_nowdate.month + 1,
                            g_nowdate.day,
@@ -487,7 +476,7 @@ static void SNTP_Demo_Task(void* parameter)
 	sTime.RTC_Seconds = g_nowdate.second;
 	if (RTC_SetTime(RTC_Format_BINorBCD, &sTime) != SUCCESS)
 	{
-		printf("\r\nRTC_SetTime fail  \r\n");
+		// printf("\r\nRTC_SetTime fail  \r\n");
 	}
 	
 	/*
@@ -500,18 +489,12 @@ static void SNTP_Demo_Task(void* parameter)
 	if (RTC_SetDate(RTC_Format_BINorBCD, &sDate) != SUCCESS)
 	{
 		// Error_Handler();
-		printf("\r\nRTC_SetDate fail  \r\n");
+		// printf("\r\nRTC_SetDate fail  \r\n");
 	}
-
-
 	vTaskDelay(1000);
-	
-	
-	
-
 	// vTaskDelete(NULL); //删除任务
 END:
-	printf("socket creat fail \r\n");
+	elog_i(ELOG_NW,"socket creat fail");
 	close(socket_fd);
 
 	#ifdef USE_MQTT_CODE

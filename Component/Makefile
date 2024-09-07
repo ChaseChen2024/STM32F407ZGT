@@ -271,6 +271,15 @@ Component/Cm_Backtrace/cm_backtrace.c \
 
 endif
 
+
+ifeq ($(BUILE_EASYLOGGER),y)
+C_SOURCES +=  \
+Component/Easy_Logger/src/elog.c \
+Component/Easy_Logger/src/elog_utils.c \
+Component/Easy_Logger/port/elog_port.c \
+
+endif
+
 ifeq ($(BUILE_LWIP),y)
 C_INCLUDES +=  \
 -IComponent/LWIP/include \
@@ -375,6 +384,11 @@ C_INCLUDES +=  \
 
 endif
 
+ifeq ($(BUILE_EASYLOGGER),y)
+C_INCLUDES +=  \
+-IComponent/Easy_Logger/inc \
+
+endif
 
 CFLAGS += $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
 

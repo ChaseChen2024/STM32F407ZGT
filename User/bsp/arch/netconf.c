@@ -64,12 +64,11 @@ void LwIP_DHCP_Process_Handle(void);
   */
 void LwIP_NW_Init(void)
 {
-  printf("LwIP_Init-111\r\n");
+ elog_i(ELOG_LWIP,"LwIP_Init-111");
   ip_addr_t ipaddr;
   ip_addr_t netmask;
   ip_addr_t gw;
- printf("%s %d\r\n0:0x%x\r\n1:0x%x\r\n",__func__,__LINE__,ETH_ReadPHYRegister(0,0),ETH_ReadPHYRegister(0,1));
-printf("%s %d\r\n2:0x%x\r\n3:0x%x\r\n",__func__,__LINE__,ETH_ReadPHYRegister(0,2),ETH_ReadPHYRegister(0,3));
+
 
 #if LWIP_DHCP
   ipaddr.addr = 0;
@@ -81,8 +80,7 @@ printf("%s %d\r\n2:0x%x\r\n3:0x%x\r\n",__func__,__LINE__,ETH_ReadPHYRegister(0,2
   IP4_ADDR(&netmask, NETMASK_ADDR0, NETMASK_ADDR1 , NETMASK_ADDR2, NETMASK_ADDR3);
   IP4_ADDR(&gw, GW_ADDR0, GW_ADDR1, GW_ADDR2, GW_ADDR3);
 #endif
-printf("%s %d\r\n0:0x%x\r\n1:0x%x\r\n",__func__,__LINE__,ETH_ReadPHYRegister(0,0),ETH_ReadPHYRegister(0,1));
-printf("%s %d\r\n2:0x%x\r\n3:0x%x\r\n",__func__,__LINE__,ETH_ReadPHYRegister(0,2),ETH_ReadPHYRegister(0,3));
+
 
   /* - netif_add(struct xnetif *xnetif, ip_addr_t *ipaddr,
             ip_addr_t *netmask, ip_addr_t *gw,
@@ -98,13 +96,11 @@ printf("%s %d\r\n2:0x%x\r\n3:0x%x\r\n",__func__,__LINE__,ETH_ReadPHYRegister(0,2
   your ethernet xnetif interface. The following code illustrates it's use.*/
 
   netif_add(&xnetif, &ipaddr, &netmask, &gw, NULL, &ethernetif_init, &ethernet_input);
-printf("%s %d\r\n0:0x%x\r\n1:0x%x\r\n",__func__,__LINE__,ETH_ReadPHYRegister(0,0),ETH_ReadPHYRegister(0,1));
-printf("%s %d\r\n2:0x%x\r\n3:0x%x\r\n",__func__,__LINE__,ETH_ReadPHYRegister(0,2),ETH_ReadPHYRegister(0,3));
+
 
   /*  Registers the default network interface.*/
   netif_set_default(&xnetif);
-printf("%s %d\r\n0:0x%x\r\n1:0x%x\r\n",__func__,__LINE__,ETH_ReadPHYRegister(0,0),ETH_ReadPHYRegister(0,1));
-printf("%s %d\r\n2:0x%x\r\n3:0x%x\r\n",__func__,__LINE__,ETH_ReadPHYRegister(0,2),ETH_ReadPHYRegister(0,3));
+
 
   /*  When the xnetif is fully configured this function must be called.*/
   netif_set_up(&xnetif);
@@ -115,23 +111,21 @@ printf("%s %d\r\n2:0x%x\r\n3:0x%x\r\n",__func__,__LINE__,ETH_ReadPHYRegister(0,2
   Note: you must call dhcp_fine_tmr() and dhcp_coarse_tmr() at
   the predefined regular intervals after starting the client.
   You can peek in the netif->dhcp struct for the actual DHCP status.*/
-  printf("%s %d\r\n0:0x%x\r\n1:0x%x\r\n",__func__,__LINE__,ETH_ReadPHYRegister(0,0),ETH_ReadPHYRegister(0,1));
-printf("%s %d\r\n2:0x%x\r\n3:0x%x\r\n",__func__,__LINE__,ETH_ReadPHYRegister(0,2),ETH_ReadPHYRegister(0,3));
 
-  printf("本例程将使用DHCP动态分配IP地址,如果不需要则在lwipopts.h中将LWIP_DHCP定义为0\n\n");
+  elog_i(ELOG_LWIP,"本例程将使用DHCP动态分配IP地址,如果不需要则在lwipopts.h中将LWIP_DHCP定义为0");
   
   err = dhcp_start(&xnetif);      //开启dhcp
   if(err == ERR_OK)
-    printf("lwip dhcp init success...\n\n");
+    elog_i(ELOG_LWIP,"lwip dhcp init success...");
   else
-    printf("lwip dhcp init fail...\n\n");
+    elog_i(ELOG_LWIP,"lwip dhcp init fail...");
 
    int count=0;
   while(ip_addr_cmp(&(xnetif.ip_addr),&ipaddr))   //等待dhcp分配的ip有效
   {
     vTaskDelay(100);
     count+=100;
-    printf("count:%d\r\n",count);
+    printf("count:%d",count);
     if(count > 5000)
     {
     	break;
@@ -139,7 +133,7 @@ printf("%s %d\r\n2:0x%x\r\n3:0x%x\r\n",__func__,__LINE__,ETH_ReadPHYRegister(0,2
     
   } 
 #endif
-    printf("本地IP地址是:%d.%d.%d.%d\n\n",  \
+    elog_i(ELOG_LWIP,"本地IP地址是:%d.%d.%d.%d",  \
         ((xnetif.ip_addr.addr)&0x000000ff),       \
         (((xnetif.ip_addr.addr)&0x0000ff00)>>8),  \
         (((xnetif.ip_addr.addr)&0x00ff0000)>>16), \
@@ -164,24 +158,24 @@ int LwIP_DHCP(ip_addr_t *addr)
   
   err = dhcp_start(&xnetif);      //开启dhcp
   if(err == ERR_OK)
-    printf("lwip dhcp init success...\n\n");
+    elog_i(ELOG_LWIP,"lwip dhcp init success...");
   else
-    printf("lwip dhcp init fail...\n\n");
+    elog_i(ELOG_LWIP,"lwip dhcp init fail...");
 
    
   while(ip_addr_cmp(&(xnetif.ip_addr),&ipaddr))   //等待dhcp分配的ip有效
   {
     vTaskDelay(100);
     count+=100;
-    printf("count:%d\r\n",count);
+    elog_i(ELOG_LWIP,"count:%d",count);
     if(count > 5000)
     {
-		printf("dhcp获取IP超时...\n\n");
+		elog_i(ELOG_LWIP,"dhcp获取IP超时...");
 		return -1;
     }
   } 
   addr->addr = xnetif.ip_addr.addr;
-    printf("本地IP地址是:%d.%d.%d.%d\n\n",  \
+    elog_i(ELOG_LWIP,"本地IP地址是:%d.%d.%d.%d",  \
         ((xnetif.ip_addr.addr)&0x000000ff),       \
         (((xnetif.ip_addr.addr)&0x0000ff00)>>8),  \
         (((xnetif.ip_addr.addr)&0x00ff0000)>>16), \

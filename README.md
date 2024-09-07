@@ -167,4 +167,8 @@ nv_write() 直接调用进行写数据
 
  2、添加os_asssert 指令主动dump模组
 
+# 20240907修改
 
+1、添加easylogger 日志库，源码：https://github.com/armink/EasyLogger
+
+2、添加编译选项开启或关闭该功能，默认开启BUILE_EASYLOGGER = y
