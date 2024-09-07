@@ -111,7 +111,8 @@
 			"tcp_priv.h": "c",
 			"typeinfo": "c",
 			"cm_backtrace.h": "c",
-			"elog.h": "c"
+			"elog.h": "c",
+			"cmath": "c"
 		}
 	}
 }

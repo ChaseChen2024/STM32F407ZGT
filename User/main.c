@@ -149,5 +149,47 @@ void rtos_assert_test(void)
 SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_FUNC), os_assert, rtos_assert_test, freertos assert);
 
 #endif
+#ifdef USE_EASYLOGGER_CODE
+int log_test(int argc, char *argv[])
+{
+  if(!strcasecmp(argv[1], "on"))
+  {
+    elog_start();
+  }
+  else if(!strcasecmp(argv[1], "off"))
+  {
+    elog_stop();
+  }
+  else if(!strcasecmp(argv[1], "level"))
+  {
+    if(!strcasecmp(argv[3], "E"))
+    {
+      elog_set_filter_tag_lvl(argv[2], ELOG_LVL_ERROR);
+    }
+    else if(!strcasecmp(argv[3], "W"))
+    {
+      elog_set_filter_tag_lvl(argv[2], ELOG_LVL_WARN);
+    }
+    else if(!strcasecmp(argv[3], "I"))
+    {
+      elog_set_filter_tag_lvl(argv[2], ELOG_LVL_INFO);
+    }
+    else if(!strcasecmp(argv[3], "D"))
+    {
+      elog_set_filter_tag_lvl(argv[2], ELOG_LVL_DEBUG);
+    }
+    else if(!strcasecmp(argv[3], "V"))
+    {
+      elog_set_filter_tag_lvl(argv[2], ELOG_LVL_VERBOSE);
+    }
+
+  }
+	shellPrint(&shell, "ok");
+	return 0;
+    
+}
+SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN), log, log_test, EasyLogger control);
+
+#endif
 
 #endif // USER_LEETTER_SHELL
