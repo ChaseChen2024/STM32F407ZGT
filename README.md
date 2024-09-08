@@ -1,5 +1,9 @@
-STM32F407ZGT
-基于STM32F407ZGT的一个共享工程，后续将不断添加他支持的功能
+STM32F407ZGT-Makefile
+
+基于启明欣欣的STM32F407ZGT开发版实现的的一个共享工程，后续将不断添加他支持的功能
+
+工程将支持freertos,lwip,paho-mqtt,letter-shell,sfud,fal,fatfs,easylogger,lvgl,cmbacktrace,nmea0183...第三方组件
+
 
 
 项目工程介绍：
@@ -9,20 +13,22 @@ STM32F407ZGT
 工程使用makefile进行管理，gcc进行编译。
 
 资源分配
-外设		资源				管理					GPIO
-SPI1		w25q128			sfud+fal+fatfs			sck--PB3,miso--PB4,mosi--PB5,cs--PG8
-SPI2		st7789			LVGL					rst--PB0,cs--PB12,dc--PB14,blk--PB1,miso--PB13,mosi--PB15
-SDIO		SD				fatfs					暂留
-ETH			LAN8720			lwip					MDIO--PA2,MDC--PC1,CLK--PA1,DV--PA7,RXD0--PC4,RXD1--PC5,TXEN--PB11,EXD0--PG13,TXD1--PG14,RST--VCC
-FSMC		SRAM			暂定					...(太多了，我就不列了)
-USART1		DEBUG			easylogger				tx1--PA9,rx1--PA10
-USART3		shell			letter-shell			tx3--PB10,rx3--PB11
-USART6		gnss			NMEAS0183				tx6--PC6，rx6--PC7
-I2C			AT24C02			暂定					scl--PB8,sda--PB9
-GPIOG13		LED0			暂定					PG13
-GPIOG14		LED1			暂定					PG14
-GPIOF6		KEY0			暂定					PF6
-GPIOF7		KEY1			暂定					PF7
+
+| 外设   | 	资源 	 |		管理	| 											GPIO 													|
+| -------|----------|---------------|---------------------------------------------------------------------------------------------------|
+| SPI1   | w25q128	| sfud+fal+fatfs| sck--PB3,miso--PB4,mosi--PB5,cs--PG8																|
+| SPI2   | st7789   | LVGL          | rst--PB0,cs--PB12,dc--PB14,blk--PB1,miso--PB13,mosi--PB15											| 
+| SDIO   | SD       | fatfs         | 暂留																								| 
+| ETH    | LAN8720  | lwip          | MDIO--PA2,MDC--PC1,CLK--PA1,DV--PA7,RXD0--PC4,RXD1--PC5,TXEN--PB11,EXD0--PG13,TXD1--PG14,RST--VCC | 
+| FSMC   | SRAM     | 暂定           | ...(太多了，我就不列了)																			  | 
+| USART1 | DEBUG	| easylogger    | tx1--PA9,rx1--PA10																				| 
+| USART3 | shell    | letter-shell  | tx3--PB10,rx3--PB11																				| 
+| USART6 | gnss     | NMEAS0183     | tx6--PC6，rx6--PC7																				| 
+| I2C    | AT24C02  | 暂定           | scl--PB8,sda--PB9																				| 
+| GPIOG13| LED0	    | 暂定           | PG13																								| 
+| GPIOG14| LED1     | 暂定           | PG14																								| 
+| GPIOF6 | KEY0     | 暂定           | PF6																								| 
+| GPIOF7 | KEY1     | 暂定           | PF7																								| 
 
 
 
