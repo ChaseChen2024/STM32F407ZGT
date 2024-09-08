@@ -5,7 +5,6 @@ STM32F407ZGT-Makefile
 工程将支持freertos,lwip,paho-mqtt,letter-shell,sfud,fal,fatfs,easylogger,lvgl,cmbacktrace,nmea0183...第三方组件
 
 
-
 项目工程介绍：
 
 项目芯片型号：STM32F407ZGT6
@@ -13,7 +12,6 @@ STM32F407ZGT-Makefile
 工程使用makefile进行管理，gcc进行编译。
 
 资源分配
-
 | 外设   | 	资源 	 |		管理	| 											GPIO 													|
 | -------|----------|---------------|---------------------------------------------------------------------------------------------------|
 | SPI1   | w25q128	| sfud+fal+fatfs| sck--PB3,miso--PB4,mosi--PB5,cs--PG8																|
