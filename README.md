@@ -2,7 +2,7 @@ STM32F407ZGT-Makefile
 
 基于启明欣欣的STM32F407ZGT开发版实现的的一个共享工程，后续将不断添加他支持的功能
 
-工程将支持freertos,lwip,paho-mqtt,letter-shell,sfud,fal,fatfs,easylogger,lvgl...第三方组件
+工程将支持freertos,lwip,paho-mqtt,letter-shell,sfud,fal,fatfs,easylogger,lvgl,cmbacktrace,nmea0183...第三方组件
 
 
 项目工程介绍：
