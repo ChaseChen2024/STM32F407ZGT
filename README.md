@@ -172,3 +172,6 @@ nv_write() 直接调用进行写数据
 1、添加easylogger 日志库，源码：https://github.com/armink/EasyLogger
 
 2、添加编译选项开启或关闭该功能，默认开启BUILE_EASYLOGGER = y
+
+# 20240908修改
+修改flash驱动，使用开源的SFUD 驱动框架管理flash，并对接fatfs文件系统，SFUD驱动地址：https://github.com/armink/SFUD/tree/master
