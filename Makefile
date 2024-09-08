@@ -33,7 +33,7 @@ Component/Cm_Backtrace/cmb_fault.S \
 
 ######
 #
-BUILE_LWIP = n
+BUILE_LWIP = y
 
 BUILE_LVGL = n
 
