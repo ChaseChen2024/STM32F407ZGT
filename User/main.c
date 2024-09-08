@@ -12,6 +12,9 @@
 
 #ifdef USE_SFUD_CODE
 #include <sfud.h>
+#ifdef USE_FAL_CODE
+#include "fal.h"
+#endif
 #endif
 
 #ifdef USE_CMBACKTRACE_CODE
@@ -97,7 +100,10 @@ static void BSP_Init(void)
   #endif
   elog_i(ELOG_BSP, "BSP init");
   #ifdef USE_SFUD_CODE
-  sfud_init();
+  sfud_user_init();
+  #ifdef USE_FAL_CODE
+  fal_init();
+  #endif // USE_FAL_CODE
   #endif
  	#ifdef USER_LEETTER_SHELL
   USART3_Config();
@@ -202,4 +208,78 @@ SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN), lo
 
 #endif
 
+#ifdef USE_FAL_CODE
+#define BUF_SIZE 1024
+
+static int fal_test(const char *partiton_name)
+{
+    int ret;
+    int i, j, len;
+    uint8_t buf[BUF_SIZE];
+    const struct fal_flash_dev *flash_dev = NULL;
+    const struct fal_partition *partition = NULL;
+
+    if (!partiton_name)
+    {
+        shellPrint(&shell,"Input param partition name is null!\r\n");
+        return -1;
+    }
+
+    partition = fal_partition_find(partiton_name);
+    if (partition == NULL)
+    {
+        shellPrint(&shell,"Find partition (%s) failed!\r\n", partiton_name);
+        ret = -1;
+        return ret;
+    }
+
+    flash_dev = fal_flash_device_find(partition->flash_name);
+    if (flash_dev == NULL)
+    {
+        shellPrint(&shell,"Find flash device (%s) failed!\r\n", partition->flash_name);
+        ret = -1;
+        return ret;
+    }
+
+    shellPrint(&shell,"Flash device : %s   "
+               "Flash size : %dK   \r\n"
+               "Partition : %s   "
+               "Partition size: %dK\r\n", 
+                partition->flash_name, 
+                flash_dev->len/1024,
+                partition->name,
+                partition->len/1024);
+
+
+
+ 
+    shellPrint(&shell,"Write (%s) partition finish! Write size %d(%dK).\r\n", partiton_name, i, i/1024);
+
+    return ret;
+}
+
+void fal_sample(void)
+{
+
+    if (fal_test("resource") == 0)
+    {
+        shellPrint(&shell,"Fal partition (%s) test success!\r\n", "param");
+    }
+    else
+    {
+        shellPrint(&shell,"Fal partition (%s) test failed!\r\n", "param");
+    }
+
+    if (fal_test("fatfs") == 0)
+    {
+        shellPrint(&shell,"Fal partition (%s) test success!\r\n", "download");
+    }
+    else
+    {
+        shellPrint(&shell,"Fal partition (%s) test failed!\r\n", "download");
+    }
+}
+
+SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN), fal_sample, fal_sample,fal sample);
+#endif
 #endif // USER_LEETTER_SHELL

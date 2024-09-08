@@ -33,7 +33,7 @@ Component/Cm_Backtrace/cmb_fault.S \
 
 ######
 #
-BUILE_LWIP = y
+BUILE_LWIP = n
 
 BUILE_LVGL = n
 
@@ -153,8 +153,14 @@ endif
 
 
 ifeq ($(BUILE_SFUD),y)
+BUILE_FAL = y
 
 C_DEFS += -DUSE_SFUD_CODE\
+
+ifeq ($(BUILE_FAL),y)
+C_DEFS += -DUSE_FAL_CODE\
+
+endif
 
 endif
 # AS includes

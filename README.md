@@ -174,4 +174,6 @@ nv_write() 直接调用进行写数据
 2、添加编译选项开启或关闭该功能，默认开启BUILE_EASYLOGGER = y
 
 # 20240908修改
-修改flash驱动，使用开源的SFUD 驱动框架管理flash，并对接fatfs文件系统，SFUD驱动地址：https://github.com/armink/SFUD/tree/master
+1、修改flash驱动，使用开源的SFUD 驱动框架管理flash，并对接fatfs文件系统，SFUD驱动地址：https://github.com/armink/SFUD/tree/master
+
+2、添加FAL 中间层，并使用FAL 层对接SDUD ，FATFS 也使用FAL的接口进行操作。

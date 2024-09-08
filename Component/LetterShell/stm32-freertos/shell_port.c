@@ -110,7 +110,7 @@ void userShellInit(void)
     BaseType_t pass = pdPASS;
     elog_i(ELOG_APP,"userShellInit");
     elog_i(ELOG_APP,"2-rtos free size: %d B",xPortGetFreeHeapSize());
-    if ((pass = xTaskCreate(shellTask, "shell", 128*15, &shell, 5, NULL) )!= pdPASS)
+    if ((pass = xTaskCreate(shellTask, "shell", 128*30, &shell, 5, NULL) )!= pdPASS)
     {
        elog_i(ELOG_APP,"userShellInit-fail:%d",pass);
     }

@@ -46,6 +46,11 @@ static const sfud_mf mf_table[] = SFUD_MF_TABLE;
 static const sfud_flash_chip flash_chip_table[] = SFUD_FLASH_CHIP_TABLE;
 #endif
 
+
+#ifdef USE_SFUD_CODE
+sfud_flash *fatfs_flash = NULL;
+#endif
+
 #ifdef SFUD_USING_QSPI
 /**
  * flash read data mode
@@ -1053,3 +1058,20 @@ sfud_err sfud_write_status(const sfud_flash *flash, bool is_volatile, uint8_t st
 
     return result;
 }
+
+#ifdef USE_SFUD_CODE
+void sfud_user_init(void)
+{
+    sfud_err ret = SFUD_SUCCESS;
+    ret = sfud_init();
+    if (ret!= SFUD_SUCCESS) {
+        // Handle the error here.
+        SFUD_INFO("Error: SFUD INIT FAIL:%d",ret);
+    }
+    else
+    {
+        fatfs_flash = sfud_get_device(SFUD_W25Q128BV_DEVICE_INDEX);
+    }
+
+}
+#endif

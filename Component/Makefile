@@ -298,6 +298,19 @@ C_INCLUDES +=  \
 
 endif
 
+ifeq ($(BUILE_FAL),y)
+C_SOURCES +=  \
+Component/fal/src/fal.c \
+Component/fal/src/fal_flash.c \
+Component/fal/src/fal_partition.c \
+Component/fal/porting/fal_flash_sfud_port.c \
+
+C_INCLUDES +=  \
+-IComponent/fal/porting \
+-IComponent/fal/inc \
+
+endif
+
 
 ifeq ($(BUILE_LWIP),y)
 C_INCLUDES +=  \
@@ -382,8 +395,6 @@ C_INCLUDES +=  \
 -IComponent/pahoMqtt/MQTTClient-C/src/FreeRTOS \
 -IComponent/pahoMqtt/MQTTPacket/src \
 -IComponent/pahoMqtt/MQTTClient-C/src \
-
-
 
 endif
 

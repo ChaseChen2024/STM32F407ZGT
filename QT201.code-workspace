@@ -114,7 +114,9 @@
 			"elog.h": "c",
 			"cmath": "c",
 			"sfud.h": "c",
-			"algorithm": "c"
+			"algorithm": "c",
+			"fal.h": "c",
+			"fal_cfg.h": "c"
 		}
 	}
 }

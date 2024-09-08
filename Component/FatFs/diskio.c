@@ -22,6 +22,9 @@
 #include "string.h"
 #ifdef USE_SFUD_CODE
 #include <sfud.h>
+#ifdef USE_FAL_CODE
+#include "fal.h"
+#endif
 #endif
 
 //需要拓展设备时增加
@@ -47,7 +50,13 @@
 extern  SD_CardInfo SDCardInfo;
 #endif
 #ifdef USE_SFUD_CODE
-sfud_flash *fatfs_flash = NULL;
+#ifdef USE_FAL_CODE
+extern struct fal_flash_dev nor_flash0;
+const struct fal_partition *nor_flash0_partition = NULL;
+#else
+extern sfud_flash *fatfs_flash;
+#endif
+
 #endif
 /*-----------------------------------------------------------------------*/
 /* Get Drive Status                                                      */
@@ -82,6 +91,10 @@ DSTATUS disk_status (
 		}
 		#endif
 		#ifdef USE_SFUD_CODE
+
+		#ifdef USE_FAL_CODE
+		stat &= ~STA_NOINIT;
+		#else
 		fatfs_flash = sfud_get_device(SFUD_W25Q128BV_DEVICE_INDEX);
 		if(fatfs_flash->init_ok)
 		{
@@ -91,6 +104,7 @@ DSTATUS disk_status (
 		{
 			stat = STA_NOINIT;
 		}
+		#endif
 		#endif
 		// translate the reslut code here
 
@@ -145,12 +159,21 @@ DSTATUS disk_initialize (
 	    SPI_Flash_WAKEUP();
 		#endif
 		#ifdef USE_SFUD_CODE
+
+		#ifdef USE_FAL_CODE
+		nor_flash0_partition = fal_partition_find("fatfs");
+		if (nor_flash0_partition == NULL)
+		{
+			fal_init();
+
+		}
+		#else
 		fatfs_flash = sfud_get_device(SFUD_W25Q128BV_DEVICE_INDEX);
 		if(!fatfs_flash->init_ok)
 		{
 			sfud_init();
 		}
-
+		#endif
 		#endif
 
 		stat = disk_status(SPI_FLASH);
@@ -226,14 +249,22 @@ DRESULT disk_read (
 		// translate the arguments here
 		//要读取的扇区号转换称为地址
 		/* 扇区偏移6MB，外部Flash文件系统空间放在SPI Flash后面10MB空间 */
-		sector+=1536;
-		read_addr = sector*FLASH_SECTOP_SIZE;
+		
 		#ifdef USE_FLASH_SPI1_CODE
+		sector+=1536;
+		
 		SPI_FLASH_BufferRead((u8*) buff, read_addr, count*FLASH_SECTOP_SIZE);
 		#endif
 		#ifdef USE_SFUD_CODE
+		#ifdef USE_FAL_CODE
+		read_addr = sector*FLASH_SECTOP_SIZE;
+		fal_partition_read(nor_flash0_partition, read_addr, (u8*) buff, count*FLASH_SECTOP_SIZE);
+		#else
+		sector+=1536;
+		read_addr = sector*FLASH_SECTOP_SIZE;
 		fatfs_flash = sfud_get_device(SFUD_W25Q128BV_DEVICE_INDEX);
 		sfud_read(fatfs_flash, read_addr, count * FLASH_SECTOP_SIZE, buff);
+		#endif
 		#endif
 		
 
@@ -310,8 +341,9 @@ DRESULT disk_write (
 	case SPI_FLASH :
 		
 		// translate the arguments here
-		sector+=1536;
+		
 		#ifdef USE_FLASH_SPI1_CODE
+		sector+=1536;
 		while(count--)
 		{
 			
@@ -328,9 +360,17 @@ DRESULT disk_write (
 		}
 		#endif
 		#ifdef USE_SFUD_CODE
+
+		#ifdef USE_FAL_CODE
+		write_addr = sector*FLASH_SECTOP_SIZE;
+		fal_partition_erase(nor_flash0_partition, write_addr, FLASH_SECTOP_SIZE);
+		fal_partition_write(nor_flash0_partition, write_addr, buff, FLASH_SECTOP_SIZE);
+		#else
+		sector+=1536;
 		write_addr = sector*FLASH_SECTOP_SIZE;
 		fatfs_flash = sfud_get_device(SFUD_W25Q128BV_DEVICE_INDEX);
 		sfud_erase_write(fatfs_flash, write_addr,FLASH_SECTOP_SIZE, buff);
+		#endif
 		#endif
 		// translate the reslut code here
 

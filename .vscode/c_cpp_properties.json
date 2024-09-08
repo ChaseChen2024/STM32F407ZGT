@@ -14,7 +14,9 @@
                 "USE_LWIP_CODE",
                 "USER_LEETTER_SHELL",
                 "USE_CMBACKTRACE_CODE",
-                "USE_EASYLOGGER_CODE"
+                "USE_EASYLOGGER_CODE",
+                "USE_SFUD_CODE",
+                "USE_FAL_CODE"
             ],
             "compilerPath": "C:\\i686-8.1.0-release-posix-dwarf-rt_v6-rev0\\mingw32\\bin\\gcc.exe",
             "cStandard": "c17",
