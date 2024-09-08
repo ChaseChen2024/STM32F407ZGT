@@ -10,6 +10,7 @@ STM32F407ZGT
 
 资源分配
 外设		资源				管理					GPIO
+
 SPI1		w25q128			sfud+fal+fatfs			sck--PB3,miso--PB4,mosi--PB5,cs--PG8
 
 SPI2		st7789			LVGL					rst--PB0,cs--PB12,dc--PB14,blk--PB1,miso--PB13,mosi--PB15
