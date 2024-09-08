@@ -12,10 +12,7 @@ STM32F407ZGT-Makefile
 工程使用makefile进行管理，gcc进行编译。
 
 资源分配
-| 列1    | 列2    | 列3   |
-|——|——|—–|
-| 内容1  | 内容2  | 内容3 |
-| 内容4  | 内容5  | 内容6 |
+
 外设		资源				管理					GPIO
 
 SPI1		w25q128			sfud+fal+fatfs			sck--PB3,miso--PB4,mosi--PB5,cs--PG8
