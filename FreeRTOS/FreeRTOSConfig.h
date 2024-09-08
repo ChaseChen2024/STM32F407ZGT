@@ -168,7 +168,7 @@
 #define configUSE_RECURSIVE_MUTEXES			1   
 
 //为1时使用计数信号量
-#define configUSE_COUNTING_SEMAPHORES		0
+#define configUSE_COUNTING_SEMAPHORES		1
 
 /* 设置可以注册的信号量和消息队列个数 */
 #define configQUEUE_REGISTRY_SIZE				10                                 
@@ -186,7 +186,7 @@
 // //将内存定义在SDRAM上
 #define configAPPLICATION_ALLOCATED_HEAP        0
 //系统所有总的堆大小
-#define configTOTAL_HEAP_SIZE					((size_t)(35*1024))    
+#define configTOTAL_HEAP_SIZE					((size_t)(40*1024))    
 // #define configTOTAL_HEAP_SIZE					((size_t)(20*1024))  
 
 /***************************************************************

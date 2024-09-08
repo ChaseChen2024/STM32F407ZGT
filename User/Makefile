@@ -8,12 +8,31 @@ User/bsp/uart/bsp_debug_usart.c \
 User/bsp/uart/bsp_usart3.c \
 User/bsp/key/bsp_key.c \
 User/bsp/rtc/bsp_rtc.c \
-User/bsp/flash/bsp_spi_flash.c \
 User/bsp/sram/bsp_sram.c \
-User/app/nv/nv.c \
 # User/bsp/led/bsp_led.c \
 # User/bsp/sdio/bsp_sdio_sd.c \
 # User/bsp/lcd/lcd.c \
+
+
+
+ifeq ($(BUILD_SPI1),y)
+C_SOURCES +=  \
+User/bsp/flash/bsp_spi_flash.c \
+
+C_INCLUDES +=  \
+-IUser/bsp/flash \
+
+endif
+
+ifeq ($(BUILE_FATFS),y)
+C_SOURCES +=  \
+User/app/nv/nv.c \
+
+C_INCLUDES +=  \
+-IUser/app/nv \
+
+endif
+
 
 
 ifeq ($(BUILE_USB),y)
@@ -36,7 +55,7 @@ endif
 
 #demo 
 C_SOURCES +=  \
-# User/app/user_demo/src/FatFs_demo.c \
+User/app/user_demo/src/FatFs_demo.c \
 # User/app/user_demo/src/Sdio_demo.c \
 # User/app/user_demo/src/Key_demo.c \
 # User/app/user_demo/src/Usb_demo.c \
@@ -49,10 +68,8 @@ C_INCLUDES +=  \
 -IUser/bsp/key \
 -IUser/bsp/led \
 -IUser/bsp/rtc \
--IUser/bsp/flash \
 -IUser/bsp/sram \
 -IUser/app/user_demo/inc \
--IUser/app/nv \
 # -IUser/bsp/sdio \
 # -IUser/bsp/lcd \
 # -IUser/app/pg \

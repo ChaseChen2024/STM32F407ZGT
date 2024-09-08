@@ -7,7 +7,9 @@
 #include <string.h>
 #include <time.h>
 
+#ifdef USE_FATFS_CODE
 #include "ff.h"
+#endif
 #include "lwip/opt.h"
 #include <sys/time.h>
 #include "lwip/sys.h"

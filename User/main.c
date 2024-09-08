@@ -2,12 +2,17 @@
 #include "user.h"
 
 #include <string.h>
+#ifdef USE_FATFS_CODE
 #include <nv.h>
+#endif
 #ifdef USER_LEETTER_SHELL
 #include "shell_port.h"
 #include "bsp_usart3.h"
 #endif
 
+#ifdef USE_SFUD_CODE
+#include <sfud.h>
+#endif
 
 #ifdef USE_CMBACKTRACE_CODE
 #include <cm_backtrace.h>
@@ -55,13 +60,13 @@ static void AppTaskCreate(void)
 
   APP_Init();
   
- #ifdef USE_LWIP_CODE
+  #ifdef USE_LWIP_CODE
 	xReturn = SNTP_Demo_Task_Init();
 	if(pdPASS == xReturn)
 		elog_i(ELOG_APP,"SNTP Client");
 
-#endif
-
+  #endif
+  elog_i(ELOG_APP,"xReturn:%d",xReturn);
 	GET_FREERTOS_FLAG = 1;
   vTaskDelete(AppTaskCreate_Handle);
   
@@ -76,7 +81,7 @@ static void BSP_Init(void)
   FSMC_SRAM_Init();
 	Debug_USART_Config();
   #ifdef USE_CMBACKTRACE_CODE
-	cm_backtrace_init("CmBacktrace", HARDWARE_VERSION, SOFTWARE_VERSION);
+	cm_backtrace_init("QT201", HARDWARE_VERSION, SOFTWARE_VERSION);
   #endif
   #ifdef USE_EASYLOGGER_CODE
   elog_init();
@@ -91,13 +96,15 @@ static void BSP_Init(void)
   elog_start();
   #endif
   elog_i(ELOG_BSP, "BSP init");
-  
- 	 #ifdef USER_LEETTER_SHELL
+  #ifdef USE_SFUD_CODE
+  sfud_init();
+  #endif
+ 	#ifdef USER_LEETTER_SHELL
   USART3_Config();
-  #endif // USER_LEETTER_SHELL
+  #endif
 #ifdef USE_LWIP_CODE
 	ETH_BSP_Config();
-#endif // USE_LWIP
+#endif
  
 }
 
@@ -105,13 +112,16 @@ static void BSP_Init(void)
 static void APP_Init(void)
 {
   elog_i(ELOG_APP, "APP init");
+  #ifdef USE_FATFS_CODE
   nv_init();
+  #endif
+
   #ifdef USER_LEETTER_SHELL
 	userShellInit();
-	#endif // USER_LEETTER_SHELL
+	#endif
   #ifdef USE_LWIP_CODE
   tcpip_init(NULL, NULL);
-  #endif // USE_LWIP
+  #endif
 
 
 }

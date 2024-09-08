@@ -49,12 +49,19 @@ Component/LWIP/apps/tftp/tftp_server.c \
 
 endif
 
+ifeq ($(BUILE_FATFS),y)
 #fatfs
 C_SOURCES +=  \
 Component/FatFs/diskio.c \
 Component/FatFs/ff.c \
 Component/FatFs/option/cc936.c \
 Component/FatFs/option/syscall.c \
+
+#fatfs
+C_INCLUDES +=  \
+-IComponent/FatFs \
+
+endif
 
 ifeq ($(BUILE_LVGL),y)
 #lvgl
@@ -280,6 +287,18 @@ Component/Easy_Logger/port/elog_port.c \
 
 endif
 
+ifeq ($(BUILE_SFUD),y)
+C_SOURCES +=  \
+Component/sfud/src/sfud.c \
+Component/sfud/src/sfud_sfdp.c \
+Component/sfud/port/sfud_port.c \
+
+C_INCLUDES +=  \
+-IComponent/sfud/inc \
+
+endif
+
+
 ifeq ($(BUILE_LWIP),y)
 C_INCLUDES +=  \
 -IComponent/LWIP/include \
@@ -294,9 +313,7 @@ endif
 
 
 
-#fatfs
-C_INCLUDES +=  \
--IComponent/FatFs \
+
 
 ifeq ($(BUILE_LVGL),y)
 #lvgl

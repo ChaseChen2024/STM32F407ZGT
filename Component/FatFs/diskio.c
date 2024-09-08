@@ -11,14 +11,18 @@
 
 // #include "./flash/bsp_spi_flash.h"
 // #include "./sdio/bsp_sdio_sd.h"
+#ifdef USE_FLASH_SPI1_CODE
 #include "bsp_spi_flash.h"
+#endif
 #ifdef SDIO_SD
 #include "bsp_sdio_sd.h"
 #endif // SDIO_SD
 
 #include "bsp_rtc.h"
 #include "string.h"
-
+#ifdef USE_SFUD_CODE
+#include <sfud.h>
+#endif
 
 //需要拓展设备时增加
 //#include "usbdisk.h"	/* Example: Header file of existing USB MSD control module */
@@ -42,6 +46,9 @@
 
 extern  SD_CardInfo SDCardInfo;
 #endif
+#ifdef USE_SFUD_CODE
+sfud_flash *fatfs_flash = NULL;
+#endif
 /*-----------------------------------------------------------------------*/
 /* Get Drive Status                                                      */
 /*-----------------------------------------------------------------------*/
@@ -60,17 +67,31 @@ DSTATUS disk_status (
 		break;
 
 	case SPI_FLASH :
+		stat &= ~STA_NOINIT;
 		//SPI_FLASH设备状态查询分支
-		 if(sFLASH_ID == SPI_FLASH_ReadID())
-      {
-        /* 设备ID读取结果正确 */
-        stat &= ~STA_NOINIT;
-      }
-      else
-      {
-        /* 设备ID读取结果错误 */
-        stat = STA_NOINIT;;
-      }
+		#ifdef USE_FLASH_SPI1_CODE
+		if(sFLASH_ID == SPI_FLASH_ReadID())
+		{
+			/* 设备ID读取结果正确 */
+			stat &= ~STA_NOINIT;
+		}
+		else
+		{
+			/* 设备ID读取结果错误 */
+			stat = STA_NOINIT;
+		}
+		#endif
+		#ifdef USE_SFUD_CODE
+		fatfs_flash = sfud_get_device(SFUD_W25Q128BV_DEVICE_INDEX);
+		if(fatfs_flash->init_ok)
+		{
+			stat &= ~STA_NOINIT;
+		}
+		else
+		{
+			stat = STA_NOINIT;
+		}
+		#endif
 		// translate the reslut code here
 
 		break;
@@ -98,13 +119,11 @@ DSTATUS disk_initialize (
 )
 {
 	DSTATUS stat;
-	uint16_t i;
 //	uint8_t result = 0;
 	switch (pdrv) {
 #ifdef SDIO_SD
 	case SD_CARD :
 		//初始化SD 卡
-
 		if(SD_Init()==SD_OK)
 		{
 			stat &= ~STA_NOINIT;
@@ -113,29 +132,30 @@ DSTATUS disk_initialize (
 		{
 			stat = STA_NOINIT;
 		}
-
 		return stat;
 #endif
 	case SPI_FLASH :
 		//初始化SPI_FLASH
-//		result = GET_SPIFLASH_STATE();
-//		if(result != 0)
-//		{
-//				SPI_FLASH_Init();
-//				i=500;
-//				while(--i);
-//		}
-			SPI_FLASH_Init();
-				i=500;
-				while(--i);
-      /* 唤醒SPI Flash */
+		#ifdef USE_FLASH_SPI1_CODE
+		uint16_t i;
+		SPI_FLASH_Init();
+		i=500;
+		while(--i);
+      	/* 唤醒SPI Flash */
 	    SPI_Flash_WAKEUP();
-			//获取设备状态，确定初始成功
-			stat = disk_status(SPI_FLASH);
-			// translate the reslut code here
+		#endif
+		#ifdef USE_SFUD_CODE
+		fatfs_flash = sfud_get_device(SFUD_W25Q128BV_DEVICE_INDEX);
+		if(!fatfs_flash->init_ok)
+		{
+			sfud_init();
+		}
 
+		#endif
+
+		stat = disk_status(SPI_FLASH);
 		return stat;
-
+#ifdef USB_OTG
 	case USB_OTG :
 		//初始化usb u盘
 
@@ -143,6 +163,7 @@ DSTATUS disk_initialize (
 
 		return stat;
 	}
+#endif
 	return STA_NOINIT;
 }
 
@@ -205,25 +226,27 @@ DRESULT disk_read (
 		// translate the arguments here
 		//要读取的扇区号转换称为地址
 		/* 扇区偏移6MB，外部Flash文件系统空间放在SPI Flash后面10MB空间 */
-		 sector+=1536;
+		sector+=1536;
 		read_addr = sector*FLASH_SECTOP_SIZE;
+		#ifdef USE_FLASH_SPI1_CODE
 		SPI_FLASH_BufferRead((u8*) buff, read_addr, count*FLASH_SECTOP_SIZE);
-	
+		#endif
+		#ifdef USE_SFUD_CODE
+		fatfs_flash = sfud_get_device(SFUD_W25Q128BV_DEVICE_INDEX);
+		sfud_read(fatfs_flash, read_addr, count * FLASH_SECTOP_SIZE, buff);
+		#endif
+		
 
 		// translate the reslut code here
 		//当前默认都能正常读取
 		return RES_OK;
-
+#ifdef USB_OTG
 	case USB_OTG :
 		// translate the arguments here
-
-
-
 		// translate the reslut code here
-
 		return res;
 	}
-
+#endif
 	return RES_PARERR;
 }
 
@@ -288,19 +311,27 @@ DRESULT disk_write (
 		
 		// translate the arguments here
 		sector+=1536;
+		#ifdef USE_FLASH_SPI1_CODE
 		while(count--)
 		{
 			
 			//要写入的扇区号转换称为地址
 			write_addr = sector*FLASH_SECTOP_SIZE;
 			//写入前需要擦除的扇区
+			
 			SPI_FLASH_SectorErase(write_addr);
 			SPI_FLASH_BufferWrite((u8*) buff, write_addr, FLASH_SECTOP_SIZE);
+		
 			
 			sector++;
 			buff += FLASH_SECTOP_SIZE;
 		}
-
+		#endif
+		#ifdef USE_SFUD_CODE
+		write_addr = sector*FLASH_SECTOP_SIZE;
+		fatfs_flash = sfud_get_device(SFUD_W25Q128BV_DEVICE_INDEX);
+		sfud_erase_write(fatfs_flash, write_addr,FLASH_SECTOP_SIZE, buff);
+		#endif
 		// translate the reslut code here
 
 		return RES_OK;

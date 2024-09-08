@@ -13,16 +13,16 @@
 static TaskHandle_t FatFs_Demo_Task_Handle = NULL;/* FatFs_Demo任务句柄 */
 
 // #define STR_WRITE  "a,b,c"
-// BYTE WriteBuffer[] = "33333333333333\r\n"; 
+BYTE WriteBuffer[] = "33333333333333\r\n"; 
 
 #define SPI_FLASH_FATFS 1
 #ifdef SPI_FLASH_FATFS
-// FATFS fs;
-// FRESULT res;
-// FIL fil;
-// UINT bw;
-// UINT br;
-// char read_buff[50];
+FATFS fs;
+FRESULT res;
+FIL fil;
+UINT bw;
+UINT br;
+char read_buff[50];
 #else
 FATFS fs;													/* FatFs文件系统对象 */
 FIL fnew;													/* 文件对象 */
@@ -42,13 +42,13 @@ BYTE ReadBuffer[1024]={0};        /* 读缓冲区 */
 static void FatFs_Demo_Task(void* parameter)
 {	
 #ifdef SPI_FLASH_FATFS
-		char read_buf[4] = {0};
-		  nv_init();
-  FRESULT err = FR_OK;
-  nv_write("1:test.txt","1024",4);
-  err = nv_read("1:test.txt",read_buf,4);
-  printf("\r\n1:20240828.txt,read:%d,%d,%d,%d,err:%d\r\n",read_buf[0],read_buf[1],read_buf[2],read_buf[3],err);
-#if 0
+// 		char read_buf[4] = {0};
+// 		//   nv_init();
+//   FRESULT err = FR_OK;
+//   nv_write("1:test.txt","1024",4);
+//   err = nv_read("1:test.txt",read_buf,4);
+//   printf("\r\n1:test.txt,read:%s,err:%d\r\n",read_buf,err);
+#if 1
 		printf("\r\n这是一个文件系统移植实验 \r\n");
 
 		res = f_mount(&fs,"1:",1);
@@ -179,10 +179,10 @@ static void FatFs_Demo_Task(void* parameter)
 	/* 不再使用文件系统，取消挂载文件系统 */
 	f_mount(NULL,"0:",1);		
 #endif		
-		// while (1)
-		// {
-		// 	vTaskDelay(500);   /* 延时500个tick */
-		// }
+		while (1)
+		{
+			vTaskDelay(500);   /* 延时500个tick */
+		}
 		vTaskDelete(NULL);
 }
 
@@ -194,7 +194,7 @@ long FatFs_Demo_Task_Init(void)
 			/* 创建FatFs_Test_Task任务 */
 			xReturn = xTaskCreate((TaskFunction_t )FatFs_Demo_Task, /* 任务入口函数 */
 													(const char*    )"FatFs_Demo_Task",/* 任务名字 */
-													(uint16_t       )1024,   /* 任务栈大小 */
+													(uint16_t       )2048,   /* 任务栈大小 */
 													(void*          )NULL,	/* 任务入口函数参数 */
 													(UBaseType_t    )4,	    /* 任务的优先级 */
 													(TaskHandle_t*  )&FatFs_Demo_Task_Handle);/* 任务控制块指针 */

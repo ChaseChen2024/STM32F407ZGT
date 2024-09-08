@@ -182,8 +182,13 @@ int nv_size_test(int argc, char *argv[])
 	FRESULT err = FR_OK;
 	FATFS *pfs;
 	char buf[64]= {0};
+	// int len = strlen(argv[1]);
 
 	DWORD fre_clust, fre_size, tot_size;
+	// if(len == 0)
+	// {
+	// 	strcpy(argv[1],"1:");
+	// }
     err = f_getfree(argv[1], &fre_clust, &pfs);
     
     if( err == FR_OK )

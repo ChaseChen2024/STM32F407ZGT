@@ -42,8 +42,6 @@
 #endif
 #include "bsp_debug_usart.h"
 #include<string.h>
-#include "bsp_spi_flash.h"
-#include "bsp_usart3.h"
 // #include "usbd_msc_core.h"
 // #include "usbd_usr.h"
 // #include "usbd_desc.h"

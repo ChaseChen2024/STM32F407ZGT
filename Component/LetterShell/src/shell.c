@@ -359,7 +359,9 @@ static unsigned short shellWriteCommandDesc(Shell *shell, const char *string)
  * @param newline 新行
  * 
  */
+#ifdef USE_FATFS_CODE
 extern char patch_name[64];
+#endif
 static void shellWritePrompt(Shell *shell, unsigned char newline)
 {
     if (shell->status.isChecked)
@@ -368,7 +370,9 @@ static void shellWritePrompt(Shell *shell, unsigned char newline)
         {
             shellWriteString(shell, "\r\n");
         }
+        #ifdef USE_FATFS_CODE
         shell->info.path = patch_name;
+        #endif
         shellWriteString(shell, shell->info.user->data.user.name);
         shellWriteString(shell, ":");
         shellWriteString(shell, shell->info.path ? shell->info.path : "/");

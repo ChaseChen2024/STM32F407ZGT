@@ -14,7 +14,9 @@
 #endif
 /*bsp driver*/
 #include "bsp_debug_usart.h"
+#ifdef USE_FLASH_SPI1_CODE
 #include "bsp_spi_flash.h"
+#endif
 #include "bsp_sram.h"	
 
 

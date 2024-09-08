@@ -89,9 +89,9 @@ void elog_port_output_unlock(void) {
 const char *elog_port_get_time(void) {
     
     /* add your code here */
-    static char cur_system_time[16] = "";
-    snprintf(cur_system_time, 16, "%lu", osKernelGetTickCount());
-    return cur_system_time;
+    // static char cur_system_time[16] = "";
+    // snprintf(cur_system_time, 16, "%lu", osKernelGetTickCount());
+    return "10:11:00";
 }
 
 /**

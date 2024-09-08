@@ -37,8 +37,6 @@ BUILE_LWIP = y
 
 BUILE_LVGL = n
 
-BUILE_MQTT = y
-
 BUILE_LETTER_SHELL = y
 
 BUILE_USB = n
@@ -48,6 +46,11 @@ BUILE_GNSS = n
 BUILE_CMBACKTRACE = y
 
 BUILE_EASYLOGGER = y
+
+BUILE_FATFS = y
+
+BUILE_SFUD = y
+
 #######################################
 # binaries
 #######################################
@@ -95,6 +98,8 @@ C_DEFS =  \
 ifeq ($(BUILE_LWIP),y)
 C_DEFS +=  -DUSE_LWIP -DUSE_LWIP_CODE\
 
+BUILE_MQTT = y
+
 ifeq ($(BUILE_MQTT),y)
 C_DEFS += -DUSE_MQTT_CODE\
 
@@ -130,6 +135,26 @@ endif
 
 ifeq ($(BUILE_EASYLOGGER),y)
 C_DEFS += -DUSE_EASYLOGGER_CODE\
+
+endif
+
+ifeq ($(BUILE_FATFS),y)
+BUILD_SPI1 = n
+BUILD_SDIO = n
+
+C_DEFS += -DUSE_FATFS_CODE\
+
+ifeq ($(BUILD_SPI1),y)
+C_DEFS += -DUSE_FLASH_SPI1_CODE\
+
+endif
+
+endif
+
+
+ifeq ($(BUILE_SFUD),y)
+
+C_DEFS += -DUSE_SFUD_CODE\
 
 endif
 # AS includes
@@ -208,11 +233,15 @@ $(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
 $(BUILD_DIR):
 	mkdir $@		
 
+# trace:
+# 	cp .\TOOL\addr2line\win64\addr2line.exe ./
 #######################################
 # clean up
 #######################################
 clean:
 	-rmdir /s /q $(BUILD_DIR)
+	
+# 	rm ./addr2line.exe
 #   windows 上使用上面命令，linux使用下面的命令
 #   -rm -fR $(BUILD_DIR)
 

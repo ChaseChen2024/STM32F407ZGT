@@ -112,7 +112,9 @@
 			"typeinfo": "c",
 			"cm_backtrace.h": "c",
 			"elog.h": "c",
-			"cmath": "c"
+			"cmath": "c",
+			"sfud.h": "c",
+			"algorithm": "c"
 		}
 	}
 }
