@@ -11,18 +11,31 @@ STM32F407ZGT
 资源分配
 外设		资源				管理					GPIO
 SPI1		w25q128			sfud+fal+fatfs			sck--PB3,miso--PB4,mosi--PB5,cs--PG8
+
 SPI2		st7789			LVGL					rst--PB0,cs--PB12,dc--PB14,blk--PB1,miso--PB13,mosi--PB15
+
 SDIO		SD				fatfs					暂留
+
 ETH			LAN8720			lwip					MDIO--PA2,MDC--PC1,CLK--PA1,DV--PA7,RXD0--PC4,RXD1--PC5,TXEN--PB11,EXD0--PG13,TXD1--PG14,RST--VCC
+
 FSMC		SRAM			暂定					...(太多了，我就不列了)
+
 USART1		DEBUG			easylogger				tx1--PA9,rx1--PA10
+
 USART3		shell			letter-shell			tx3--PB10,rx3--PB11
+
 USART6		gnss			NMEAS0183				tx6--PC6，rx6--PC7
+
 I2C			AT24C02			暂定					scl--PB8,sda--PB9
+
 GPIOG13		LED0			暂定					PG13
+
 GPIOG14		LED1			暂定					PG14
+
 GPIOF6		KEY0			暂定					PF6
+
 GPIOF7		KEY1			暂定					PF7
+
 
 
 
