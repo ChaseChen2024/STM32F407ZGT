@@ -4,17 +4,18 @@
     // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
         {
             "cwd": "${workspaceRoot}",
-            "executable": "./build/freertos_stm32_makefil.elf",
+            "executable": "./build/QT201.elf",
             "name": "Debug Microcontroller",
             "request": "launch",
             "type": "cortex-debug",
             "showDevDebugOutput": false,
             "servertype": "openocd",
             "configFiles": [
-                "cmsis-dap-v1.cfg",
-                "stm32f4x.cfg"
+                "./TOOL/debug/stlink.cfg",
+                "./TOOL/debug/stm32f4x.cfg"
             ]
         }
     ]

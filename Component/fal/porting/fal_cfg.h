@@ -18,24 +18,30 @@
 #define FAL_PART_HAS_TABLE_CFG	//启动设备表
 #define FAL_USING_SFUD_PORT	//使用sfud通用串行flash
 #define NOR_FLASH_DEV_NAME             "norflash0"
+#define ONCHIP_FLASH_DEV_NAME           "stm32_onchip"
 
 /* ===================== Flash device Configuration ========================= */
-extern const struct fal_flash_dev stm32f2_onchip_flash;
+extern const struct fal_flash_dev stm32f4_onchip_flash;
 extern struct fal_flash_dev nor_flash0;
 
 /* flash device table */
 #define FAL_FLASH_DEV_TABLE                                          \
 {                                                                    \
+    &stm32f4_onchip_flash,                                           \
     &nor_flash0,                                                     \
 }
 /* ====================== Partition Configuration ========================== */
 #ifdef FAL_PART_HAS_TABLE_CFG
 /* partition table */
-#define FAL_PART_TABLE                                                               \
-{                                                                                    \
-    {FAL_PART_MAGIC_WORD, "resource", NOR_FLASH_DEV_NAME,    0, 6*1024*1024, 0}, \
-    {FAL_PART_MAGIC_WORD,  "fatfs", NOR_FLASH_DEV_NAME, 6*1024*1024, 10*1024*1024, 0}, \
+#define FAL_PART_TABLE                                                                              \
+{                                                                                                   \
+    {FAL_PART_MAGIC_WORD,   "bootloader",       ONCHIP_FLASH_DEV_NAME,      0,          128*1024,           0}, \
+    {FAL_PART_MAGIC_WORD,   "application",      ONCHIP_FLASH_DEV_NAME,      128*1024,   896 * 1024,         0}, \
+    {FAL_PART_MAGIC_WORD,   "download",         NOR_FLASH_DEV_NAME,         0,          3*1024*1024,        0}, \
+    {FAL_PART_MAGIC_WORD,   "default",         NOR_FLASH_DEV_NAME,         3*1024*1024,3*1024*1024,        0}, \
+    {FAL_PART_MAGIC_WORD,   "fatfs",            NOR_FLASH_DEV_NAME,         6*1024*1024,10*1024*1024,       0}, \
 }
+
 #endif /* FAL_PART_HAS_TABLE_CFG */
 
 #endif /* _FAL_CFG_H_ */

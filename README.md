@@ -3,7 +3,7 @@ STM32F407ZGT-Makefile
 基于启明欣欣的STM32F407ZGT开发版实现的的一个共享工程，后续将不断添加他支持的功能
 
 工程将支持freertos,lwip,paho-mqtt,letter-shell,sfud,fal,fatfs,easylogger,lvgl,cmbacktrace,nmea0183...第三方组件
-
+使用rt-fota作为bootloader，实现fota升级。
 
 项目工程介绍：
 
@@ -198,3 +198,10 @@ nv_write() 直接调用进行写数据
 1、修改flash驱动，使用开源的SFUD 驱动框架管理flash，并对接fatfs文件系统，SFUD驱动地址：https://github.com/armink/SFUD/tree/master
 
 2、添加FAL 中间层，并使用FAL 层对接SDUD ，FATFS 也使用FAL的接口进行操作。
+
+# 20240910修改
+
+1、移植rt-fota 升级框架，源码：https://gitee.com/spunky_973/rt-fota
+当前移植功能未完善，所以仅提供烧录的bootloader 固件，烧录地址在0x08000000，使用make down 会在烧录app 固件一同将bootloader 烧录到板子中(当前仅学习使用，后续移植为Makefile工程后再上传)
+2、将当前版本作为application ，支持bootloader 升级和启动。
+3、添加rt-thread 的打包工具到 TOOL/ota_packeger

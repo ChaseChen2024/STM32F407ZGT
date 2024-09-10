@@ -304,6 +304,7 @@ Component/fal/src/fal.c \
 Component/fal/src/fal_flash.c \
 Component/fal/src/fal_partition.c \
 Component/fal/porting/fal_flash_sfud_port.c \
+Component/fal/porting/fal_flash_stm32f4_port.c \
 
 C_INCLUDES +=  \
 -IComponent/fal/porting \

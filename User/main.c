@@ -36,7 +36,7 @@ static void APP_Init(void);
 int main(void)
 {	
   BaseType_t xReturn = pdPASS;
-  
+
   BSP_Init();
 
   
@@ -79,10 +79,15 @@ static void AppTaskCreate(void)
 
 static void BSP_Init(void)
 {
-  
-	NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
+  NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0x20000);
+  __enable_irq();
+  NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
   FSMC_SRAM_Init();
-	Debug_USART_Config();
+  Debug_USART_Config();
+  printf("\r\n-------------------------enter application-------------------------\r\n");
+  printf("-------------------------2024/09/10-------------------------\r\n");
+  
+	
   #ifdef USE_CMBACKTRACE_CODE
 	cm_backtrace_init("QT201", HARDWARE_VERSION, SOFTWARE_VERSION);
   #endif
@@ -99,6 +104,7 @@ static void BSP_Init(void)
   elog_start();
   #endif
   elog_i(ELOG_BSP, "BSP init");
+  elog_i(ELOG_BSP, "0x%x",SCB->VTOR);
   #ifdef USE_SFUD_CODE
   sfud_user_init();
   #ifdef USE_FAL_CODE
@@ -213,9 +219,7 @@ SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN), lo
 
 static int fal_test(const char *partiton_name)
 {
-    int ret;
-    int i, j, len;
-    uint8_t buf[BUF_SIZE];
+    int ret =  0;
     const struct fal_flash_dev *flash_dev = NULL;
     const struct fal_partition *partition = NULL;
 
@@ -250,18 +254,31 @@ static int fal_test(const char *partiton_name)
                 partition->name,
                 partition->len/1024);
 
-
-
- 
-    shellPrint(&shell,"Write (%s) partition finish! Write size %d(%dK).\r\n", partiton_name, i, i/1024);
-
     return ret;
 }
 
 void fal_sample(void)
 {
 
-    if (fal_test("resource") == 0)
+    if (fal_test("bootloader") == 0)
+    {
+        shellPrint(&shell,"Fal partition (%s) test success!\r\n", "param");
+    }
+    else
+    {
+        shellPrint(&shell,"Fal partition (%s) test failed!\r\n", "param");
+    }
+
+    if (fal_test("application") == 0)
+    {
+        shellPrint(&shell,"Fal partition (%s) test success!\r\n", "param");
+    }
+    else
+    {
+        shellPrint(&shell,"Fal partition (%s) test failed!\r\n", "param");
+    }
+
+    if (fal_test("download") == 0)
     {
         shellPrint(&shell,"Fal partition (%s) test success!\r\n", "param");
     }

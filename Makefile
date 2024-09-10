@@ -239,27 +239,32 @@ $(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
 $(BUILD_DIR):
 	mkdir $@		
 
-# trace:
-# 	cp .\TOOL\addr2line\win64\addr2line.exe ./
+
 #######################################
 # clean up
 #######################################
 clean:
-	-rmdir /s /q $(BUILD_DIR)
-	
-# 	rm ./addr2line.exe
+	-rmdir /s /q $(BUILD_DIR) \
+	 && del addr2line.exe
+
+trace_del:
+	del addr2line.exe
 #   windows 上使用上面命令，linux使用下面的命令
 #   -rm -fR $(BUILD_DIR)
-
+trace:
+	copy ".\TOOL\addr2line\win64\addr2line.exe"
 #烧录命令
+
 down:
-	-openocd -f TOOL/debug/stlink.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08000000" -c reset -c shutdown
-download_dap:
-	-openocd -f TOOL/debug/cmsis-dap-v1.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08000000" -c reset -c shutdown
-download_stlinkv2:
-	-openocd -f TOOL/debug/stlink-v2.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08000000" -c reset -c shutdown
-download_jlink:
-	-openocd -f TOOL/debug/jlink.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08000000" -c reset -c shutdown
+	-openocd -f TOOL/debug/stlink.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase Component/bootloader/bootloader.bin 0x08000000" -c reset -c shutdown \
+	&& openocd -f TOOL/debug/stlink.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08020000" -c reset -c shutdown 
+	
+# download_dap:
+# 	-openocd -f TOOL/debug/cmsis-dap-v1.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08000000" -c reset -c shutdown
+# download_stlinkv2:
+# 	-openocd -f TOOL/debug/stlink-v2.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08000000" -c reset -c shutdown
+# download_jlink:
+# 	-openocd -f TOOL/debug/jlink.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08000000" -c reset -c shutdown
 
 #######################################
 # dependencies
