@@ -121,7 +121,7 @@ void nv_read_test(char *str,int len)
     sprintf(buf, "read string: %s\r\nlen:%d,err:%d\r\n",nv_read_buf,len,err);
     Usart_SendString(USART3,buf);
 }
-SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_FUNC), nvread, nv_read_test, fatfs file read);
+SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_FUNC), nvread, nv_read_test, nvread "1:xxxx.xx" len);
 
 // void nv_wirte_test(char *filename,char *str,int len)
 void nv_wirte_test(int argc, char *argv[])

@@ -36,6 +36,13 @@
 //#define ATA		0	/* Example: Map ATA harddisk to physical drive 0 */
 //#define MMC		1	/* Example: Map MMC/SD card to physical drive 1 */
 //#define USB		2	/* Example: Map USB MSD to physical drive 2 */
+//重新调整逻辑盘符号
+/*
+根据fal分区来区分
+1 app 分区  存放用户应用文件数据
+2 default 分区 存放默认固件
+3 downloade 分区 存放网络服务器下载的固件
+*/
 //定义逻辑设备号
 #define SD_CARD		  0	
 #define SPI_FLASH		1

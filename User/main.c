@@ -85,7 +85,7 @@ static void BSP_Init(void)
   FSMC_SRAM_Init();
   Debug_USART_Config();
   printf("\r\n-------------------------enter application-------------------------\r\n");
-  printf("-------------------------2024/09/10-------------------------\r\n");
+  printf("\r\n-----------------------------2024/09/10----------------------------\r\n");
   
 	
   #ifdef USE_CMBACKTRACE_CODE
@@ -133,6 +133,7 @@ static void APP_Init(void)
 	#endif
   #ifdef USE_LWIP_CODE
   tcpip_init(NULL, NULL);
+  tftpInit();
   #endif
 
 
@@ -298,5 +299,23 @@ void fal_sample(void)
 }
 
 SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN), fal_sample, fal_sample,fal sample);
+
+void fal_erase_download(void)
+{
+  int ret =  0;
+  const struct fal_partition *partition = NULL;
+  partition = fal_partition_find("download");
+  if (partition == NULL)
+  {
+      shellPrint(&shell,"Find partition (%s) failed!\r\n", partition->name);
+      ret = -1;
+      return ret;
+  }
+  if ((ret = fal_partition_erase_all(partition)) < 0)
+  {
+      elog_e(LOG_TAG,"Firmware download failed! Partition (%s) erase error!", partition->name);
+  }
+}
+SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN), fal_erase_download, fal_erase_download,fal erase download);
 #endif
 #endif // USER_LEETTER_SHELL

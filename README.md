@@ -101,6 +101,18 @@ download_jlink:
 	-openocd -f TOOL/jlink.cfg -f TOOL/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08000000" -c reset -c shutdown
  
 
+
+TFTP使用：
+工具路径TOOL\tftpd\tftpd64.exe ，打开后，选择Tftp Client ，在Host 输入开发板的地址（可以在shell上使用ifconfig指令查询），Port填入tftp的默认端口 69
+
+Local File 填入本地的文件路径
+Remote file填入要在开发板中打开或创建的文件名
+其他默认
+点击put就会将Local File传递到开发板中，如果Remote file文件存在，就会进行内容覆盖，不存在就会以Remote file为名创建新的文件。
+点击get就会从开发板获取Remote file文件传输到本地，并以Local File 创建或覆盖文件
+
+
+
 20240203修改-ChaseChen
 
 
@@ -205,3 +217,16 @@ nv_write() 直接调用进行写数据
 当前移植功能未完善，所以仅提供烧录的bootloader 固件，烧录地址在0x08000000，使用make down 会在烧录app 固件一同将bootloader 烧录到板子中(当前仅学习使用，后续移植为Makefile工程后再上传)
 2、将当前版本作为application ，支持bootloader 升级和启动。
 3、添加rt-thread 的打包工具到 TOOL/ota_packeger
+4、支持rt-fota 使用ymodem 协议进行升级
+
+
+# 20240913修改
+
+1、添加tftp 功能（lwip 原始应用+fatfs），可以实现局域网内读取文件和上传文件。
+2、添加tftpd64工具到TOOL/tftpd文件夹内。
+
+
+# 20240916修改
+
+1、添加通过tftp上传文件到download 分区的功能， 上传完成后，设备重启后会自动升级。(仅支持上传，裸flash的tftp 下载部分代码仍存在问题)
+2、添加tftp_location <location> 命令，用于设置tftp下载文件的路径。0：fatfs 1：download，默认0
