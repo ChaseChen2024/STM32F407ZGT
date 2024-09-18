@@ -230,3 +230,15 @@ nv_write() 直接调用进行写数据
 
 1、添加通过tftp上传文件到download 分区的功能， 上传完成后，设备重启后会自动升级。(仅支持上传，裸flash的tftp 下载部分代码仍存在问题)
 2、添加tftp_location <location> 命令，用于设置tftp下载文件的路径。0：fatfs 1：download，默认0
+
+
+
+
+
+# 20240918修改
+
+1、添加http client 下载文件功能demo ，基于lwip socket 实现下载文件到fatfs区域/download 分区。
+2、添加http_download <location>命令，用于下载文件到指定区域。
+3、实现reboot 命令，重启设备。
+
+

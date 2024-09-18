@@ -105,6 +105,7 @@ User/bsp/arch/netconf.c \
 C_SOURCES +=  \
 User/app/user_demo/src/Sntp_demo.c \
 User/app/user_demo/src/Tftp_demo.c \
+User/app/user_demo/src/Http_Client_demo.c \
 # User/app/user_demo/src/Lwip_Tcp_Client_Socket_demo.c \
 # User/app/user_demo/src/client.c \
 

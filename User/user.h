@@ -46,7 +46,20 @@
 #define elog_w(tag, ...)     printf(__VA_ARGS__);printf("\r\n")
 #define elog_i(tag, ...)     printf(__VA_ARGS__);printf("\r\n")
 #define elog_d(tag, ...)     printf(__VA_ARGS__);printf("\r\n")
+
+#define log_a(...)     printf(__VA_ARGS__);printf("\r\n")
+#define log_e(...)     printf(__VA_ARGS__);printf("\r\n")
+#define log_w(...)     printf(__VA_ARGS__);printf("\r\n")
+#define log_i(...)     printf(__VA_ARGS__);printf("\r\n")
+#define log_d(...)     printf(__VA_ARGS__);printf("\r\n")
 #endif
+
+
+
+
+
+
+void soft_reset(void);
 #endif //__USER_H
 
 

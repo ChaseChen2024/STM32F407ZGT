@@ -521,4 +521,3 @@ long SNTP_Demo_Task_Init(void)
 }
 #endif
 #endif
-

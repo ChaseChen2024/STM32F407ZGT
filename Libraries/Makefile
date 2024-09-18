@@ -59,6 +59,7 @@ Libraries/STM32_USB_OTG_Driver/src/usb_core.c \
 Libraries/STM32_USB_OTG_Driver/src/usb_dcd.c \
 Libraries/STM32_USB_OTG_Driver/src/usb_dcd_int.c \
 
+
 C_INCLUDES +=  \
 -ILibraries/STM32_USB_Device_Library/Core/inc \
 -ILibraries/STM32_USB_Device_Library/Class/msc/inc \
@@ -72,7 +73,6 @@ C_INCLUDES +=  \
 -ILibraries/CMSIS/Include \
 -ILibraries/CMSIS/Device/ST/STM32F4xx/Include \
 -ILibraries/STM32F4x7_ETH_Driver/inc \
-
 
 
 

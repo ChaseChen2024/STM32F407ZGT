@@ -33,6 +33,13 @@ static void BSP_Init(void);
 static void APP_Init(void);
 
 
+void soft_reset(void)
+{
+    __set_FAULTMASK(1); 
+    NVIC_SystemReset(); 
+}
+
+
 int main(void)
 {	
   BaseType_t xReturn = pdPASS;
@@ -117,7 +124,7 @@ static void BSP_Init(void)
 #ifdef USE_LWIP_CODE
 	ETH_BSP_Config();
 #endif
- 
+
 }
 
 
@@ -318,4 +325,11 @@ void fal_erase_download(void)
 }
 SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN), fal_erase_download, fal_erase_download,fal erase download);
 #endif
+
+void reboot(void)
+{
+  soft_reset();
+}
+SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN), reboot, reboot,system restart);
+
 #endif // USER_LEETTER_SHELL

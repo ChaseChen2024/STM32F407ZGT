@@ -10,7 +10,7 @@ FreeRTOS/src/tasks.c \
 FreeRTOS/src/timers.c \
 FreeRTOS/port/MemMang/heap_4.c \
 FreeRTOS/port/GCC/ARM_CM4F/port.c \
-
+# FreeRTOS/CMSIS_RTOS/cmsis_os.c \
 
 
 
@@ -18,7 +18,7 @@ C_INCLUDES +=  \
 -IFreeRTOS \
 -IFreeRTOS/include \
 -IFreeRTOS/port/GCC/ARM_CM4F \
-
+# -IFreeRTOS/CMSIS_RTOS \
 
 CFLAGS += $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
 

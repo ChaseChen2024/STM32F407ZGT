@@ -51,6 +51,7 @@ BUILE_FATFS = y
 
 BUILE_SFUD = y
 
+
 #######################################
 # binaries
 #######################################
@@ -98,13 +99,17 @@ C_DEFS =  \
 ifeq ($(BUILE_LWIP),y)
 C_DEFS +=  -DUSE_LWIP -DUSE_LWIP_CODE\
 
-BUILE_MQTT = y
+BUILE_MQTT = n
 
 ifeq ($(BUILE_MQTT),y)
 C_DEFS += -DUSE_MQTT_CODE\
 
 endif
 
+ifeq ($(BUILE_ESP_HOSTED),y)
+C_DEFS += -DUSE_ESP_HOSTED_CODE\
+
+endif
 endif
 
 ifeq ($(BUILE_LVGL),y)
@@ -258,6 +263,9 @@ trace:
 down:
 	-openocd -f TOOL/debug/stlink.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase Component/bootloader/bootloader.bin 0x08000000" -c reset -c shutdown \
 	&& openocd -f TOOL/debug/stlink.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08020000" -c reset -c shutdown 
+
+down_app:
+	-openocd -f TOOL/debug/stlink.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08020000" -c reset -c shutdown 
 	
 # download_dap:
 # 	-openocd -f TOOL/debug/cmsis-dap-v1.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08000000" -c reset -c shutdown
