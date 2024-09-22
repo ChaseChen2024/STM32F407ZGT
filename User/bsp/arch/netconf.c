@@ -125,7 +125,7 @@ void LwIP_NW_Init(void)
   {
     vTaskDelay(100);
     count+=100;
-    printf("count:%d",count);
+    log_i("count:%d",count);
     if(count > 5000)
     {
     	break;

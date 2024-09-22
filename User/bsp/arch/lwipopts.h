@@ -234,7 +234,7 @@ The STM32F4x7 allows computing and verifying the IP, UDP, TCP and ICMP checksums
    ----------------------------------------
 */
 #define LWIP_DEBUG                      1
-#include "bsp_debug_usart.h"
+#include "bsp_usart3.h"
 // #define LWIP_PLATFORM_DIAG(x) do{printf x;} while(0)
 #define DHCP_DEBUG                  LWIP_DBG_OFF
 #define SNTP_DEBUG   LWIP_DBG_OFF
@@ -256,7 +256,7 @@ The STM32F4x7 allows computing and verifying the IP, UDP, TCP and ICMP checksums
 #define SNTP_SET_SYSTEM_TIME		sntp_set_time
 // #define SNTP_SERVER_ADDRESS             1
 #define SNTP_SERVER_DNS                 1
-#define SNTP_UPDATE_DELAY               20000
+#define SNTP_UPDATE_DELAY               3600000
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
 

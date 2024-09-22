@@ -2,7 +2,7 @@
 #include "Rtc_demo.h"
 #include "Sntp_demo.h"
 #include "bsp_rtc.h"
-#include "bsp_debug_usart.h"
+#include "bsp_usart3.h"
 
 #include <string.h>
 #include <time.h>
@@ -28,7 +28,7 @@
 #endif
 
 static TaskHandle_t SNTP_Demo_Task_Handle = NULL;/* RTC任务句柄 */
-#if 0
+#if 1
 uint32_t get_timestamp(void);
 void sntp_set_time(uint32_t sntp_time);
 
@@ -42,17 +42,14 @@ static void SNTP_Demo_Task(void* parameter)
 {	
 	LwIP_NW_Init();
 	vTaskDelay(1000);
-//	int a=0,b=0,c=0;
-	Sntp_BSP_Init();
+	log_i("Sntp Init");
+	sntp_setoperatingmode(SNTP_OPMODE_POLL);
+  	sntp_setservername(0, "203.107.6.88" );
+	sntp_init();
 	// sntp_set_time(1);
-	vTaskDelay(60000);
-	sntp_stop();
+	//  vTaskDelay(2000);
+	// sntp_stop();
 	vTaskDelete(SNTP_Demo_Task_Handle); 
-//   while (1)
-//   {
-//     /* 显示时间和日期 */
-// 		RTC_TimeAndDate_Show();
-//   }
 }
 /*!
  * @brief 获取当前时间戳
@@ -88,55 +85,71 @@ uint32_t get_timestamp(void)
 
 void sntp_set_time(uint32_t sntp_time)
 {
+	
+	
 	if(sntp_time == 0)
 	{
-		printf("sntp_set_time: wrong!@@\n");
+		log_i("sntp_set_time: wrong!");
 		return;
 	}
 	
-	printf("\r\nsntp_set_time: c00, enter!\r\n");
-	printf("\r\nsntp_set_time: c01, get time = %u\r\n\n", sntp_time);
-
-	struct tm *time;
-	RTC_TimeTypeDef sTime = {0};
-	RTC_DateTypeDef sDate = {0};
+	log_i("sntp_set_time: c00, enter!");
+	log_i("sntp_set_time: c01, get time = %u", sntp_time);
 
 	sntp_time += (8 * 60 * 60); ///北京时间是东8区需偏移8小时
+	
+	struct tm time_info;
+    time_t time_t_value = (time_t)sntp_time;
 
-	time = localtime(&sntp_time);
 
-	/*
-	 * 设置 RTC 的 时间
-	 */
-	sTime.RTC_Hours = time->tm_hour;
-	sTime.RTC_Minutes = time->tm_min;
-	sTime.RTC_Seconds = time->tm_sec;
+    localtime_r(&time_t_value, &time_info);
+
+    log_i("location:%d-%02d-%02d %02d:%02d:%02d\n",
+           1900 + time_info.tm_year, 1 + time_info.tm_mon, time_info.tm_mday,
+           time_info.tm_hour, time_info.tm_min, time_info.tm_sec);
+
+	// struct tm *time;
+	// time_t time_t_value = (time_t)sntp_time;
+	// RTC_TimeTypeDef sTime = {0};
+	// RTC_DateTypeDef sDate = {0};
+
+	// sntp_time += (8 * 60 * 60); ///北京时间是东8区需偏移8小时
+
+	// localtime_r(&time_t_value,time);
+
+	// log_i("sntp_set_time: c02, decode time: 20%d-%02d-%02d %d:%d:%d",(time->tm_year) + 1900 - 2000, (time->tm_mon) + 1, time->tm_mday, time->tm_hour, time->tm_min, time->tm_sec);
+	// /*
+	//  * 设置 RTC 的 时间
+	//  */
+	// sTime.RTC_Hours = time->tm_hour;
+	// sTime.RTC_Minutes = time->tm_min;
+	// sTime.RTC_Seconds = time->tm_sec;
 	// sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
 	// sTime.StoreOperation = RTC_STOREOPERATION_RESET;
-	if (RTC_SetTime(RTC_Format_BINorBCD, &sTime) != SUCCESS)
-	{
-		// Error_Handler();
-		printf("\r\nRTC_SetTime fail  \r\n");
-	}
+	// if (RTC_SetTime(RTC_Format_BINorBCD, &sTime) != SUCCESS)
+	// {
+	// 	// Error_Handler();
+	// 	log_i("\r\nRTC_SetTime fail  \r\n");
+	// }
 	
 	/*
 	 * 设置 RTC 的 日期
 	 */
-	sDate.RTC_WeekDay = time->tm_wday;
-	sDate.RTC_Month = (time->tm_mon) + 1;
-	sDate.RTC_Date = time->tm_mday;
-	sDate.RTC_Year = (time->tm_year) + 1900 - 2000;
-	if (RTC_SetDate(RTC_Format_BINorBCD, &sDate) != SUCCESS)
-	{
-		// Error_Handler();
-		printf("\r\nRTC_SetDate fail  \r\n");
-	}
+	// sDate.RTC_WeekDay = time->tm_wday;
+	// sDate.RTC_Month = (time->tm_mon) + 1;
+	// sDate.RTC_Date = time->tm_mday;
+	// sDate.RTC_Year = (time->tm_year) + 1900 - 2000;
+	// if (RTC_SetDate(RTC_Format_BINorBCD, &sDate) != SUCCESS)
+	// {
+	// 	// Error_Handler();
+	// 	log_i("\r\nRTC_SetDate fail  \r\n");
+	// }
 
-	printf("\r\nsntp_set_time: c02, decode time: 20%d-%02d-%02d %d:%d:%d\n", \
-				sDate.RTC_Year, sDate.RTC_Month, sDate.RTC_Date, sTime.RTC_Hours, sTime.RTC_Minutes, sTime.RTC_Seconds);
+	// log_i("\r\nsntp_set_time: c02, decode time: 20%d-%02d-%02d %d:%d:%d\n", \
+	// 			sDate.RTC_Year, sDate.RTC_Month, sDate.RTC_Date, sTime.RTC_Hours, sTime.RTC_Minutes, sTime.RTC_Seconds);
 	
-	printf("\r\nsntp_set_time: c03, test get = %u\n", get_timestamp());
-	printf("\r\nsntp_set_time: c04, set rtc time done\n");
+	// log_i("sntp_set_time: c03, test get = %u", get_timestamp());
+	// log_i("sntp_set_time: c04, set rtc time done");
 }
 
 void set_sntp_server_list(void)
@@ -176,17 +189,7 @@ long SNTP_Demo_Task_Init(void)
 													(TaskHandle_t*  )&SNTP_Demo_Task_Handle);/* 任务控制块指针 */ 
 		return xReturn;
 }
-void Sntp_BSP_Init(void)
-{
-	printf("\r\n Sntp_BSP_Init \r\n");
 
-	sntp_setoperatingmode(SNTP_OPMODE_POLL);
-	//  set_sntp_server_list();
-  	sntp_setservername(0, "203.107.6.88" );
-	sntp_init();
-	printf("\r\nsntp_init \r\n");
-	
-}
 #else
 #define VERSION_3           3
 #define VERSION_4           4
@@ -441,7 +444,7 @@ static void SNTP_Demo_Task(void* parameter)
 		recv_data_len = recvfrom(socket_fd, buf, NTP_PACKET_SIZE, 0,(struct sockaddr *) &servaddr,&ip_info_size);
 		// for (int i = 0; i < recv_data_len; i++)
 		// {
-		// 	 printf("%x ", buf[i]);
+		// 	 log_i("%x ", buf[i]);
 		// }
 		
 		elog_i(ELOG_NW,"recv_data_len=%d",recv_data_len);
@@ -478,7 +481,7 @@ static void SNTP_Demo_Task(void* parameter)
 	sTime.RTC_Seconds = g_nowdate.second;
 	if (RTC_SetTime(RTC_Format_BINorBCD, &sTime) != SUCCESS)
 	{
-		// printf("\r\nRTC_SetTime fail  \r\n");
+		// log_i("\r\nRTC_SetTime fail  \r\n");
 	}
 	
 	/*
@@ -491,7 +494,7 @@ static void SNTP_Demo_Task(void* parameter)
 	if (RTC_SetDate(RTC_Format_BINorBCD, &sDate) != SUCCESS)
 	{
 		// Error_Handler();
-		// printf("\r\nRTC_SetDate fail  \r\n");
+		// log_i("\r\nRTC_SetDate fail  \r\n");
 	}
 	vTaskDelay(1000);
 	// vTaskDelete(NULL); //删除任务

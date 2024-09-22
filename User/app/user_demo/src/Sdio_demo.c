@@ -130,11 +130,11 @@ static void SD_EraseTest(void)
   
   if(EraseStatus == PASSED)
   {
-    printf("\r\n %d,SD 擦除测试通过",__LINE__);  
+    log_i("\r\n %d,SD 擦除测试通过",__LINE__);  
   }
   else
   {
-    printf("\r\n %d，SD 擦除测试失败",__LINE__);      
+    log_i("\r\n %d，SD 擦除测试失败",__LINE__);      
   }
 }
 
@@ -175,11 +175,11 @@ static void SD_SingleBlockTest(void)
   
   if(TransferStatus1 == PASSED)
   {
-    printf("\r\n %d,单块读写测试通过",__LINE__);  
+    log_i("\r\n %d,单块读写测试通过",__LINE__);  
   }
   else
   {
-    printf("\r\n %d,单块读写测试失败",__LINE__);     
+    log_i("\r\n %d,单块读写测试失败",__LINE__);     
   }
 }
 
@@ -221,11 +221,11 @@ static void SD_MultiBlockTest(void)
   
   if(TransferStatus2 == PASSED)
   {
-    printf("\r\n %d,多块读写测试通过",__LINE__);  
+    log_i("\r\n %d,多块读写测试通过",__LINE__);  
   }
   else
   {
-    printf("\r\n %d,多块读写测试失败",__LINE__);    
+    log_i("\r\n %d,多块读写测试失败",__LINE__);    
   }
 }
 /**********************************************************************
@@ -236,10 +236,10 @@ static void SD_MultiBlockTest(void)
   ********************************************************************/
 static void SDIO_Demo_Task(void* parameter)
 {	
-	printf("SDIO_Demo_Task  running！\n\n");
+	log_i("SDIO_Demo_Task  running！\n\n");
 	if((Status = SD_Init()) != SD_OK)
   {
-    printf("\r\n %d,Status:%d",__LINE__,Status);
+    log_i("\r\n %d,Status:%d",__LINE__,Status);
   }
 	while((Status == SD_OK) && (uwSDCardOperation != SD_OPERATION_END) && (SD_Detect()== SD_PRESENT))
   {
@@ -278,7 +278,7 @@ static void SDIO_Demo_Task(void* parameter)
 long Sdio_Demo_Task_Init(void)
 {
 			BaseType_t xReturn = pdPASS;
-		 printf("SDIO_Demo_Task init！\n\n");
+		 log_i("SDIO_Demo_Task init！\n\n");
 			/* 创建SDIO_Demo任务 */
 		xReturn = xTaskCreate((TaskFunction_t )SDIO_Demo_Task,  /* 任务入口函数 */
 													(const char*    )"SDIO_Demo_Task",/* 任务名字 */

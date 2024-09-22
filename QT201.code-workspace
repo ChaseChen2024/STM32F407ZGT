@@ -146,7 +146,8 @@
 			"unordered_map": "c",
 			"deque": "c",
 			"vector": "c",
-			"http_client_demo.h": "c"
+			"http_client_demo.h": "c",
+			"bsp_usart1.h": "c"
 		}
 	}
 }

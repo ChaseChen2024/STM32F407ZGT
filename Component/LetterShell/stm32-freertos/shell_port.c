@@ -35,7 +35,7 @@ static SemaphoreHandle_t shellMutex;
  */
 short userShellWrite(char *data, unsigned short len)
 {
-    Usart_Transmit(USART3,data,len);
+    Usart_Transmit(SHELL_USART,data,len);
     return len;
 }
 
@@ -106,7 +106,7 @@ void userShellInit(void)
     shell.lock = userShellLock;
     shell.unlock = userShellUnlock;
     shellInit(&shell, shellBuffer, 512);
-    Uart3_BinarySem_Handle = xSemaphoreCreateBinary();	
+    Usart1_BinarySem_Handle = xSemaphoreCreateBinary();	
     BaseType_t pass = pdPASS;
     elog_i(ELOG_APP,"userShellInit");
     elog_i(ELOG_APP,"2-rtos free size: %d B",xPortGetFreeHeapSize());

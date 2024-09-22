@@ -19,8 +19,8 @@ STM32F407ZGT-Makefile
 | SDIO   | SD       | fatfs         | 暂留																								| 
 | ETH    | LAN8720  | lwip          | MDIO--PA2,MDC--PC1,CLK--PA1,DV--PA7,RXD0--PC4,RXD1--PC5,TXEN--PB11,EXD0--PG13,TXD1--PG14,RST--VCC | 
 | FSMC   | SRAM     | 暂定           | ...(太多了，我就不列了)																			  | 
-| USART1 | DEBUG	| easylogger    | tx1--PA9,rx1--PA10																				| 
-| USART3 | shell    | letter-shell  | tx3--PB10,rx3--PB11																				| 
+| USART3 | DEBUG	| easylogger    | tx1--PA9,rx1--PA10																				| 
+| USART1 | shell    | letter-shell  | tx3--PB10,rx3--PB11																				| 
 | USART6 | gnss     | NMEAS0183     | tx6--PC6，rx6--PC7																				| 
 | I2C    | AT24C02  | 暂定           | scl--PB8,sda--PB9																				| 
 | GPIOG13| LED0	    | 暂定           | PG13																								| 
@@ -84,22 +84,15 @@ cmd 进入工程目录或在工程目录打开cmd。
 
 #烧录命令
 
-download:
+make down 下载bootloader固件和app固件，make down_app 下载app固件
 
-	-openocd -f TOOL/cmsis-dap-v1.cfg -f TOOL/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08000000" -c reset -c shutdown
- 
-download_dap:
+down:
+	-openocd -f TOOL/debug/stlink.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase Component/bootloader/bootloader.bin 0x08000000" -c reset -c shutdown \
+	&& openocd -f TOOL/debug/stlink.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08020000" -c reset -c shutdown 
 
-	-openocd -f TOOL/cmsis-dap-v1.cfg -f TOOL/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08000000" -c reset -c shutdown
- 
-download_stlinkv2:
-
-	-openocd -f TOOL/stlink-v2.cfg -f TOOL/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08000000" -c reset -c shutdown
- 
-download_jlink:
-
-	-openocd -f TOOL/jlink.cfg -f TOOL/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08000000" -c reset -c shutdown
- 
+down_app:
+	-openocd -f TOOL/debug/stlink.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08020000" -c reset -c shutdown 
+	
 
 
 TFTP使用：
@@ -113,132 +106,27 @@ Remote file填入要在开发板中打开或创建的文件名
 
 
 
-20240203修改-ChaseChen
+# 分支描述
+
+release-1.0 支持基本的fatfs lvgl nmea0183解析器
+
+release-1.1 支持rt-fota bootloader、sfud、fal、lwip 、easyloger、cmbacktrace、letter-shell
 
 
+# 使用到的开源库
 
 
-# 20240505修改
-
-1、包含三方库有 FatFs\LVGL\LWIP。 LWIP默认裁剪掉。
-
-2、使用FreeRTOS进行任务调度，使用heap4进行内存管理。使用内部SRAM。
-
-3、开启了外部SRAM，外部SRAM 速度受限，仅用于要求不高的任务中的大变量。
-
-4、SPI1用于外部FLASH,SDIO用于SD卡，使用第三方库FATFS进行文件管理。
-
-5、SPI2+DMA用于ST7789 屏幕，并使用LVGL进行页面绘制显示。并在my_gui文件中添加了码表的基础页面。
-
-6、开启RTC时钟。
-
-7、使用UART6+DMA与GPS进行数据交互。
-
-
-# 20240510修改
-1、添加开源NMEA0183解析器，开源地址 https://gitee.com/armxu/NMEA0183-C.git  仅做搭建时使用，后续有必要，需要重写
-
-# 20240512修改
-添加开源的LVGL页面管理器，完成基本的页面交互流程
-
-# 20240826修改
-一、移植paho.mqtt.embedded-c 库
-链接：https://github.com/eclipse/paho.mqtt.embedded-c
-
-库所在位置E:\STM32F407ZGT\Component\pahoMqtt
-
-清理main.c 文件
-
-功能宏如下：
-BUILE_LWIP = y
-BUILE_LVGL = n
-BUILE_MQTT = y
-
-
-# 20240828修改
-
-封装Fatfs 的读写函数
-nv_read() 直接调用进行数据
-nv_write() 直接调用进行写数据
-
-优化内存占用
-   text    data     bss     dec     hex filename
- 143172     164  101620  244956   3bcdc Build/QT201.elf
-
-
-# 20240830修改
-
-新增letter-shell 串口终端，用于串口调试功能。
-功能源码来源：https://github.com/NevermindZZT/letter-shell
-
-本工程使用uart3作为通信口，中断方式进行数据接收。
-
-新增BUILE_LETTER_SHELL控制，且默认打开
-
-# 20240831修改
-
-1 修复letter-shell方向键不匹配问题
-原因：串口丢数据导致。
-解决方法：修改终端串口usart3为空闲中断 DMA接收不定长数据的方法。
-在shellTask中将数据将数据逐个推到shellHandler()
-
-优化：删除shellTask中的delay函数，采用信号量的方式进行，阻塞task.当串口进入空闲中断后，抛出信号量，通知shellTask读取数据进行处理
-
-
-2 基于letter-shell ,实现简单的文件系统操作指令，ls,cd,mkdir,rm,nvread,nvwrite
-
-3 基于letter-shell ,实现简单网络操作指令，dhcp(触发dhcp),ifconfig(仅能查询IP)
-
-   text    data     bss     dec     hex filename
-
- 349768     316  112580  462664   70f48 Build/QT201.elf
-
-
- # 20240905修改
-
- 1、添加cmbacktrace 错误追踪库，移植源码：https://gitee.com/Armink/CmBacktrace
-
- 2、添加os_asssert 指令主动dump模组
-
-# 20240907修改
-
-1、添加easylogger 日志库，源码：https://github.com/armink/EasyLogger
-
-2、添加编译选项开启或关闭该功能，默认开启BUILE_EASYLOGGER = y
-
-# 20240908修改
-1、修改flash驱动，使用开源的SFUD 驱动框架管理flash，并对接fatfs文件系统，SFUD驱动地址：https://github.com/armink/SFUD/tree/master
-
-2、添加FAL 中间层，并使用FAL 层对接SDUD ，FATFS 也使用FAL的接口进行操作。
-
-# 20240910修改
-
-1、移植rt-fota 升级框架，源码：https://gitee.com/spunky_973/rt-fota
-当前移植功能未完善，所以仅提供烧录的bootloader 固件，烧录地址在0x08000000，使用make down 会在烧录app 固件一同将bootloader 烧录到板子中(当前仅学习使用，后续移植为Makefile工程后再上传)
-2、将当前版本作为application ，支持bootloader 升级和启动。
-3、添加rt-thread 的打包工具到 TOOL/ota_packeger
-4、支持rt-fota 使用ymodem 协议进行升级
-
-
-# 20240913修改
-
-1、添加tftp 功能（lwip 原始应用+fatfs），可以实现局域网内读取文件和上传文件。
-2、添加tftpd64工具到TOOL/tftpd文件夹内。
-
-
-# 20240916修改
-
-1、添加通过tftp上传文件到download 分区的功能， 上传完成后，设备重启后会自动升级。(仅支持上传，裸flash的tftp 下载部分代码仍存在问题)
-2、添加tftp_location <location> 命令，用于设置tftp下载文件的路径。0：fatfs 1：download，默认0
-
-
-
-
-
-# 20240918修改
-
-1、添加http client 下载文件功能demo ，基于lwip socket 实现下载文件到fatfs区域/download 分区。
-2、添加http_download <location>命令，用于下载文件到指定区域。
-3、实现reboot 命令，重启设备。
+| 功能   | 	库地址 	 |
+| -------|----------|
+|NMEA0183|https://gitee.com/armxu/NMEA0183-C.git|
+|paho.mqtt.embedded-c |https://github.com/eclipse/paho.mqtt.embedded-c|
+|letter-shell|https://github.com/NevermindZZT/letter-shell|
+|cmbacktrace |https://gitee.com/Armink/CmBacktrace|
+|easylogger|https://github.com/armink/EasyLogger|
+|SFUD|https://github.com/armink/SFUD/tree/master|
+|FAL |https://gitee.com/RT-Thread-Mirror/fal|
+|rt-fota |https://gitee.com/spunky_973/rt-fota |
+|lwip|https://github.com/lwip-tcpip/lwip|
+|lvgl|https://github.com/lvgl/lvgl|
 
 

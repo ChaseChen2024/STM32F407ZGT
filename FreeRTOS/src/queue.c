@@ -78,7 +78,7 @@ task.h is included from an application file. */
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
-#include "bsp_debug_usart.h"
+#include "bsp_usart3.h"
 #if ( configUSE_CO_ROUTINES == 1 )
 	#include "croutine.h"
 #endif

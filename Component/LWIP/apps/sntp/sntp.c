@@ -61,7 +61,7 @@
 
 #include <string.h>
 #include <time.h>
-#include "bsp_debug_usart.h"
+#include "bsp_usart3.h"
 
 #if LWIP_UDP
 

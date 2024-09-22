@@ -13,7 +13,7 @@
 #include "stm32f4x7_phy.h"
 #endif
 /*bsp driver*/
-#include "bsp_debug_usart.h"
+#include "bsp_usart3.h"
 #ifdef USE_FLASH_SPI1_CODE
 #include "bsp_spi_flash.h"
 #endif

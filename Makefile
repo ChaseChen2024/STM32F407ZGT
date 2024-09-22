@@ -144,15 +144,9 @@ C_DEFS += -DUSE_EASYLOGGER_CODE\
 endif
 
 ifeq ($(BUILE_FATFS),y)
-BUILD_SPI1 = n
 BUILD_SDIO = n
 
 C_DEFS += -DUSE_FATFS_CODE\
-
-ifeq ($(BUILD_SPI1),y)
-C_DEFS += -DUSE_FLASH_SPI1_CODE\
-
-endif
 
 endif
 

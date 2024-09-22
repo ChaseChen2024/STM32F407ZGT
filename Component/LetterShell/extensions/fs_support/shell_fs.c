@@ -11,7 +11,7 @@
 #include "shell_fs.h"
 #include "shell.h"
 #include "stdio.h"
-#include "bsp_debug_usart.h"
+#include "bsp_usart3.h"
 
 /**
  * @brief 改变当前路径(shell调用)
@@ -43,19 +43,13 @@ void shellLS(void)
 {
     size_t count;
     char *buffer;
-    printf("shell\r\n");
     Shell *shell = shellGetCurrent();
     ShellFs *shellFs = shellCompanionGet(shell, SHELL_COMPANION_ID_FS);
     SHELL_ASSERT(shellFs, return);
-    printf("shell_1\r\n");
     buffer = SHELL_MALLOC(SHELL_FS_LIST_FILE_BUFFER_MAX);
-    printf("shell_2:%s\r\n",shellGetPath(shell));
     SHELL_ASSERT(buffer, return);
-    printf("shell_3\r\n");
     count = shellFs->listdir(shellGetPath(shell), buffer, SHELL_FS_LIST_FILE_BUFFER_MAX);
-    printf("shell_4:%s\r\n",buffer);
     shellWriteString(shell, buffer);
-    printf("shell_5\r\n");
     SHELL_FREE(buffer);
 }
 SHELL_EXPORT_CMD(

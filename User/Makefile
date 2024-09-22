@@ -4,8 +4,8 @@
 C_SOURCES +=  \
 User/main.c \
 User/stm32f4xx_it.c \
-User/bsp/uart/bsp_debug_usart.c \
 User/bsp/uart/bsp_usart3.c \
+User/bsp/uart/bsp_usart1.c \
 User/bsp/key/bsp_key.c \
 User/bsp/rtc/bsp_rtc.c \
 User/bsp/sram/bsp_sram.c \
@@ -15,14 +15,6 @@ User/bsp/sram/bsp_sram.c \
 
 
 
-ifeq ($(BUILD_SPI1),y)
-C_SOURCES +=  \
-User/bsp/flash/bsp_spi_flash.c \
-
-C_INCLUDES +=  \
--IUser/bsp/flash \
-
-endif
 
 ifeq ($(BUILE_FATFS),y)
 C_SOURCES +=  \
@@ -57,7 +49,6 @@ endif
 C_SOURCES +=  \
 User/app/user_demo/src/FatFs_demo.c \
 # User/app/user_demo/src/Sdio_demo.c \
-# User/app/user_demo/src/Key_demo.c \
 # User/app/user_demo/src/Usb_demo.c \
 # User/app/user_demo/src/Rtc_demo.c \
 # User/app/user_demo/src/Lcd_demo.c \
@@ -106,8 +97,6 @@ C_SOURCES +=  \
 User/app/user_demo/src/Sntp_demo.c \
 User/app/user_demo/src/Tftp_demo.c \
 User/app/user_demo/src/Http_Client_demo.c \
-# User/app/user_demo/src/Lwip_Tcp_Client_Socket_demo.c \
-# User/app/user_demo/src/client.c \
 
 C_SOURCES +=  \
 User/app/nw/nw.c \

@@ -15,6 +15,10 @@
 #include "stdarg.h"
 #include "shell_ext.h"
 #include "bsp_usart3.h"
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+#include "semphr.h"
 
 #if SHELL_USING_CMD_EXPORT == 1
 /**
@@ -1881,6 +1885,7 @@ void shellWriteEndLine(Shell *shell, char *buffer, int len)
 #endif /** SHELL_SUPPORT_END_LINE == 1 */
 
 
+
 /**
  * @brief shell 任务
  * 
@@ -1895,20 +1900,18 @@ void shellTask(void *param)
     while(1)
     {
 #endif
-        xSemaphoreTake(Uart3_BinarySem_Handle, portMAX_DELAY);
+        xSemaphoreTake(Usart1_BinarySem_Handle, portMAX_DELAY);
         if(READ_IT_FLAG == 1)
         {
             READ_IT_FLAG = 0;
-            // printf("%d\r\n",strlen(Usart3_Rx_Buf));
-            // printf("%s\r\n",Usart3_Rx_Buf);
-            if(strlen(Usart3_Rx_Buf) >= 1)
+            if(strlen(SHELL_RX_BUF) >= 1)
             {
-                for(int i = 0; i < strlen(Usart3_Rx_Buf); i++)
+                for(int i = 0; i < strlen(SHELL_RX_BUF); i++)
                 {
-                    shellHandler(shell, Usart3_Rx_Buf[i]);
+                    shellHandler(shell, SHELL_RX_BUF[i]);
                 }
             }
-            memset(Usart3_Rx_Buf, 0, UART3_BUFF_SIZE);
+            memset(SHELL_RX_BUF, 0, USART1_BUFF_SIZE);
         }
 #if SHELL_TASK_WHILE == 1
     }

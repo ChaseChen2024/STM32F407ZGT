@@ -13,7 +13,7 @@
 #include "../../lvgl.h"
 #include "lcd.h"
 #include "user.h"
-#include "bsp_debug_usart.h"
+#include "bsp_usart3.h"
 /*********************
  *      DEFINES
  *********************/

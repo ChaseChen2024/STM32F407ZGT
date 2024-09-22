@@ -45,7 +45,7 @@ int MQTTDeserialize_publish(unsigned char* dup, int* qos, unsigned char* retaine
 //	FUNC_ENTRY;
 	header.byte = readChar(&curdata);
 	
-	printf("MQTTDeserialize_publish---1,header.bits.type:%d\r\n",header.bits.type);
+	log_i("MQTTDeserialize_publish---1,header.bits.type:%d\r\n",header.bits.type);
 	if (header.bits.type != PUBLISH)
 		goto exit;
 	*dup = header.bits.dup;
@@ -54,13 +54,13 @@ int MQTTDeserialize_publish(unsigned char* dup, int* qos, unsigned char* retaine
 
 	curdata += (rc = MQTTPacket_decodeBuf(curdata, &mylen)); /* read remaining length */
 	enddata = curdata + mylen;
-	printf("MQTTDeserialize_publish---2,rc:%d,enddata:%d,curdata:%d,mylen:%d\r\n",rc,enddata,curdata,mylen);
+	log_i("MQTTDeserialize_publish---2,rc:%d,enddata:%d,curdata:%d,mylen:%d\r\n",rc,enddata,curdata,mylen);
 
 	if (!readMQTTLenString(topicName, &curdata, enddata) ||
 		enddata - curdata < 0) /* do we have enough data to read the protocol version byte? */
 		goto exit;
 
-	printf("MQTTDeserialize_publish---3,*qos:%d\r\n",*qos);
+	log_i("MQTTDeserialize_publish---3,*qos:%d\r\n",*qos);
 
 	if (*qos > 0)
 		*packetid = readInt(&curdata);
@@ -70,7 +70,7 @@ int MQTTDeserialize_publish(unsigned char* dup, int* qos, unsigned char* retaine
 	rc = 1;
 exit:
 	FUNC_EXIT_RC(rc);
-	printf("MQTTDeserialize_publish---4,rc:%d\r\n",rc);
+	log_i("MQTTDeserialize_publish---4,rc:%d\r\n",rc);
 	return rc;
 }
 

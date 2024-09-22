@@ -190,15 +190,15 @@ int deliverMessage(MQTTClient* c, MQTTString* topicName, MQTTMessage* message)
     // we have to find the right message handler - indexed by topic
     for (i = 0; i < MAX_MESSAGE_HANDLERS; ++i)
     {
-    	printf("deliverMessage,i:%d,c->messageHandlers[i].topicFilter:%d\r\n",i,c->messageHandlers[i].topicFilter);
+    	log_i("deliverMessage,i:%d,c->messageHandlers[i].topicFilter:%d\r\n",i,c->messageHandlers[i].topicFilter);
         if (c->messageHandlers[i].topicFilter != 0 && (MQTTPacket_equals(topicName, (char*)c->messageHandlers[i].topicFilter) ||
                 isTopicMatched((char*)c->messageHandlers[i].topicFilter, topicName)))
         {
-        	printf("deliverMessage-111\r\n");
+        	log_i("deliverMessage-111\r\n");
             if (c->messageHandlers[i].fp != NULL)
             {
             	
-        		printf("deliverMessage-cb\r\n");
+        		log_i("deliverMessage-cb\r\n");
                 MessageData md;
                 NewMessageData(&md, topicName, message);
                 c->messageHandlers[i].fp(&md);
@@ -228,13 +228,13 @@ int keepalive(MQTTClient* c)
 
     if (TimerIsExpired(&c->last_sent) || TimerIsExpired(&c->last_received))
     {
-    	printf("keepalive---1,c->ping_outstanding:%d\r\n",c->ping_outstanding);
+    	log_i("keepalive---1,c->ping_outstanding:%d\r\n",c->ping_outstanding);
         if (c->ping_outstanding)
             	rc = FAILURE; /* PINGRESP not received in keepalive interval */
         else
         {
         	
-        	printf("\r\n------------------keepalive--------------------------\r\n");
+        	log_i("\r\n------------------keepalive--------------------------\r\n");
             Timer timer;
             TimerInit(&timer);
             TimerCountdownMS(&timer, 5000);
@@ -255,7 +255,7 @@ exit:
 void MQTTCleanSession(MQTTClient* c)
 {
     int i = 0;
-	printf("MQTTCleanSession---1\r\n");
+	log_i("MQTTCleanSession---1\r\n");
     for (i = 0; i < MAX_MESSAGE_HANDLERS; ++i)
         c->messageHandlers[i].topicFilter = NULL;
 }
@@ -536,7 +536,7 @@ int MQTTSetMessageHandler(MQTTClient* c, const char* topicFilter, messageHandler
         if (i < MAX_MESSAGE_HANDLERS)
         {
         	
-			printf("MQTTSetMessageHandler,sub cb regits\r\n");
+			log_i("MQTTSetMessageHandler,sub cb regits\r\n");
             c->messageHandlers[i].topicFilter = topicFilter;
             c->messageHandlers[i].fp = messageHandler;
         }
@@ -580,7 +580,7 @@ int MQTTSubscribeWithResults(MQTTClient* c, const char* topicFilter, enum QoS qo
         data->grantedQoS = QOS0;
         if (MQTTDeserialize_suback(&mypacketid, 1, &count, (int*)&data->grantedQoS, c->readbuf, c->readbuf_size) == 1)
         {
-        	printf("MQTTSubscribeWithResults,data->grantedQoS:0x%x\r\n",data->grantedQoS);
+        	log_i("MQTTSubscribeWithResults,data->grantedQoS:0x%x\r\n",data->grantedQoS);
         	if (data->grantedQoS != 0x80)
                 rc = MQTTSetMessageHandler(c, topicFilter, messageHandler);
         }
@@ -633,7 +633,7 @@ int MQTTUnsubscribe(MQTTClient* c, const char* topicFilter)
         unsigned short mypacketid;  // should be the same as the packetid above
         if (MQTTDeserialize_unsuback(&mypacketid, c->readbuf, c->readbuf_size) == 1)
         {
-        	printf("MQTTUnsubscribe------1,remove the subscription and callback\r\n");
+        	log_i("MQTTUnsubscribe------1,remove the subscription and callback\r\n");
             /* remove the subscription message handler associated with this topic, if there is one */
             MQTTSetMessageHandler(c, topicFilter, NULL);
         }

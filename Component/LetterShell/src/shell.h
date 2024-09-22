@@ -536,6 +536,16 @@ void shellTask(void *param);
 int shellRun(Shell *shell, const char *cmd);
 
 
+#ifdef USER_LEETTER_SHELL
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+#include "semphr.h"
+#include "bsp_usart1.h"
+extern SemaphoreHandle_t Usart1_BinarySem_Handle;
+#define SHELL_USART USART1_SHELL
+#define SHELL_RX_BUF Usart1_Rx_Buf
+#endif 
 
 #if SHELL_USING_COMPANION == 1
 /**

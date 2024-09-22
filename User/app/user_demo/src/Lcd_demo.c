@@ -1,7 +1,7 @@
 #if 1
 #include "lcd.h"
 #include "Lcd_demo.h"
-#include "bsp_debug_usart.h"
+#include "bsp_usart3.h"
 #include <string.h>
 /* FreeRTOS头文件 */
 #include "FreeRTOS.h"
@@ -19,15 +19,15 @@ static void Lcd_Demo_Task(void* parameter)
 	 float t=0;
 			
   Lcd_Init();	
-   printf("LCD init\n\n");//初始化OLED  
+   log_i("LCD init\n\n");//初始化OLED  
    SPI2_ReadWriteByte(0x12);
     SPI2_ReadWriteByte(0x34);
      SPI2_ReadWriteByte(0x56);
       SPI2_ReadWriteByte(0x78);
 	 LCD_Clear(WHITE);
-   printf("[%s][%d]\r\n",__FILE__,__LINE__);
+   log_i("[%s][%d]\r\n",__FILE__,__LINE__);
 	 BACK_COLOR=WHITE;
-   	printf("[%s][%d]\r\n",__FILE__,__LINE__);
+   	log_i("[%s][%d]\r\n",__FILE__,__LINE__);
      while(1)
 	 {
 		 LCD_ShowChinese(10,0,0,32,RED);   //中

@@ -356,8 +356,8 @@ void GET_STM32MACID(uint8_t* pMacBuf)
 	CpuID[1]=*(uint32_t*)(0x1fff7a14);
 	CpuID[2]=*(uint32_t*)(0x1fff7a18);
 #endif
-//	printf("MCU UID: %08X-%08X-%08X\r\n",CpuID[0],CpuID[1],CpuID[2]);
-//	printf("MCU Flash Size: %dK\r\n", *(uint16_t *)(0X1FFF7a22));
+//	log_i("MCU UID: %08X-%08X-%08X\r\n",CpuID[0],CpuID[1],CpuID[2]);
+//	log_i("MCU Flash Size: %dK\r\n", *(uint16_t *)(0X1FFF7a22));
 	
 	//按字节（8位）读取
 	pMcuID[0] = (uint8_t)(CpuID[0] & 0x000000FF);

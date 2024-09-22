@@ -104,7 +104,7 @@ void ethernetif_input( void * pvParameters );
 */
 static void low_level_init(struct netif *netif)
 {
-  printf("low_level_init-1\r\n");
+  log_i("low_level_init-1\r\n");
   uint32_t i;
 
   /* set netif MAC hardware address length */

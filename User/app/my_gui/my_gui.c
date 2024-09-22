@@ -264,7 +264,7 @@ void top_sig_timer_cb(lv_timer_t *timer)
     lv_label_set_text_fmt(LvglTopViewParm.rtc_label,"%02d:%02d:%02d",RTC_TimeStructure_lvgl.RTC_Hours,RTC_TimeStructure_lvgl.RTC_Minutes,RTC_TimeStructure_lvgl.RTC_Seconds);
 
     lv_label_set_text_fmt(LvglTopViewParm.satellite_label,"%s %d",LV_SYMBOL_GPS,get_gnss_satellite_num());
-    //printf("top_sig_timer_cb£¬top_sig_timer_cb: %d\r\n",LvglTopViewParm.bat);
+    //log_i("top_sig_timer_cb£¬top_sig_timer_cb: %d\r\n",LvglTopViewParm.bat);
 
 
 }
@@ -410,14 +410,14 @@ void my_gui_xtrack(lv_obj_t *page)
 
 void page_stopwatch_onLoad(lv_obj_t *page)
 {
-  printf("lifecycle: stopwatch onLoad\n");
+  log_i("lifecycle: stopwatch onLoad\n");
   my_gui_xtrack(page);
 
 }
 
 void page_stopwatch_unLoad(lv_obj_t *page)
 {
-  printf("lifecycle: stopwatch unLoad\n");
+  log_i("lifecycle: stopwatch unLoad\n");
   lv_obj_remove_event_cb(LvglMainViewParm.app_btn,return_but_event_handler);
   lv_obj_remove_event_cb(LvglMainViewParm.start_btn, start_but_event_handler);
   lv_timer_del(LvglTopViewParm.timer);
@@ -433,7 +433,7 @@ struct
 
 void page_set_onLoad(lv_obj_t *page)
 {
-  printf("lifecycle: set onLoad\n");
+  log_i("lifecycle: set onLoad\n");
   lv_obj_set_style_bg_color(page, lv_color_make(255, 255, 255), LV_STATE_DEFAULT);
   LvglSetViewParm.return_btn = lv_btn_create(page);
     lv_obj_set_size(LvglSetViewParm.return_btn,40,40);
@@ -448,7 +448,7 @@ void page_set_onLoad(lv_obj_t *page)
 
 void page_set_unLoad(lv_obj_t *page)
 {
-  printf("lifecycle: set unLoad\n");
+  log_i("lifecycle: set unLoad\n");
   lv_obj_remove_event_cb(LvglSetViewParm.return_btn,return_but_event_handler);
   lv_group_del(LvglSetViewParm.g);
 }
@@ -493,7 +493,7 @@ static void app_set_btn_event_handler(lv_event_t * e)
 }
 void page_applist_onLoad(lv_obj_t *page)
 {
-    printf("lifecycle: applist onLoad\n");
+    log_i("lifecycle: applist onLoad\n");
 
     LvglApplistViewParm.g = lv_group_create();
     lv_indev_set_group(indev_keypad,LvglApplistViewParm.g );
@@ -527,7 +527,7 @@ void page_applist_onLoad(lv_obj_t *page)
 
 void page_applist_unLoad(lv_obj_t *page)
 {
-  printf("lifecycle: applist unLoad\n");
+  log_i("lifecycle: applist unLoad\n");
   lv_obj_remove_event_cb(LvglApplistViewParm.stopwatch, app_stopwatch_btn_event_handler);
   lv_obj_remove_event_cb(LvglApplistViewParm.set, app_set_btn_event_handler);
   lv_group_del(LvglApplistViewParm.g);
@@ -541,7 +541,7 @@ void one_sig_timer_cb(lv_timer_t *timer)
 
 void page_one_onLoad(lv_obj_t *page)
 {
-    printf("lifecycle: one onLoad\n");
+    log_i("lifecycle: one onLoad\n");
     lv_obj_set_style_bg_color(page, lv_color_make(255, 255, 255), LV_STATE_DEFAULT);
     lv_obj_t* set_txt = lv_label_create(page);
     lv_obj_set_style_text_font(set_txt,&lv_font_montserrat_40,0);
@@ -553,7 +553,7 @@ void page_one_onLoad(lv_obj_t *page)
 
 void page_one_unLoad(lv_obj_t *page)
 {
-  printf("lifecycle: one unLoad\n");
+  log_i("lifecycle: one unLoad\n");
    lv_timer_del(timer11);
 }
 
@@ -577,7 +577,7 @@ void xtrack_start(void)
     set->onLoad = page_set_onLoad;
     set->unLoad = page_set_unLoad;
 
-    printf("start\n");
+    log_i("start\n");
     lv_pm_open_page(STARTUP_PAGE, &options);
  
 }

@@ -41,6 +41,6 @@ long RTC_Demo_Task_Init(void)
 void Rtc_Bsp_Init(void)
 {
   Rtc_Init();
-  printf("[%s],[%d],[%s]\r\n",__FUNCTION__,__LINE__,"RTC init");
+  log_i("[%s],[%d],[%s]\r\n",__FUNCTION__,__LINE__,"RTC init");
 }
 #endif

@@ -57,32 +57,32 @@
 
 
 // Log define
-#define USB_INFO(fmt,arg...)           printf("<<-USB-INFO->> "fmt"\n",##arg)
-#define USB_ERROR(fmt,arg...)          printf("<<-USB-ERROR->> "fmt"\n",##arg)
+#define USB_INFO(fmt,arg...)           log_i("<<-USB-INFO->> "fmt"\n",##arg)
+#define USB_ERROR(fmt,arg...)          log_i("<<-USB-ERROR->> "fmt"\n",##arg)
 #define USB_DEBUG(fmt,arg...)          do{\
                                          if(USB_DEBUG_ON)\
-                                         printf("<<-USB-DEBUG->>[%s] [%d]"fmt"\n",__FILE__,__LINE__, ##arg);\
+                                         log_i("<<-USB-DEBUG->>[%s] [%d]"fmt"\n",__FILE__,__LINE__, ##arg);\
                                        }while(0)
 #define USB_DEBUG_ARRAY(array, num)    do{\
                                          int32_t i;\
                                          uint8_t* a = array;\
                                          if(USB_DEBUG_ARRAY_ON)\
                                          {\
-                                            printf("<<-USB-DEBUG-ARRAY->>\n");\
+                                            log_i("<<-USB-DEBUG-ARRAY->>\n");\
                                             for (i = 0; i < (num); i++)\
                                             {\
-                                                printf("%02x   ", (a)[i]);\
+                                                log_i("%02x   ", (a)[i]);\
                                                 if ((i + 1 ) %10 == 0)\
                                                 {\
-                                                    printf("\n");\
+                                                    log_i("\n");\
                                                 }\
                                             }\
-                                            printf("\n");\
+                                            log_i("\n");\
                                         }\
                                        }while(0)
 #define USB_DEBUG_FUNC()               do{\
                                          if(USB_DEBUG_FUNC_ON)\
-                                         printf("<<-USB-FUNC->> Func:%s@Line:%d\n",__func__,__LINE__);\
+                                         log_i("<<-USB-FUNC->> Func:%s@Line:%d\n",__func__,__LINE__);\
                                        }while(0)
 
 

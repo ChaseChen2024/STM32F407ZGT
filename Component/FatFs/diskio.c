@@ -85,18 +85,6 @@ DSTATUS disk_status (
 	case SPI_FLASH :
 		stat &= ~STA_NOINIT;
 		//SPI_FLASH设备状态查询分支
-		#ifdef USE_FLASH_SPI1_CODE
-		if(sFLASH_ID == SPI_FLASH_ReadID())
-		{
-			/* 设备ID读取结果正确 */
-			stat &= ~STA_NOINIT;
-		}
-		else
-		{
-			/* 设备ID读取结果错误 */
-			stat = STA_NOINIT;
-		}
-		#endif
 		#ifdef USE_SFUD_CODE
 
 		#ifdef USE_FAL_CODE
@@ -156,17 +144,7 @@ DSTATUS disk_initialize (
 		return stat;
 #endif
 	case SPI_FLASH :
-		//初始化SPI_FLASH
-		#ifdef USE_FLASH_SPI1_CODE
-		uint16_t i;
-		SPI_FLASH_Init();
-		i=500;
-		while(--i);
-      	/* 唤醒SPI Flash */
-	    SPI_Flash_WAKEUP();
-		#endif
 		#ifdef USE_SFUD_CODE
-
 		#ifdef USE_FAL_CODE
 		nor_flash0_partition = fal_partition_find("fatfs");
 		if (nor_flash0_partition == NULL)
@@ -256,12 +234,6 @@ DRESULT disk_read (
 		// translate the arguments here
 		//要读取的扇区号转换称为地址
 		/* 扇区偏移6MB，外部Flash文件系统空间放在SPI Flash后面10MB空间 */
-		
-		#ifdef USE_FLASH_SPI1_CODE
-		sector+=1536;
-		
-		SPI_FLASH_BufferRead((u8*) buff, read_addr, count*FLASH_SECTOP_SIZE);
-		#endif
 		#ifdef USE_SFUD_CODE
 		#ifdef USE_FAL_CODE
 		read_addr = sector*FLASH_SECTOP_SIZE;
@@ -348,26 +320,7 @@ DRESULT disk_write (
 	case SPI_FLASH :
 		
 		// translate the arguments here
-		
-		#ifdef USE_FLASH_SPI1_CODE
-		sector+=1536;
-		while(count--)
-		{
-			
-			//要写入的扇区号转换称为地址
-			write_addr = sector*FLASH_SECTOP_SIZE;
-			//写入前需要擦除的扇区
-			
-			SPI_FLASH_SectorErase(write_addr);
-			SPI_FLASH_BufferWrite((u8*) buff, write_addr, FLASH_SECTOP_SIZE);
-		
-			
-			sector++;
-			buff += FLASH_SECTOP_SIZE;
-		}
-		#endif
 		#ifdef USE_SFUD_CODE
-
 		#ifdef USE_FAL_CODE
 		write_addr = sector*FLASH_SECTOP_SIZE;
 		fal_partition_erase(nor_flash0_partition, write_addr, FLASH_SECTOP_SIZE);

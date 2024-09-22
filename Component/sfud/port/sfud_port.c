@@ -33,6 +33,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
+#include "user.h"
 
 typedef struct {
     SPI_TypeDef *spix;
@@ -238,10 +239,10 @@ void sfud_log_debug(const char *file, const long line, const char *format, ...) 
 
     /* args point to the first variable parameter */
     va_start(args, format);
-    printf("[SFUD](%s:%ld) ", file, line);
+    log_i("[SFUD](%s:%ld) ", file, line);
     /* must use vprintf to print */
     vsnprintf(log_buf, sizeof(log_buf), format, args);
-    printf("%s\r\n", log_buf);
+    log_i("%s\r\n", log_buf);
     va_end(args);
 }
 
@@ -256,9 +257,9 @@ void sfud_log_info(const char *format, ...) {
 
     /* args point to the first variable parameter */
     va_start(args, format);
-    printf("[SFUD]");
+    log_i("[SFUD]");
     /* must use vprintf to print */
     vsnprintf(log_buf, sizeof(log_buf), format, args);
-    printf("%s\r\n", log_buf);
+    log_i("%s\r\n", log_buf);
     va_end(args);
 }

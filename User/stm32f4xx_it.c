@@ -40,7 +40,7 @@
 #include "lwip/sys.h"
 #include "stm32f4x7_eth.h"
 #endif
-#include "bsp_debug_usart.h"
+#include "bsp_usart3.h"
 #include<string.h>
 // #include "usbd_msc_core.h"
 // #include "usbd_usr.h"
@@ -82,7 +82,7 @@ void NMI_Handler(void)
   */
 // void HardFault_Handler(void)
 // {
-// 	printf("\r\n  HardFault_Handler");
+// 	log_i("\r\n  HardFault_Handler");
 //   /* Go to infinite loop when Hard Fault exception occurs */
 //   while (1)
 //   {}
@@ -133,18 +133,18 @@ void DebugMon_Handler(void)
 {}
 
 #ifdef USER_LEETTER_SHELL
-#include "bsp_usart3.h"
-void USART3_IRQHandler(void)  
+#include "bsp_usart1.h"
+void USART1_IRQHandler(void)  
 {
 	uint32_t ulReturn;
   u8 rec_data;
   ulReturn = taskENTER_CRITICAL_FROM_ISR();
 
-	if(USART_GetITStatus(USART3,USART_IT_IDLE)!=RESET)
+	if(USART_GetITStatus(USART1_SHELL,USART_IT_IDLE)!=RESET)
 	{		
-		Uart3_DMA_Rx_Data();
+		Usart1_DMA_Rx_Data();
     READ_IT_FLAG = 1;
-		rec_data = USART_ReceiveData(USART3);
+		rec_data = USART_ReceiveData(USART1_SHELL);
 	}	 
   taskEXIT_CRITICAL_FROM_ISR( ulReturn );
 } 

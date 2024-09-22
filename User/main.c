@@ -90,7 +90,8 @@ static void BSP_Init(void)
   __enable_irq();
   NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
   FSMC_SRAM_Init();
-  Debug_USART_Config();
+  Usart3_Config();
+ 
   printf("\r\n-------------------------enter application-------------------------\r\n");
   printf("\r\n-----------------------------2024/09/10----------------------------\r\n");
   
@@ -119,7 +120,7 @@ static void BSP_Init(void)
   #endif // USE_FAL_CODE
   #endif
  	#ifdef USER_LEETTER_SHELL
-  USART3_Config();
+  Usart1_Config();
   #endif
 #ifdef USE_LWIP_CODE
 	ETH_BSP_Config();

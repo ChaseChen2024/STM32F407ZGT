@@ -92,7 +92,7 @@ int FreeRTOS_read(Network* n, unsigned char* buffer, int len, int timeout_ms)
     tv_out.tv_sec = 1;
     tv_out.tv_usec = 0;
 	int recvLen = 0;
-//	printf("FreeRTOS_read£¬timeout_ms:%d,xTicksToWait:%d----------------\r\n",timeout_ms,xTicksToWait);
+//	log_i("FreeRTOS_read£¬timeout_ms:%d,xTicksToWait:%d----------------\r\n",timeout_ms,xTicksToWait);
 	vTaskSetTimeOutState(&xTimeOut); /* Record the time at which this function was entered. */
 	do
 	{
@@ -215,7 +215,7 @@ int NetworkConnect(Network* n, char* addr, int port)
 // 		goto exit;
 	hp = gethostbyname(addr);
 	
-	printf("gethostbyname\r\n");
+	log_i("gethostbyname\r\n");
 	if(hp == NULL)
 	{
 		goto exit;
@@ -229,11 +229,11 @@ int NetworkConnect(Network* n, char* addr, int port)
  	sAddr.sin_family = AF_INET;
  	memset(&(sAddr.sin_zero ), 0, sizeof(sAddr.sin_zero ));
 	
-	printf("ip:%s\r\n",ip4addr_ntoa(ipAddress));
+	log_i("ip:%s\r\n",ip4addr_ntoa(ipAddress));
  	if ((n->my_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
  		goto exit;
 
-	printf("\r\nNetworkConnect,socket my_socket:%d\r\n",n->my_socket);
+	log_i("\r\nNetworkConnect,socket my_socket:%d\r\n",n->my_socket);
  	if ((retVal = connect(n->my_socket, &sAddr, sizeof(sAddr))) < 0)
  	{
  		closesocket(n->my_socket);

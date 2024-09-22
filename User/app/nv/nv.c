@@ -31,19 +31,19 @@ FRESULT nv_read(char *file_name,char *p_read_buf, UINT read_len)
 	err = f_open(&fd, file_name, FA_READ);
     if (FR_OK != err)
     {
-		printf("open file failed,err:%d\r\n", err);
+		log_i("open file failed,err:%d\r\n", err);
 		return err;
     }
 
 	err = f_read(&fd, p_read_buf, read_len, &br);
 	if (FR_OK != err)
     {
-		printf("read file failed,err:%d\r\n", err);
+		log_i("read file failed,err:%d\r\n", err);
 		return err;
     }
-	printf("\r\nread,err:%d,br:%d,%s\r\n", err,br,p_read_buf);
+	log_i("\r\nread,err:%d,br:%d,%s\r\n", err,br,p_read_buf);
 	err = f_close(&fd);
-	printf("\r\n,%d,f_close res=%d",__LINE__,err);
+	log_i("\r\n,%d,f_close res=%d",__LINE__,err);
     return err;	
 }
 
@@ -60,19 +60,19 @@ FRESULT nv_write(char *file_name, char *p_write_buf, UINT write_len)
 	}
 
 	err = f_open(&fd, file_name, FA_CREATE_ALWAYS|FA_WRITE);
-	printf("\r\n,%d,f_open res=%d",__LINE__,err);
+	log_i("\r\n,%d,f_open res=%d",__LINE__,err);
 	
 	if(err != FR_OK)
 	{
-		printf("\r\n,%d,f_write res=%d",__LINE__,err);
+		log_i("\r\n,%d,f_write res=%d",__LINE__,err);
         return err;
 	}
 
 	err = f_write(&fd, p_write_buf, write_len ,&bw);
-	printf("\r\n,%d,f_write res=%d len=%d bw=%d",__LINE__,err,strlen(p_write_buf),bw);
+	log_i("\r\n,%d,f_write res=%d len=%d bw=%d",__LINE__,err,strlen(p_write_buf),bw);
 
 	err = f_close(&fd);
-	printf("\r\n,%d,f_close res=%d",__LINE__,err);
+	log_i("\r\n,%d,f_close res=%d",__LINE__,err);
     return err;
 }
 	
@@ -119,7 +119,7 @@ void nv_read_test(char *str,int len)
 	err = nv_read(str,nv_read_buf,len);
     
     sprintf(buf, "read string: %s\r\nlen:%d,err:%d\r\n",nv_read_buf,len,err);
-    Usart_SendString(USART3,buf);
+	shellPrint(&shell,"%s",buf);
 }
 SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_FUNC), nvread, nv_read_test, nvread "1:xxxx.xx" len);
 
@@ -259,13 +259,13 @@ void nv_scan_files_test(void)
 				
 				elog_i(ELOG_APP,"/%s", fno.fname);
 				sprintf(buf, "/%s\r\n",fno.fname);
-    			Usart_SendString(USART3,buf);
+				shellPrint(&shell,"%s",buf);
                 if (res != FR_OK) break;
                 patch_name[i] = 0;
             } else {                                       /* It is a file. */
                 elog_i(ELOG_APP,"%s",fno.fname);
 				sprintf(buf, "%s\r\n",fno.fname);
-    			Usart_SendString(USART3,buf);
+				shellPrint(&shell,"%s",buf);
 
             }
         }
@@ -279,7 +279,7 @@ void nv_open_dir_test(int argc, char *argv[])
 	char buf[64] = {0};
 	DIR dir_info;
 	FRESULT ret = FR_OK;
-	printf("argv[1]:%s\r\n",argv[1]);
+	log_i("argv[1]:%s\r\n",argv[1]);
 	if(argv[1][0] == '.' && argv[1][1] == '.')
 	{
 		char *p = strrchr(patch_name,'/');
@@ -287,7 +287,7 @@ void nv_open_dir_test(int argc, char *argv[])
 	}
 	else if(argv[1][0] == '1' && argv[1][1] == ':')
 	{
-		printf("argv[0]:%s\r\n",argv[1]);
+		log_i("argv[0]:%s\r\n",argv[1]);
 		if(f_opendir(&dir_info, argv[1]) == FR_OK)
 		{
 			strcpy(patch_name,argv[1]);
@@ -303,7 +303,7 @@ void nv_open_dir_test(int argc, char *argv[])
 		strcat(buf,patch_name);
 		strcat(buf,"/");
 		strcat(buf,argv[1]);
-		printf("%s\r\n",buf);
+		log_i("%s\r\n",buf);
 		ret = f_opendir(&dir_info, buf);
 		if(ret == FR_OK)
 		{
@@ -317,7 +317,7 @@ void nv_open_dir_test(int argc, char *argv[])
 		}
 		
 	}
-	printf("%s,ret:%d\r\n",patch_name,ret);
+	log_i("%s,ret:%d\r\n",patch_name,ret);
 }
 SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN), cd, nv_open_dir_test, fatfs open dir);
 
@@ -333,7 +333,7 @@ int nv_mkdir_dir_test(int argc, char *argv[])
 	}
 	else
 	{
-		printf("argv[1]:%s\r\n",argv[1]);
+		log_i("argv[1]:%s\r\n",argv[1]);
 		if(argv[1][0] == '.' && argv[1][1] == '.')
 		{
 
@@ -343,14 +343,14 @@ int nv_mkdir_dir_test(int argc, char *argv[])
 			strcpy(patch_mk,argv[1]);
 			char *p = strrchr(patch_mk,'/');
         	if(p) *p = 0;
-			printf("patch_mk:%s\r\n",patch_mk);
+			log_i("patch_mk:%s\r\n",patch_mk);
 			if(f_opendir(&dir_info, patch_mk) == FR_OK)
 			{
 				f_closedir(&dir_info);
 				res = f_mkdir(argv[1]);
 				if(res != FR_OK)
 				{
-					Usart_SendString(USART3,"error\r\n");
+					shellPrint(&shell,"error\r\n");
 				}
 			}
 			else
@@ -361,11 +361,11 @@ int nv_mkdir_dir_test(int argc, char *argv[])
 		else
 		{
 			sprintf(patch_mk,"%s/%s",patch_name,argv[1]);
-			printf("%s\r\n",patch_mk);
+			log_i("%s\r\n",patch_mk);
 			res = f_mkdir(patch_mk);
 			if(res != FR_OK)
 			{
-				Usart_SendString(USART3,"error\r\n");
+				shellPrint(&shell,"error\r\n");
 			}
 		}
 	}
@@ -378,18 +378,18 @@ void nv_rm_test(char *dir)
 	char patch_mk[32] = {0};
 	sprintf(patch_mk,"%s/%s",patch_name,dir);
 
-	printf("%s\r\n",patch_mk);
+	log_i("%s\r\n",patch_mk);
 	res = f_unlink(patch_mk);
 	if(res != FR_OK)
 	{
-		Usart_SendString(USART3,"error\r\n");
+		shellPrint(&shell,"error\r\n");
 	}
 }
 SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_FUNC), rm, nv_rm_test, fatfs rm);
 void nv_pwd_test(void)
 {
 	char patch_mk[64] = {0};
-	printf("%s\r\n",patch_name);
+	log_i("%s\r\n",patch_name);
 	sprintf(patch_mk,"%s",patch_name);
 	shellPrint(&shell,patch_mk);
 
@@ -437,7 +437,7 @@ int nv_rstset_test(int argc, char *argv[])
 	strcpy(UserFaftsParams.LDriveId,"1:");
 		
 	err = f_mkfs("1:",0,1024*1024*10);
-	printf("\r\nnv_init_3,f_mkfs res=%d\r\n",err);
+	log_i("\r\nnv_init_3,f_mkfs res=%d\r\n",err);
 	err = f_mount(NULL,(UserFaftsParams.LDriveId),1);
 	err = f_mount(&(UserFaftsParams.fs),(UserFaftsParams.LDriveId),1);		
 
@@ -453,7 +453,7 @@ int nv_rstset_test(int argc, char *argv[])
         tot_size = (pfs->n_fatent - 2) * pfs->csize; // 总容量    单位Kbyte
         fre_size = fre_clust * pfs->csize;           // 可用容量  单位Kbyte
 
-        printf("\r\nnv_init_4\r\ntot_size:%10lu KB\r\nfre_size:%10lu KB\r\n",tot_size *4, fre_size *4);
+        log_i("\r\nnv_init_4\r\ntot_size:%10lu KB\r\nfre_size:%10lu KB\r\n",tot_size *4, fre_size *4);
     }
 	shellPrint(&shell,"\r\ntot_size:%10lu KB\r\nfre_size:%10lu KB\r\n",tot_size *4, fre_size *4);
 

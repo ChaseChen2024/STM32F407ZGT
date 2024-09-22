@@ -15,6 +15,7 @@ static void Usart3_NVIC_Configuration(void)
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_Init(&NVIC_InitStructure);
 }
+#if 0
 uint8_t READ_IT_FLAG = 0;
 uint8_t GET_FREERTOS_FLAG = 0;
 char Usart3_Rx_Buf[UART3_BUFF_SIZE];
@@ -45,8 +46,8 @@ void Uart3_DMA_Config(void)
   DMA_Cmd (DMA1_Stream1,ENABLE);
 }
 
-
-void USART3_Config(void)
+#endif
+void Usart3_Config(void)
 {
   GPIO_InitTypeDef GPIO_InitStructure;
   USART_InitTypeDef USART_InitStructure;
@@ -81,13 +82,18 @@ void USART3_Config(void)
 	
 
 	Usart3_NVIC_Configuration();
-  USART_ITConfig(USART3_SHELL, USART_IT_IDLE, ENABLE);
+  USART_ITConfig(USART3_SHELL, USART_IT_RXNE, ENABLE);
 	USART_Cmd(USART3_SHELL, ENABLE);
 
+#if 0
+  USART_ITConfig(USART3_SHELL, USART_IT_IDLE, ENABLE);
+	USART_Cmd(USART3_SHELL, ENABLE);
   Uart3_DMA_Config();
   USART_DMACmd(USART3_SHELL, USART_DMAReq_Rx, ENABLE);
+#endif
   
 }
+#if 0
 SemaphoreHandle_t Uart3_BinarySem_Handle;
 void Uart3_DMA_Rx_Data(void)
 {
@@ -107,4 +113,23 @@ void Uart3_DMA_Rx_Data(void)
     portYIELD_FROM_ISR(pxHigherPriorityTaskWoken);  
   }
   
+}
+#endif
+void USART3_SendData(USART_TypeDef* USARTx, uint16_t Data)
+{
+  /* Check the parameters */
+  assert_param(IS_USART_ALL_PERIPH(USARTx));
+  assert_param(IS_USART_DATA(Data)); 
+    
+  /* Transmit Data */
+  USARTx->DR = (Data & (uint16_t)0x01FF);
+}
+int _write (int fd, char *pBuffer, int size)
+{
+    for (int i = 0; i < size; i++)
+    {
+        while (USART_GetFlagStatus(USART3, USART_FLAG_TXE) == RESET);
+        USART3_SendData(USART3, (uint8_t) pBuffer[i]);
+    }
+    return size;
 }

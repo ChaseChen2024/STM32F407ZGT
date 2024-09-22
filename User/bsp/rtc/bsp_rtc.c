@@ -1,7 +1,7 @@
 
 #include "stm32f4xx.h"
 #include "bsp_rtc.h"
-#include "bsp_debug_usart.h"
+#include "bsp_usart3.h"
 
  
 /**
@@ -52,13 +52,13 @@ void RTC_TimeAndDate_Show(void)
 		if(Rtctmp != RTC_TimeStructure.RTC_Seconds)
 		{
 			// 打印日期
-			printf("The Date :  Y:20%0.2d - M:%0.2d - D:%0.2d - W:%0.2d\r\n", 
+			log_i("The Date :  Y:20%0.2d - M:%0.2d - D:%0.2d - W:%0.2d\r\n", 
 					RTC_DateStructure.RTC_Year,
 					RTC_DateStructure.RTC_Month, 
 					RTC_DateStructure.RTC_Date,
 					RTC_DateStructure.RTC_WeekDay);
 			// 打印时间
-			printf("The Time :  %0.2d:%0.2d:%0.2d \r\n\r\n", 
+			log_i("The Time :  %0.2d:%0.2d:%0.2d \r\n\r\n", 
 					RTC_TimeStructure.RTC_Hours, 
 					RTC_TimeStructure.RTC_Minutes, 
 					RTC_TimeStructure.RTC_Seconds);
@@ -126,7 +126,7 @@ void RTC_CLK_Config(void)
 	/* 用RTC_InitStructure的内容初始化RTC寄存器 */
 	if (RTC_Init(&RTC_InitStructure) == ERROR)
 	{
-		printf("\n\r RTC 时钟初始化失败 \r\n");
+		log_i("\n\r RTC 时钟初始化失败 \r\n");
 	}	
 }
 
@@ -162,13 +162,13 @@ void RTC_CLK_Config_Backup(void)
 	
 	if(LSEStatus == SET )
   {
-		printf("\n\r LSE 启动成功 \r\n");
+		log_i("\n\r LSE 启动成功 \r\n");
 		/* 选择LSE作为RTC的时钟源 */
 		RCC_RTCCLKConfig(RCC_RTCCLKSource_LSE);
   }
 	else
 	{
-		printf("\n\r LSE 故障，转为使用LSI \r\n");
+		log_i("\n\r LSE 故障，转为使用LSI \r\n");
 		
 		/* 使能LSI */	
 		RCC_LSICmd(ENABLE);
@@ -177,7 +177,7 @@ void RTC_CLK_Config_Backup(void)
 		{			
 		}
 		
-		printf("\n\r LSI 启动成功 \r\n");
+		log_i("\n\r LSI 启动成功 \r\n");
 		/* 选择LSI作为RTC的时钟源 */
 		RCC_RTCCLKConfig(RCC_RTCCLKSource_LSI);
 	}
@@ -198,7 +198,7 @@ void RTC_CLK_Config_Backup(void)
 	/* 用RTC_InitStructure的内容初始化RTC寄存器 */
 	if (RTC_Init(&RTC_InitStructure) == ERROR)
 	{
-		printf("\n\r RTC 时钟初始化失败 \r\n");
+		log_i("\n\r RTC 时钟初始化失败 \r\n");
 	}	
 }
 
@@ -215,15 +215,15 @@ void Rtc_Init(void)
 		/* 检查是否电源复位 */
 		if (RCC_GetFlagStatus(RCC_FLAG_PORRST) != RESET)
 		{
-		printf("\r\n 发生电源复位....\r\n");
+		log_i("\r\n 发生电源复位....\r\n");
 		}
 		/* 检查是否外部复位 */
 		else if (RCC_GetFlagStatus(RCC_FLAG_PINRST) != RESET)
 		{
-		printf("\r\n 发生外部复位....\r\n");
+		log_i("\r\n 发生外部复位....\r\n");
 		}
 
-		printf("\r\n 不需要重新配置RTC....\r\n");
+		log_i("\r\n 不需要重新配置RTC....\r\n");
 		
 		/* 使能 PWR 时钟 */
 		// RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);

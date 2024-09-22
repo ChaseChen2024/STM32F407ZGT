@@ -5,7 +5,7 @@
 #include "lcd.h"
 #include "oledfont.h"
 #include "bmp.h"
-#include "bsp_debug_usart.h"
+#include "bsp_usart3.h"
 
 u16 BACK_COLOR;
 
@@ -16,7 +16,7 @@ void spi2_set_speed(uint8_t spi_baudrate_prescaler);
 
 void SPI2_Init(void)
 {
-	printf("[%s][%d]\r\n",__FILE__,__LINE__);
+	log_i("[%s][%d]\r\n",__FILE__,__LINE__);
 	GPIO_InitTypeDef GPIO_InitStructure;
   
 	RCC_AHB1PeriphClockCmd(	RCC_AHB1Periph_GPIOB, ENABLE);	
@@ -155,7 +155,7 @@ void DMA_Config(uint32_t TX_Buff,uint32_t SENDBUFF_SIZE)
 //     if(DMA_GetITStatus(DMA1_Stream4, DMA_IT_TCIF4))	
 //     {
 //         // ���DMA������ɱ�־
-//         //  printf("[%s][%d] dma send OK\r\n",__FILE__,__LINE__);
+//         //  log_i("[%s][%d] dma send OK\r\n",__FILE__,__LINE__);
 //         DMA_ClearITPendingBit(DMA1_Stream4, DMA_IT_TCIF4);	
 //         // Ƭѡ���ߣ����ݷ������	
 //         LCD_CS_SET;	
@@ -167,7 +167,7 @@ void DMA_Config(uint32_t TX_Buff,uint32_t SENDBUFF_SIZE)
 // }
 void DMA_Write_buf(uint32_t SizeLen)
 {   
-	// printf("[%s][%d] start dma\r\n",__FILE__,__LINE__);
+	// log_i("[%s][%d] start dma\r\n",__FILE__,__LINE__);
 	// �رշ��� DMA		
 	DMA_Cmd(DMA1_Stream4, DISABLE);	
 	// ���÷��͵�������    

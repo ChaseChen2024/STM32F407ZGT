@@ -4,7 +4,7 @@
 
 
 #include "stm32f4xx.h"
-#include "bsp_debug_usart.h"
+// #include "bsp_usart3.h"
 
 //使用NOR/SRAM的 Bank1.sector4,地址位HADDR[27,26]=10 
 //对IS61LV25616/IS62WV25616,地址线范围为A0~A17 
@@ -230,11 +230,11 @@
 /*信息输出*/
 #define SRAM_DEBUG_ON         1
 
-#define SRAM_INFO(fmt,arg...)           printf("<<-SRAM-INFO->> "fmt"\n",##arg)
-#define SRAM_ERROR(fmt,arg...)          printf("<<-SRAM-ERROR->> "fmt"\n",##arg)
+#define SRAM_INFO(fmt,arg...)           log_i("<<-SRAM-INFO->> "fmt"\n",##arg)
+#define SRAM_ERROR(fmt,arg...)          log_i("<<-SRAM-ERROR->> "fmt"\n",##arg)
 #define SRAM_DEBUG(fmt,arg...)          do{\
                                           if(SRAM_DEBUG_ON)\
-                                          printf("<<-SRAM-DEBUG->> [%d]"fmt"\n",__LINE__, ##arg);\
+                                          log_i("<<-SRAM-DEBUG->> [%d]"fmt"\n",__LINE__, ##arg);\
                                           }while(0)
 
 

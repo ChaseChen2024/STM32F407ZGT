@@ -47,19 +47,19 @@ static void FatFs_Demo_Task(void* parameter)
 //   FRESULT err = FR_OK;
 //   nv_write("1:test.txt","1024",4);
 //   err = nv_read("1:test.txt",read_buf,4);
-//   printf("\r\n1:test.txt,read:%s,err:%d\r\n",read_buf,err);
+//   log_i("\r\n1:test.txt,read:%s,err:%d\r\n",read_buf,err);
 #if 1
-		printf("\r\n这是一个文件系统移植实验 \r\n");
+		log_i("\r\n这是一个文件系统移植实验 \r\n");
 
 		res = f_mount(&fs,"1:",1);
 
-		printf("\r\n,%d,fmount res=%d",__LINE__,res);
+		log_i("\r\n,%d,fmount res=%d",__LINE__,res);
 
 		if(res == FR_NO_FILESYSTEM)
 		{
 				//格式化
 				res = f_mkfs("1:",0,0);
-				printf("\r\n,%d,f_mkfs res=%d",__LINE__,res);
+				log_i("\r\n,%d,f_mkfs res=%d",__LINE__,res);
 
 				//格式化后需要重新挂载文件系统
 				res = f_mount(NULL,"1:",1);
@@ -68,22 +68,22 @@ static void FatFs_Demo_Task(void* parameter)
 		}
 
 		res = f_open(&fil, "1:czs.csv", FA_CREATE_ALWAYS|FA_WRITE);
-		printf("\r\n,%d,f_open res=%d",__LINE__,res);
+		log_i("\r\n,%d,f_open res=%d",__LINE__,res);
 
 		res = f_write(&fil, WriteBuffer, strlen(WriteBuffer) ,&bw);
-		printf("\r\n,%d,f_write res=%d len=%d bw=%d",__LINE__,res,strlen(WriteBuffer),bw);
+		log_i("\r\n,%d,f_write res=%d len=%d bw=%d",__LINE__,res,strlen(WriteBuffer),bw);
 
 		res = f_close(&fil);
-		printf("\r\n,%d,f_close res=%d",__LINE__,res);
+		log_i("\r\n,%d,f_close res=%d",__LINE__,res);
 
 
 		res = f_open(&fil, "1:czs.csv", FA_OPEN_EXISTING|FA_READ);
 
 		res = f_read(&fil, read_buff, bw, &br);
-		printf("\r\nf_read res=%d br=%d",res,br);
+		log_i("\r\nf_read res=%d br=%d",res,br);
 		read_buff[br] = '\0';
-		printf("\r\n读取到的文件内容:\r\n");
-		printf("%s", read_buff);
+		log_i("\r\n读取到的文件内容:\r\n");
+		log_i("%s", read_buff);
 
 		res = f_close(&fil);
 #endif
@@ -97,13 +97,13 @@ static void FatFs_Demo_Task(void* parameter)
 	/* 如果没有文件系统就格式化创建创建文件系统 */
 	if(res_sd == FR_NO_FILESYSTEM)
 	{
-		printf("》SD卡还没有文件系统，即将进行格式化...\r\n");
+		log_i("》SD卡还没有文件系统，即将进行格式化...\r\n");
     /* 格式化 */
 		res_sd=f_mkfs("0:",0,0);							
 		
 		if(res_sd == FR_OK)
 		{
-			printf("》SD卡已成功格式化文件系统。\r\n");
+			log_i("》SD卡已成功格式化文件系统。\r\n");
       /* 格式化后，先取消挂载 */
 			res_sd = f_mount(NULL,"0:",1);			
       /* 重新挂载	*/			
@@ -111,67 +111,67 @@ static void FatFs_Demo_Task(void* parameter)
 		}
 		else
 		{
-			printf("《《格式化失败。》》\r\n");
+			log_i("《《格式化失败。》》\r\n");
 			while(1);
 		}
 	}
   else if(res_sd!=FR_OK)
   {
-    printf("！！SD卡挂载文件系统失败。(%d)\r\n",res_sd);
-    printf("！！可能原因：SD卡初始化不成功。\r\n");
+    log_i("！！SD卡挂载文件系统失败。(%d)\r\n",res_sd);
+    log_i("！！可能原因：SD卡初始化不成功。\r\n");
 		while(1);
   }
   else
   {
-    printf("》文件系统挂载成功，可以进行读写测试\r\n");
+    log_i("》文件系统挂载成功，可以进行读写测试\r\n");
   }
   
 /*----------------------- 文件系统测试：写测试 -----------------------------*/
 	/* 打开文件，如果文件不存在则创建它 */
-	printf("\r\n****** 即将进行文件写入测试... ******\r\n");	
+	log_i("\r\n****** 即将进行文件写入测试... ******\r\n");	
 	res_sd = f_open(&fnew, "0:FatFs读写测试文件.txt",FA_CREATE_ALWAYS | FA_WRITE );
 	if ( res_sd == FR_OK )
 	{
-		printf("》打开/创建FatFs读写测试文件.txt文件成功，向文件写入数据。\r\n");
+		log_i("》打开/创建FatFs读写测试文件.txt文件成功，向文件写入数据。\r\n");
     /* 将指定存储区内容写入到文件内 */
 		res_sd=f_write(&fnew,WriteBuffer,sizeof(WriteBuffer),&fnum);
     if(res_sd==FR_OK)
     {
-      printf("》文件写入成功，写入字节数据：%d\n",fnum);
-      printf("》向文件写入的数据为：\r\n%s\r\n",WriteBuffer);
+      log_i("》文件写入成功，写入字节数据：%d\n",fnum);
+      log_i("》向文件写入的数据为：\r\n%s\r\n",WriteBuffer);
     }
     else
     {
-      printf("！！文件写入失败：(%d)\n",res_sd);
+      log_i("！！文件写入失败：(%d)\n",res_sd);
     }    
 		/* 不再读写，关闭文件 */
     f_close(&fnew);
 	}
 	else
 	{	
-		printf("！！打开/创建文件失败。\r\n");
+		log_i("！！打开/创建文件失败。\r\n");
 	}
 	
 /*------------------- 文件系统测试：读测试 ------------------------------------*/
-	printf("****** 即将进行文件读取测试... ******\r\n");
+	log_i("****** 即将进行文件读取测试... ******\r\n");
 	res_sd = f_open(&fnew, "0:FatFs读写测试文件.txt", FA_OPEN_EXISTING | FA_READ); 	 
 	if(res_sd == FR_OK)
 	{
-		printf("》打开文件成功。\r\n");
+		log_i("》打开文件成功。\r\n");
 		res_sd = f_read(&fnew, ReadBuffer, sizeof(ReadBuffer), &fnum); 
     if(res_sd==FR_OK)
     {
-      printf("》文件读取成功,读到字节数据：%d\r\n",fnum);
-      printf("》读取得的文件数据为：\r\n%s \r\n", ReadBuffer);	
+      log_i("》文件读取成功,读到字节数据：%d\r\n",fnum);
+      log_i("》读取得的文件数据为：\r\n%s \r\n", ReadBuffer);	
     }
     else
     {
-      printf("！！文件读取失败：(%d)\n",res_sd);
+      log_i("！！文件读取失败：(%d)\n",res_sd);
     }		
 	}
 	else
 	{
-		printf("！！打开文件失败。\r\n");
+		log_i("！！打开文件失败。\r\n");
 	}
 	/* 不再读写，关闭文件 */
 	f_close(&fnew);	
@@ -210,14 +210,14 @@ long FatFs_Demo_Task_Init(void)
 // 	char writ_buf[64]={0};
 // 	sprintf(writ_buf,"%d,%d,%d\r\n",a,b,c);
 // 	res = f_open(&fil, "1:czs.csv", FA_OPEN_EXISTING|FA_WRITE);
-// 	printf("\r\n,%d,f_open res=%d",__LINE__,res);
+// 	log_i("\r\n,%d,f_open res=%d",__LINE__,res);
 	
 // 	res=f_lseek(&fil,f_size(&fil));
-// 	printf("\r\n,%d,f_lseek res=%d",__LINE__,res);
+// 	log_i("\r\n,%d,f_lseek res=%d",__LINE__,res);
 	
 	
 // 	res = f_write(&fil, writ_buf, strlen(writ_buf) ,&bw);
-// 	printf("\r\n,%d,f_write res=%d len=%d bw=%d",__LINE__,res,strlen(writ_buf),bw);
+// 	log_i("\r\n,%d,f_write res=%d len=%d bw=%d",__LINE__,res,strlen(writ_buf),bw);
 	
 // 	res = f_close(&fil);
 
