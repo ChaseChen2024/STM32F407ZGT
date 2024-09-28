@@ -1,13 +1,15 @@
 STM32F407ZGT-Makefile
 
-基于启明欣欣的STM32F407ZGT开发版实现的的一个共享工程，后续将不断添加他支持的功能
-
-工程将支持freertos,lwip,paho-mqtt,letter-shell,sfud,fal,fatfs,easylogger,lvgl,cmbacktrace,nmea0183...第三方组件
-使用rt-fota作为bootloader，实现fota升级。
-
 项目工程介绍：
 
+基于启明欣欣的STM32F407ZGT开发板实现的的一个SDK工程，后续将不断添加他支持的功能
+
+工程将支持freertos,lwip,paho-mqtt,letter-shell,sfud,fal,fatfs,easylogger,lvgl,cmbacktrace,nmea0183...第三方组件
+作为bootloader使用https://github.com/ChaseChen2024/STM32F407ZGT-BOOTLOADER.git，实现fota升级。
+
+
 项目芯片型号：STM32F407ZGT6
+
 资源介绍：32位 cortex-M4  时钟最高168M, 板载192k ram  1024k flash, pin 144 , 3个12位AD,2个12位DA,16个DMA通道，17个定时器，3个i2c,6个串口，3个spi,2个can2.0,2个usb otg,1个SDIO
 工程使用makefile进行管理，gcc进行编译。
 
@@ -93,6 +95,7 @@ down:
 down_app:
 	-openocd -f TOOL/debug/stlink.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08020000" -c reset -c shutdown 
 	
+bootloader编译，需要进入STM32F407ZGT\Component\bootloader\STM32F407ZGT-BOOTLOADER目录下，make编译bootloader工程，之后将\STM32F407ZGT-BOOTLOADER\Build\QT201-BOOT.bin复制到STM32F407ZGT\Component\bootloader路径下并重命名为bootloader.bin，之后就能在STM32F407ZGT工程使用make down进行bootloader和application一同烧录到开发板中了
 
 
 TFTP使用：
