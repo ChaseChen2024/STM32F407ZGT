@@ -33,4 +33,5 @@ extern uint8_t READ_IT_FLAG;
 extern uint8_t GET_FREERTOS_FLAG;
 void Usart1_Config(void);
 void Usart1_DMA_Rx_Data(void);
+void Usart_Transmit( USART_TypeDef * pUSARTx, char *pBuffer, unsigned int len );
 #endif /* __USART1_H */
