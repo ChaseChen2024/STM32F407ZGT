@@ -1,0 +1,3 @@
+[submodule "Component/bootloader/STM32F407ZGT-BOOTLOADER"]
+	path = Component/bootloader/STM32F407ZGT-BOOTLOADER
+	url = https://github.com/ChaseChen2024/STM32F407ZGT-BOOTLOADER.git
