@@ -255,12 +255,19 @@ trace:
 #烧录命令
 
 down:
-	-openocd -f TOOL/debug/stlink.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase Component/bootloader/bootloader.bin 0x08000000" -c reset -c shutdown \
+	-openocd -f TOOL/debug/stlink.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase Release/bootloader.bin 0x08000000" -c reset -c shutdown \
 	&& openocd -f TOOL/debug/stlink.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08020000" -c reset -c shutdown 
 
 down_app:
 	-openocd -f TOOL/debug/stlink.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08020000" -c reset -c shutdown 
-	
+
+
+#使用build_new.bat脚本编译完后，使用该指令烧录
+
+down_all:
+	-openocd -f TOOL/debug/stlink.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase Release/bootloader.bin 0x08000000" -c reset -c shutdown \
+	&& openocd -f TOOL/debug/stlink.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase Release/$(TARGET).bin 0x08020000" -c reset -c shutdown 
+
 # download_dap:
 # 	-openocd -f TOOL/debug/cmsis-dap-v1.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08000000" -c reset -c shutdown
 # download_stlinkv2:

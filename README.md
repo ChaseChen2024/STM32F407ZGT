@@ -89,13 +89,21 @@ cmd 进入工程目录或在工程目录打开cmd。
 make down 下载bootloader固件和app固件，make down_app 下载app固件
 
 down:
-	-openocd -f TOOL/debug/stlink.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase Component/bootloader/bootloader.bin 0x08000000" -c reset -c shutdown \
+	-openocd -f TOOL/debug/stlink.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase Release/bootloader.bin 0x08000000" -c reset -c shutdown \
 	&& openocd -f TOOL/debug/stlink.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08020000" -c reset -c shutdown 
+
 
 down_app:
 	-openocd -f TOOL/debug/stlink.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase build/$(TARGET).bin 0x08020000" -c reset -c shutdown 
 	
-bootloader编译，需要进入STM32F407ZGT\Component\bootloader\STM32F407ZGT-BOOTLOADER目录下，make编译bootloader工程，之后将\STM32F407ZGT-BOOTLOADER\Build\QT201-BOOT.bin复制到STM32F407ZGT\Component\bootloader路径下并重命名为bootloader.bin，之后就能在STM32F407ZGT工程使用make down进行bootloader和application一同烧录到开发板中了
+
+#使用build_new.bat脚本编译完后，使用该指令烧录
+down_all:
+	-openocd -f TOOL/debug/stlink.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase Release/bootloader.bin 0x08000000" -c reset -c shutdown \
+	&& openocd -f TOOL/debug/stlink.cfg -f TOOL/debug/stm32f4x.cfg -c init -c "reset halt;wait_halt;flash write_image erase Release/$(TARGET).bin 0x08020000" -c reset -c shutdown 
+
+bootloader编译，需要进入STM32F407ZGT\Component\bootloader\STM32F407ZGT-BOOTLOADER目录下，make编译bootloader工程，之后将\STM32F407ZGT-BOOTLOADER\Build\QT201-BOOT.bin复制到STM32F407ZGT\Release路径下并重命名为bootloader.bin，之后就能在STM32F407ZGT工程使用make down进行bootloader和application一同烧录到开发板中了
+也可以在STM32F407ZGT目录下，打开终端，使用build_new.bat脚本编译,编译完成后，脚本会把所有需要用到的文件复制到STM32F407ZGT\Release路径下，在STM32F407ZGT目录下可以使用make down_all 执行下载
 
 
 TFTP使用：
