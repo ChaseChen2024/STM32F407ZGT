@@ -46,6 +46,7 @@ User/app/pg/anima.c \
 endif
 
 #demo 
+ifeq ($(BUILE_DEMO),y)
 C_SOURCES +=  \
 User/app/user_demo/src/FatFs_demo.c \
 # User/app/user_demo/src/Sdio_demo.c \
@@ -54,13 +55,25 @@ User/app/user_demo/src/FatFs_demo.c \
 # User/app/user_demo/src/Lcd_demo.c \
 
 C_INCLUDES +=  \
+-IUser/app/user_demo/inc \
+
+ifeq ($(BUILE_LWIP),y)
+C_SOURCES +=  \
+User/app/user_demo/src/Sntp_demo.c \
+User/app/user_demo/src/Tftp_demo.c \
+User/app/user_demo/src/Http_Client_demo.c \
+
+endif
+
+endif
+
+C_INCLUDES +=  \
 -IUser \
 -IUser/bsp/uart \
 -IUser/bsp/key \
 -IUser/bsp/led \
 -IUser/bsp/rtc \
 -IUser/bsp/sram \
--IUser/app/user_demo/inc \
 # -IUser/bsp/sdio \
 # -IUser/bsp/lcd \
 # -IUser/app/pg \
@@ -92,11 +105,6 @@ User/bsp/arch/sys_arch.c \
 User/bsp/arch/ethernetif.c \
 User/bsp/arch/netconf.c \
 
-#demo 
-C_SOURCES +=  \
-User/app/user_demo/src/Sntp_demo.c \
-User/app/user_demo/src/Tftp_demo.c \
-User/app/user_demo/src/Http_Client_demo.c \
 
 C_SOURCES +=  \
 User/app/nw/nw.c \
@@ -111,24 +119,5 @@ C_INCLUDES +=  \
 
 endif
 
-CFLAGS += $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
+CPP_SOURCES += \
 
-
-# list of objects
-OBJECTS = $(addprefix $(BUILD_DIR)/,$(notdir $(C_SOURCES:.c=.o)))
-vpath %.c $(sort $(dir $(C_SOURCES)))
-
-$(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR) 
-	$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
-
-ifeq ($(DEBUG), 1)
-CFLAGS += -g -gdwarf-2
-endif	
-
-
-#######################################
-# dependencies
-#######################################
--include $(wildcard $(BUILD_DIR)/*.d)
-
-# *** EOF ***

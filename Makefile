@@ -16,24 +16,10 @@ OPT = -O0
 # Build path
 BUILD_DIR = Build
 
-######################################
-# source
-######################################
-# C sources
-# #STM32¿âº¯Êý
-C_SOURCES = \
-
-# ASM sources
-ASM_SOURCES =  \
-Startup/startup_stm32f40xx.s \
-
-# ASM sources
-ASMM_SOURCES = \
-Component/Cm_Backtrace/cmb_fault.S \
 
 ######
 #
-BUILE_LWIP = y
+BUILE_LWIP = n
 
 BUILE_LVGL = n
 
@@ -51,6 +37,28 @@ BUILE_FATFS = y
 
 BUILE_SFUD = y
 
+BUILE_DEMO = n
+
+######################################
+# source
+######################################
+# C sources
+# #STM32¿âº¯Êý
+C_SOURCES = \
+
+#C++
+CPP_SOURCES = \
+
+
+# ASM sources
+ASM_SOURCES =  \
+Startup/startup_stm32f40xx.s \
+
+# ASM sources
+ASMM_SOURCES = \
+Component/Cm_Backtrace/cmb_fault.S \
+
+
 
 #######################################
 # binaries
@@ -60,11 +68,13 @@ PREFIX = arm-none-eabi-
 # either it can be added to the PATH environment variable.
 ifdef GCC_PATH
 CC = $(GCC_PATH)/$(PREFIX)gcc
+XX = $(GCC_PATH)/$(PREFIX)g++
 AS = $(GCC_PATH)/$(PREFIX)gcc -x assembler-with-cpp
 CP = $(GCC_PATH)/$(PREFIX)objcopy
 SZ = $(GCC_PATH)/$(PREFIX)size
 else
 CC = $(PREFIX)gcc
+XX = $(PREFIX)g++
 AS = $(PREFIX)gcc -x assembler-with-cpp
 CP = $(PREFIX)objcopy
 SZ = $(PREFIX)size
@@ -94,12 +104,13 @@ AS_DEFS =
 C_DEFS =  \
 -DUSE_STDPERIPH_DRIVER\
 -DSTM32F40_41xxx\
--DUSE_EMBEDDED_PHY\
+# -DUSE_EMBEDDED_PHY\
 
 ifeq ($(BUILE_LWIP),y)
 C_DEFS +=  -DUSE_LWIP -DUSE_LWIP_CODE\
 
 BUILE_MQTT = n
+BUILE_PHY = n
 
 ifeq ($(BUILE_MQTT),y)
 C_DEFS += -DUSE_MQTT_CODE\
@@ -162,12 +173,20 @@ C_DEFS += -DUSE_FAL_CODE\
 endif
 
 endif
+
+
+ifeq ($(BUILE_DEMO),y)
+C_DEFS += -DUSE_DEMO_CODE\
+
+endif
+
 # AS includes
 AS_INCLUDES =  \
 -IUser \
 
 # C includes
 C_INCLUDES =  \
+
 
 
 
@@ -185,10 +204,17 @@ ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffuncti
 
 CFLAGS += $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
 
+CPP_FLAGS += $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
 
 ifeq ($(DEBUG), 1)
 CFLAGS += -g -gdwarf-2
+CPP_FLAGS += -g -gdwarf-2
 endif
+
+
+# Generate dependency information
+C_FLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
+CPP_FLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 
 #######################################
 # LDFLAGS
@@ -209,8 +235,11 @@ all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET
 # build the application
 #######################################
 # list of objects
-OBJECTS = $(addprefix $(BUILD_DIR)/,$(notdir $(C_SOURCES:.c=.o)))
+OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(C_SOURCES:.c=.o)))
 vpath %.c $(sort $(dir $(C_SOURCES)))
+#c++ list of objects
+OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(CPP_SOURCES:.cpp=.o)))
+vpath %.cpp $(sort $(dir $(CPP_SOURCES)))
 # list of ASM program objects
 OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(ASM_SOURCES:.s=.o)))
 vpath %.s $(sort $(dir $(ASM_SOURCES)))
@@ -219,6 +248,10 @@ vpath %.S $(sort $(dir $(ASMM_SOURCES)))
 
 $(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR) 
 	$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
+
+# c++
+$(BUILD_DIR)/%.o: %.cpp Makefile | $(BUILD_DIR) 
+	$(XX) -c $(CPP_FLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.cpp=.lst)) $< -o $@
 
 $(BUILD_DIR)/%.o: %.s Makefile | $(BUILD_DIR)
 	$(AS) -c $(CFLAGS) $< -o $@

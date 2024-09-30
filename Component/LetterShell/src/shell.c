@@ -1895,7 +1895,7 @@ void shellWriteEndLine(Shell *shell, char *buffer, int len)
 void shellTask(void *param)
 {
     Shell *shell = (Shell *)param;
-    char data;
+    // char data;
 #if SHELL_TASK_WHILE == 1
     while(1)
     {

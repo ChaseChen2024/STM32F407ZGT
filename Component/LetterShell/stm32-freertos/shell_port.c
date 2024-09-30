@@ -51,19 +51,6 @@ short userShellWrite(char *data, unsigned short len)
 /*
 使用串口中断接收，故不使用该查询接收函数
 */
-#if 0
-uint8_t uart3_shell_data = 0;
-short userShellRead(char *data, unsigned short len)
-{
-    if(READ_IT_FLAG == 1)
-    {
-        READ_IT_FLAG = 0;
-        data[0] = uart3_shell_data;
-        return 1;
-    }
-    return 0;
-}
-#endif
 /**
  * @brief 用户shell上锁
  * 
@@ -100,9 +87,6 @@ void userShellInit(void)
     shellMutex = xSemaphoreCreateMutex();
 
     shell.write = userShellWrite;
-    #if 0
-    // shell.read = userShellRead;
-    #endif
     shell.lock = userShellLock;
     shell.unlock = userShellUnlock;
     shellInit(&shell, shellBuffer, 512);
@@ -115,5 +99,4 @@ void userShellInit(void)
        elog_i(ELOG_APP,"userShellInit-fail:%d",pass);
     }
 }
-CEVENT_EXPORT(EVENT_INIT_STAGE2, userShellInit);
 

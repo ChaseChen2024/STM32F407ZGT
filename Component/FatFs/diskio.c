@@ -9,8 +9,6 @@
 
 #include "diskio.h"		/* FatFs lower layer API */
 
-// #include "./flash/bsp_spi_flash.h"
-// #include "./sdio/bsp_sdio_sd.h"
 #ifdef USE_FLASH_SPI1_CODE
 #include "bsp_spi_flash.h"
 #endif
@@ -46,7 +44,6 @@
 //定义逻辑设备号
 #define SD_CARD		  0	
 #define SPI_FLASH		1
-#define USB_OTG		  2
 
 //定义扇区大小
 #define FLASH_SECTOP_SIZE 4096
@@ -104,13 +101,6 @@ DSTATUS disk_status (
 		// translate the reslut code here
 
 		break;
-
-	case USB_OTG :
-		//USB存储设备状态查询分支
-
-		// translate the reslut code here
-
-		break;
 	default:
 			stat = STA_NOINIT;
 	}
@@ -163,15 +153,8 @@ DSTATUS disk_initialize (
 
 		stat = disk_status(SPI_FLASH);
 		return stat;
-#ifdef USB_OTG
-	case USB_OTG :
-		//初始化usb u盘
-
-		// translate the reslut code here
-
-		return stat;
 	}
-#endif
+
 	return STA_NOINIT;
 }
 
@@ -188,11 +171,11 @@ DRESULT disk_read (
 	UINT count		/* Number of sectors to read */
 )
 {
-	DRESULT res;
+	// DRESULT res;
 	uint32_t read_addr = 0;
 	#ifdef SDIO_SD
 	SD_Error SD_state = SD_OK;
-#endif
+	#endif
 	switch (pdrv) {
 #ifdef SDIO_SD
 	case SD_CARD :
@@ -245,18 +228,9 @@ DRESULT disk_read (
 		sfud_read(fatfs_flash, read_addr, count * FLASH_SECTOP_SIZE, buff);
 		#endif
 		#endif
-		
 
-		// translate the reslut code here
-		//当前默认都能正常读取
 		return RES_OK;
-#ifdef USB_OTG
-	case USB_OTG :
-		// translate the arguments here
-		// translate the reslut code here
-		return res;
 	}
-#endif
 	return RES_PARERR;
 }
 
@@ -274,7 +248,7 @@ DRESULT disk_write (
 	UINT count			/* Number of sectors to write */
 )
 {
-	DRESULT res;
+	// DRESULT res;
 	uint32_t write_addr = 0;
 	#ifdef SDIO_SD
 	SD_Error SD_state = SD_OK;
@@ -335,15 +309,6 @@ DRESULT disk_write (
 		// translate the reslut code here
 
 		return RES_OK;
-
-	case USB_OTG :
-		// translate the arguments here
-
-
-
-		// translate the reslut code here
-
-		return res;
 	}
 
 	return RES_PARERR;
@@ -416,12 +381,6 @@ DRESULT disk_ioctl (
 				break;
 		}
 		// Process of the command for the MMC/SD card
-
-		return res;
-
-	case USB_OTG :
-
-		// Process of the command the USB drive
 
 		return res;
 	}

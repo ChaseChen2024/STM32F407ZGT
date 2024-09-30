@@ -2,7 +2,9 @@
 #include "stm32f4xx.h"
 #include "bsp_rtc.h"
 #include "bsp_usart3.h"
-
+#ifdef USE_EASYLOGGER_CODE
+#include "elog.h"
+#endif // DEBUG
  
 /**
   * @brief  设置时间和日期
@@ -39,7 +41,6 @@ void RTC_TimeAndDate_Set(void)
 void RTC_TimeAndDate_Show(void)
 {
 	uint8_t Rtctmp=0;
-	char LCDTemp[100];
 	RTC_TimeTypeDef RTC_TimeStructure;
 	RTC_DateTypeDef RTC_DateStructure;
 	while(1)
@@ -52,13 +53,13 @@ void RTC_TimeAndDate_Show(void)
 		if(Rtctmp != RTC_TimeStructure.RTC_Seconds)
 		{
 			// 打印日期
-			log_i("The Date :  Y:20%0.2d - M:%0.2d - D:%0.2d - W:%0.2d\r\n", 
+			log_i("The Date :  Y:20%0.2d - M:%0.2d - D:%0.2d - W:%0.2d", 
 					RTC_DateStructure.RTC_Year,
 					RTC_DateStructure.RTC_Month, 
 					RTC_DateStructure.RTC_Date,
 					RTC_DateStructure.RTC_WeekDay);
 			// 打印时间
-			log_i("The Time :  %0.2d:%0.2d:%0.2d \r\n\r\n", 
+			log_i("The Time :  %0.2d:%0.2d:%0.2d", 
 					RTC_TimeStructure.RTC_Hours, 
 					RTC_TimeStructure.RTC_Minutes, 
 					RTC_TimeStructure.RTC_Seconds);

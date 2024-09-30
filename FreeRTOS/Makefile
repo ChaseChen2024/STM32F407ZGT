@@ -10,7 +10,6 @@ FreeRTOS/src/tasks.c \
 FreeRTOS/src/timers.c \
 FreeRTOS/port/MemMang/heap_4.c \
 FreeRTOS/port/GCC/ARM_CM4F/port.c \
-# FreeRTOS/CMSIS_RTOS/cmsis_os.c \
 
 
 
@@ -18,26 +17,25 @@ C_INCLUDES +=  \
 -IFreeRTOS \
 -IFreeRTOS/include \
 -IFreeRTOS/port/GCC/ARM_CM4F \
-# -IFreeRTOS/CMSIS_RTOS \
 
-CFLAGS += $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
+# CFLAGS += $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
 
 
-# list of objects
-OBJECTS = $(addprefix $(BUILD_DIR)/,$(notdir $(C_SOURCES:.c=.o)))
-vpath %.c $(sort $(dir $(C_SOURCES)))
+# # list of objects
+# OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(C_SOURCES:.c=.o)))
+# vpath %.c $(sort $(dir $(C_SOURCES)))
 
-$(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR) 
-	$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
+# $(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR) 
+# 	$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
 
-ifeq ($(DEBUG), 1)
-CFLAGS += -g -gdwarf-2
-endif	
+# ifeq ($(DEBUG), 1)
+# CFLAGS += -g -gdwarf-2
+# endif	
 
 
 #######################################
 # dependencies
 #######################################
--include $(wildcard $(BUILD_DIR)/*.d)
+# -include $(wildcard $(BUILD_DIR)/*.d)
 
 # *** EOF ***

@@ -12,7 +12,7 @@
 
 #if _FS_REENTRANT
 /*------------------------------------------------------------------------*/
-/* Create a Synchronization Object
+/* Create a Synchronization Object										  */
 /*------------------------------------------------------------------------*/
 /* This function is called in f_mount() function to create a new
 /  synchronization object, such as semaphore and mutex. When a 0 is returned,
@@ -25,17 +25,6 @@ int ff_cre_syncobj (	/* !=0:Function succeeded, ==0:Could not create due to any 
 )
 {
 	int ret;
-
-
-//	*sobj = CreateMutex(NULL, FALSE, NULL);		/* Win32 */
-//	ret = (int)(*sobj != INVALID_HANDLE_VALUE);
-
-//	*sobj = SyncObjects[vol];			/* uITRON (give a static created sync object) */
-//	ret = 1;							/* The initial value of the semaphore must be 1. */
-
-//	*sobj = OSMutexCreate(0, &err);		/* uC/OS-II */
-//	ret = (int)(err == OS_NO_ERR);
-
 	*sobj = xSemaphoreCreateMutex();	/* FreeRTOS */
 	ret = (int)(*sobj != NULL);
 
@@ -57,16 +46,8 @@ int ff_del_syncobj (	/* !=0:Function succeeded, ==0:Could not delete due to any 
 )
 {
 	int ret;
-
-
-//	ret = CloseHandle(sobj);	/* Win32 */
-
-//	ret = 1;					/* uITRON (nothing to do) */
-
-//	OSMutexDel(sobj, OS_DEL_ALWAYS, &err);	/* uC/OS-II */
-//	ret = (int)(err == OS_NO_ERR);
-
-  vSemaphoreDelete(sobj);		/* FreeRTOS */
+	
+  	vSemaphoreDelete(sobj);		/* FreeRTOS */
 	ret = 1;
 
 	return ret;
@@ -86,14 +67,6 @@ int ff_req_grant (	/* 1:Got a grant to access the volume, 0:Could not get a gran
 )
 {
 	int ret;
-
-	//ret = (int)(WaitForSingleObject(sobj, _FS_TIMEOUT) == WAIT_OBJECT_0);	/* Win32 */
-
-//	ret = (int)(wai_sem(sobj) == E_OK);			/* uITRON */
-
-//	OSMutexPend(sobj, _FS_TIMEOUT, &err));		/* uC/OS-II */
-//	ret = (int)(err == OS_NO_ERR);
-
 	ret = (int)(xSemaphoreTake(sobj, _FS_TIMEOUT) == pdTRUE);	/* FreeRTOS */
 
 	return ret;
@@ -111,12 +84,6 @@ void ff_rel_grant (
 	_SYNC_t sobj	/* Sync object to be signaled */
 )
 {
-//	ReleaseMutex(sobj);		/* Win32 */
-
-//	sig_sem(sobj);			/* uITRON */
-
-//	OSMutexPost(sobj);		/* uC/OS-II */
-
 	xSemaphoreGive(sobj);	/* FreeRTOS */
 }
 

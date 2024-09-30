@@ -228,17 +228,20 @@
 
 
 /*ÐÅÏ¢Êä³ö*/
-#define SRAM_DEBUG_ON         1
-
+#define SRAM_DEBUG_ON         0
+/*
 #define SRAM_INFO(fmt,arg...)           log_i("<<-SRAM-INFO->> "fmt"\n",##arg)
 #define SRAM_ERROR(fmt,arg...)          log_i("<<-SRAM-ERROR->> "fmt"\n",##arg)
 #define SRAM_DEBUG(fmt,arg...)          do{\
                                           if(SRAM_DEBUG_ON)\
                                           log_i("<<-SRAM-DEBUG->> [%d]"fmt"\n",__LINE__, ##arg);\
                                           }while(0)
+*/
 
 
-
+#define SRAM_INFO(fmt,arg...)
+#define SRAM_ERROR(fmt,arg...) 
+#define SRAM_DEBUG(fmt,arg...)
 
 											  
 void FSMC_SRAM_Init(void);

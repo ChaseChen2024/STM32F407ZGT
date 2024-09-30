@@ -27,7 +27,7 @@
  */
  
 #include <elog.h>
-
+#include <stdio.h>
 /**
  * EasyLogger port initialize
  *
@@ -86,12 +86,13 @@ void elog_port_output_unlock(void) {
  *
  * @return current time
  */
+extern uint32_t osKernelGetTickCount(void);
 const char *elog_port_get_time(void) {
     
     /* add your code here */
     // static char cur_system_time[16] = "";
-    // snprintf(cur_system_time, 16, "%lu", osKernelGetTickCount());
-    return "10:11:00";
+    // snprintf(cur_system_time, 16, "%ld", osKernelGetTickCount());
+    return "000001";
 }
 
 /**

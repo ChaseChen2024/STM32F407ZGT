@@ -259,17 +259,7 @@ typedef struct _DateTime  /*此结构体定义了NTP时间同步的相关变量*/
     int  second;      /* 秒 */
 } DateTime;
 DateTime g_nowdate;   
-uint32_t osKernelGetTickCount (void) {
-  TickType_t ticks;
 
-//   if (IS_IRQ()) {
-//    ticks = xTaskGetTickCountFromISR();
-//   } else {
-     ticks = xTaskGetTickCount();
-//   }
-
-  return (ticks);
-}
 uint32_t  quec_get_time(void) 
 {
     uint32_t currentMs = 0;

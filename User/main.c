@@ -17,6 +17,7 @@
 #endif
 #endif
 
+
 #ifdef USE_CMBACKTRACE_CODE
 #include <cm_backtrace.h>
 
@@ -38,14 +39,26 @@ void soft_reset(void)
     __set_FAULTMASK(1); 
     NVIC_SystemReset(); 
 }
+void _kill(void){};
+void _getpid(void){};
 
+uint32_t osKernelGetTickCount(void) 
+{
+  TickType_t ticks;
 
+  if (xPortIsInsideInterrupt()) {
+   ticks = xTaskGetTickCountFromISR();
+  } else {
+     ticks = xTaskGetTickCount();
+  }
+
+  return (ticks);
+}
 int main(void)
 {	
   BaseType_t xReturn = pdPASS;
-
+  
   BSP_Init();
-
   
   xReturn = xTaskCreate((TaskFunction_t )AppTaskCreate,  
                         (const char*    )"AppTaskCreate",
@@ -317,7 +330,7 @@ void fal_erase_download(void)
   {
       shellPrint(&shell,"Find partition (%s) failed!\r\n", partition->name);
       ret = -1;
-      return ret;
+      return;
   }
   if ((ret = fal_partition_erase_all(partition)) < 0)
   {

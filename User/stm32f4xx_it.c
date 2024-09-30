@@ -137,14 +137,13 @@ void DebugMon_Handler(void)
 void USART1_IRQHandler(void)  
 {
 	uint32_t ulReturn;
-  u8 rec_data;
   ulReturn = taskENTER_CRITICAL_FROM_ISR();
 
 	if(USART_GetITStatus(USART1_SHELL,USART_IT_IDLE)!=RESET)
 	{		
 		Usart1_DMA_Rx_Data();
     READ_IT_FLAG = 1;
-		rec_data = USART_ReceiveData(USART1_SHELL);
+		USART_ReceiveData(USART1_SHELL);
 	}	 
   taskEXIT_CRITICAL_FROM_ISR( ulReturn );
 } 
@@ -206,13 +205,12 @@ void ETH_IRQHandler(void)
 void USART6_IRQHandler(void)  
 {
 	uint32_t ulReturn;
-  u8 rec_data;
   ulReturn = taskENTER_CRITICAL_FROM_ISR();
 
 	if(USART_GetITStatus(USART6,USART_IT_IDLE)!=RESET)
 	{		
 		Uart6_DMA_Rx_Data();
-		rec_data = USART_ReceiveData(USART6);
+		USART_ReceiveData(USART6);
 	}	 
 
   taskEXIT_CRITICAL_FROM_ISR( ulReturn );

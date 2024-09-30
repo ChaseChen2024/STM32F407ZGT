@@ -110,7 +110,7 @@ FRESULT nv_init(void)
 	return err;
 }
 #ifdef USER_LEETTER_SHELL
-char patch_name[64] = "1:";
+char patch_name[32] = "1:";
 void nv_read_test(char *str,int len)
 {
 	FRESULT err = FR_OK;
@@ -123,12 +123,10 @@ void nv_read_test(char *str,int len)
 }
 SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_FUNC), nvread, nv_read_test, nvread "1:xxxx.xx" len);
 
-// void nv_wirte_test(char *filename,char *str,int len)
 void nv_wirte_test(int argc, char *argv[])
 {
 	FRESULT err = FR_OK;
 	DIR dir_info;
-    FILINFO fno;
 	int len = 0;
 	char buf[128]= {0};
 	elog_i(ELOG_APP,"cmd :%s,%s,%s,%s",argv[0],argv[1],argv[2],argv[3]);
@@ -169,11 +167,8 @@ void nv_wirte_test(int argc, char *argv[])
 			shellPrint(&shell,"no such file or directory\r\n");
 		}
 	}
-	// err = nv_write(filename,str,len);
-    
-    // sprintf(buf, "write string: %s\r\nlen:%d,err:%d\r\n",str,len,err);
-    // Usart_SendString(USART3,buf);
-	return 0;
+	shellPrint(&shell,"write string:len:%d,err:%d",len,err);
+
 }
 SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN), write, nv_wirte_test, fatfs file wirte);
 
@@ -182,13 +177,9 @@ int nv_size_test(int argc, char *argv[])
 	FRESULT err = FR_OK;
 	FATFS *pfs;
 	char buf[64]= {0};
-	// int len = strlen(argv[1]);
 
 	DWORD fre_clust, fre_size, tot_size;
-	// if(len == 0)
-	// {
-	// 	strcpy(argv[1],"1:");
-	// }
+
     err = f_getfree(argv[1], &fre_clust, &pfs);
     
     if( err == FR_OK )
@@ -326,7 +317,7 @@ int nv_mkdir_dir_test(int argc, char *argv[])
 {
 	FRESULT res;
 	DIR dir_info;
-	char patch_mk[32] = {0};
+	char patch_mk[64] = {0};
 	if(argc < 2)
 	{
 		shellPrint(&shell,"command no such\r\n");
@@ -369,15 +360,16 @@ int nv_mkdir_dir_test(int argc, char *argv[])
 			}
 		}
 	}
-	
+	return res;
 }
 SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN), mkdir, nv_mkdir_dir_test, fatfs mkdir dir);
 void nv_rm_test(char *dir)
 {
 	FRESULT res;
 	char patch_mk[32] = {0};
-	sprintf(patch_mk,"%s/%s",patch_name,dir);
-
+	strcat(patch_mk,patch_name);
+	strcat(patch_mk,"/");
+	strcat(patch_mk,dir);
 	log_i("%s\r\n",patch_mk);
 	res = f_unlink(patch_mk);
 	if(res != FR_OK)
@@ -423,7 +415,7 @@ int nv_copy_test(int argc, char *argv[])
 {
 	shellPrint(&shell,"%s\r\n%s\r\n", argv[1], argv[2]);
 
-
+	return 0;
 }
 SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN),cp,nv_copy_test,file copy cmd);
 
@@ -456,7 +448,7 @@ int nv_rstset_test(int argc, char *argv[])
         log_i("\r\nnv_init_4\r\ntot_size:%10lu KB\r\nfre_size:%10lu KB\r\n",tot_size *4, fre_size *4);
     }
 	shellPrint(&shell,"\r\ntot_size:%10lu KB\r\nfre_size:%10lu KB\r\n",tot_size *4, fre_size *4);
-
+	return err;
 
 }
 SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0)|SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN),fatfs_rstset,nv_rstset_test,file rstset cmd);

@@ -41,10 +41,18 @@ Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_tim.c \
 Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_usart.c \
 Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_wwdg.c \
 Libraries/CMSIS/Device/ST/STM32F4xx/Source/Templates/system_stm32f4xx.c \
-Libraries/STM32F4x7_ETH_Driver/src/stm32f4x7_eth.c \
 # Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_lptim.c \
 # Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_ltdc.c \
 
+
+ifeq ($(BUILE_PHY),y)
+C_SOURCES +=  \
+Libraries/STM32F4x7_ETH_Driver/src/stm32f4x7_eth.c \
+
+C_INCLUDES +=  \
+-ILibraries/STM32F4x7_ETH_Driver/inc \
+
+endif
 
 ifeq ($(BUILE_USB),y)
 C_SOURCES +=  \
@@ -75,25 +83,3 @@ C_INCLUDES +=  \
 -ILibraries/STM32F4x7_ETH_Driver/inc \
 
 
-
-CFLAGS += $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
-
-
-# list of objects
-OBJECTS = $(addprefix $(BUILD_DIR)/,$(notdir $(C_SOURCES:.c=.o)))
-vpath %.c $(sort $(dir $(C_SOURCES)))
-
-$(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR) 
-	$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
-
-# ifeq ($(DEBUG), 1)
-# CFLAGS += -g -gdwarf-2
-# endif	
-
-
-#######################################
-# dependencies
-#######################################
--include $(wildcard $(BUILD_DIR)/*.d)
-
-# *** EOF ***
